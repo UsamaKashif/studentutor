@@ -1,0 +1,64 @@
+{% extends "home/b.html" %}
+
+{% block links %}
+    <style>
+        .my-card{
+            border: solid 2px;
+            border-radius: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block nav %}
+    {% include 'tutors/navBar.html' %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        {% if user.tutor.verified == True %}
+            <div class="alert alert-info mt-5" role="alert">
+                You Will Need To Re-Verify Your Documents After Submitting This Form
+            </div>
+            <div class="alert alert-info mt-2" role="alert">
+                Active posts will not be displayed
+            </div>
+        {% endif %}
+        <div class="card card-body shadow mt-5 my-card mb-3">
+            <form method="POST" class="container">
+                    {% csrf_token %}
+                    <h5 class="card-title">Qualifications</h5>
+                    <hr>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text">Highest Qualification</i></span>
+                        </div>
+                        {{form.highest_qual}}
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text">Institute</i></span>
+                        </div>
+                        {{form.highest_qual_inst}}
+                    </div>
+                    
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text">Secondary Qualification</i></span>
+                        </div>
+                        {{form.secondary_qaul}}
+                    </div>
+                    
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text">Institute</i></span>
+                        </div>
+                        {{form.secondary_qaul_inst}}
+                    </div>
+                    <div class="d-flex justify-content-center mt-3 float-left">
+                            <input type="submit" value="Submit" class="btn btn-primary w-100 ">
+                    </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

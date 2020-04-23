@@ -1,0 +1,107 @@
+{% extends "home/b.html" %}
+
+{% load static %}
+
+{% block links %}
+<link href="{% static 'students/signUp/style.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+        <div class="row">
+          <div class="col-lg-10 col-xl-9 mx-auto">
+            <div class="card card-signin flex-row my-5 shadow-lg">
+                <div class="card-img-left d-none d-md-flex" style="background-image: url({% static 'students/img/register_img.jpg' %})">
+                        <!-- Background image for card set in CSS! -->
+                </div>
+              <div class="card-body">
+                <h5 class="card-title text-center">Tutor Register</h5>
+                <form class="form-signin" method="POST" action="">
+                        {% csrf_token %}
+                  <div class="form-label-group">
+                        {{form.username}}
+                  </div>
+                  <small class="text-danger">{{form.username.errors}}</small>
+    
+                  <div class="form-label-group">
+                        {{form.first_name}}
+                  </div>
+                  <small class="text-danger">{{form.first_name.errors}}</small>
+                  <div class="form-label-group">
+                        {{form.last_name}}
+                  </div>
+                  <small class="text-danger">{{form.last_name.errors}}</small>
+                  <div class="form-label-group">
+                        {{form.email}}
+                  </div>
+                  <small class="text-danger">{{form.email.errors}}</small>
+                  <div class="form-label-group">
+                        {{form.age}}
+                  </div>
+                  <small class="text-danger">{{form.age.errors}}</small>
+                  <div class="form-label-group">
+                        {{form.city}}
+                  </div>
+                  <small class="text-danger">{{form.city.errors}}</small>
+				  
+				  <div class="form-label-group">
+					
+								{{form.gender}}
+                  </div>
+                  <small class="text-danger">{{form.gender.errors}}</small>
+				  
+				  <div class="form-label-group">
+                        {{form.phone}}
+                  </div>
+                  <small class="text-danger">{{form.phone.errors}}</small>
+				  
+				  <div class="form-label-group">
+                        {{form.cnic}}
+                  </div>
+                  <small class="text-danger">{{form.cnic.errors}}</small>
+                  
+                  <hr>
+    
+                  <div class="form-label-group">
+                        {{form.password1}}
+                  </div>
+                  <small class="text-danger">{{form.password1.errors}}</small>
+                  
+                  <div class="form-label-group">
+                        {{form.password2}}
+                  </div>
+                  <small class="text-danger">{{form.password2.errors}}</small>
+    
+                  <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
+                  <a class="d-block text-center mt-2 small" href="{% url 'sign_in'  %}">Sign In</a>
+                  <hr class="my-4">
+                  <a class="btn btn-lg  btn-block text-uppercase" href="{% url 'home_page' %}" >Back To Home</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+		var form_fields = document.getElementsByTagName('input')
+        form_fields[1].placeholder='Username';
+        form_fields[2].placeholder='First Name';
+        form_fields[3].placeholder='Last Name';
+        form_fields[4].placeholder='Email';
+        form_fields[5].placeholder='Age';
+        form_fields[6].placeholder='City';
+        form_fields[7].placeholder='Gender';
+        form_fields[8].placeholder='Phone';
+        form_fields[9].placeholder='CNIC';
+        form_fields[10].placeholder='Password';
+        form_fields[11].placeholder='Password Again';
+        for (var field in form_fields){	
+			form_fields[field].className += ' form-control'
+		}
+</script>
+{% endblock %}

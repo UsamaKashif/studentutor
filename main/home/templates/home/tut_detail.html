@@ -1,0 +1,61 @@
+{% extends "home/base.html" %}
+
+{% load static %}
+
+{% block links %}
+    <style>
+        a {
+            
+            font-family: 'Kaushan Script', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        }
+    </style>
+{% endblock %}
+
+{% block nav %}
+<nav class="navbar navbar-light bg-dark">
+    <span class="navbar-brand mb-0 h1">
+            <a class="navbar-brand js-scroll-trigger" href="{% url 'home_page' %}" style="color: #fed136;">
+                    <img src="{% static 'home/img/logo.png' %}"> StudenTutor
+            </a>
+    </span>
+</nav>
+{% endblock %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-center">
+        <div class="card shadow card-body border border-primary">
+
+            <div class="row mb-2">
+                <div class="col-md-12">
+                    <span class="d-flex justify-content-end"> 
+                        <a class="btn btn-danger" style="font-size: 1rem" href="{% url 'tutors' %}"><i class="far fa-times-circle"></i></a>
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-12 container">
+                    <div class="d-flex justify-content-center">
+                        <img src="{{tutor.user_image.url}}" style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div>
+                    <h5>{{tutor.first_name}} {{tutor.last_name}}</h5>
+                </div>
+                <div>
+                    <small style="text-align: justify;">{{tutor.tagline}}</small>
+                    <p class="mt-2 mb-2"><b><i class="fas fa-graduation-cap"></i></b> <span style="text-align: justify;">{{qual.highest_qual}} from {{qual.highest_qual_inst}}, {{qual.secondary_qaul}} from {{qual.secondary_qaul_inst}}</span></p>
+                    <hr>    
+                    <p style="text-align: justify;" class="mt-2">{{tutor.about}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

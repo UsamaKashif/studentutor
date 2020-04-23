@@ -1,0 +1,160 @@
+{% extends 'home/base.html' %}
+
+{% block links %}
+<style>
+        #floating_btn{
+            position: fixed;
+            bottom: 50px;
+            right: 40px;
+            z-index: 999;
+            padding: 15;
+            font-size: 1.2rem;
+            width: 80px;
+            height: 80px;
+            border: solid 2px;
+            border-color: black;
+            border-radius: 40%;
+            background-color:#fec810;
+            color:white;
+            font-weight:600;
+        }
+    </style>
+{% endblock %}
+
+{% block nav %}
+    {% include 'students/navBar.html' %}
+{% endblock %}
+
+{% block content %}
+
+<div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Filter Tutors</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form method="GET" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="search" name="Subject" placeholder="Subject" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <select class="form-control selectpicker" name="TuitionLevel">
+                                <option>All</option>
+                                <option>Primary (class 1-5)</option>
+                                <option>Matric</option>
+                                <option>University</option>
+                                <option>Professional</option>
+                                <option>Secondary (class 6-8)</option>
+                                <option>Intermediate</option>
+                                <option>O Level</option>
+                                <option>A Level</option>
+                                <option>SAT-I / SAT-II / E-CAT / M-CAT / GRE / GMAT / Entry test</option>
+                                <option>IELTS / TOEFL", "IELTS / TOEFL</option>
+                                <option>Quran / Religious Studies", "Quran / Religious Studies</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="search" name="City" placeholder="City" class="form-control ">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success">Filter</button>
+                        </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% if tutors %}
+<div class="container">
+        <button class="btn shadow " id="floating_btn" data-toggle="modal" data-target="#myModal" >Filter</button>
+
+
+        {% if user.student.profile_complete == False %}
+            <div class="alert alert-danger mt-4" role="alert">
+                Complete <b>About Me</b> to be able to invite tutor for demo
+            </div>
+        {% endif %}
+        {% if messages %}
+        <ul class="messages d-flex justify-content-center mb-2 mt-2">
+            {% for message in messages %}
+            <div class="alert alert-warning" role="alert">
+            <h5  {% if message.tags %} class="{{ message.tags }} "{% endif %}>{{ message }}</h5>
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="row row-cols-1 row-cols-md-2 mt-3">
+            {% for tutor in tutors %}
+            {% if tutor.tutorUser.verified == True %}
+            <div class="col mb-4">
+                <div class="card shadow " style="height: auto;">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <span class="d-flex justify-content-end"> 
+                                    <a class="btn btn-info" href="{% url 'specific_tutor' tutor.id %}">View Tutor</a>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 container ">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{tutor.tutorUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 container">
+                            <div>
+                                <h5> {{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}} </h5>
+                            </div>
+                            <div>
+                                <small style="text-align: justify;">{{tutor.tutorUser.tagline}}</small>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{tutor.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{tutor.tuition_level}}</span></li>
+                                {% if tutor.can_travel == "Yes" %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Travel</span></li>
+                                {% else %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Not Travel</span></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="d-flex justify-content-center container">
+        <h1 class="border p-3 mt-5 border-primary text-secondary"> NO TUTOR FOUND </h1>
+    </div>
+    {% endif %}
+{% endblock %}

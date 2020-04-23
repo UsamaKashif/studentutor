@@ -1,0 +1,61 @@
+{% extends 'home/b.html' %}
+
+
+{% block links %}
+    <style>
+        .my-card{
+            border: solid 3px;
+            border-radius: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block nav %}
+    {% include 'tutors/navBar.html' %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="d-flex justify-content-center p-2">
+            <div class="card mt-5 mb-3 shadow-lg my-card" style="width: 40rem;">
+                <div class="card-body">
+                    <h5 class="card-title text-center text-muted">Verify Your Documents</h5>
+                    <hr>
+                    <div class="container border mb-3">
+                        <h5 class="text-center text-info p-2">Read This Carefully Before Submitting Documents</h5>
+                        <ul class="list-group p-2 mb-2 list-group-flush">
+                            <li class="list-group-item">Please complete your profile. Fill in all the sections accurately. At the time of verification, we review your profile alongside your documents</li>
+                            <li class="list-group-item">File types of uploaded images should be <b>.jpg or .png</b></li>
+                            <li class="list-group-item">You must attach image of your highest qualification document which matches with details you have entered in your profile</li>
+                            <li class="list-group-item">If your profile is complete and your documents are correct, then it will normally be verified without any delay. Allow 48 hours minimum before contacting us to check on status.</li>
+                        </ul>
+                    </div>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <h5 class="text-danger">Upload The Front Of Your NIC</h5>
+                            {{form.cnic_front}}
+                        </div>
+                        <small class="text-danger">{{form.cnic_front.errors}}</small>
+                        <hr>
+                        <div class="input-group mb-3">
+                            <h5 class="text-danger">Upload The Back Of Your NIC</h5>
+                            {{form.cnic_back}}
+                        </div>
+                        <small class="text-danger">{{form.cnic_back.errors}}</small>
+                        <hr>
+                        <div class="input-group mb-3">
+                            <h5 class="text-danger">Upload Image Of Highest Qualification Certificate</h5>
+                            {{form.highest_qual}}
+                        </div>
+                        <small class="text-danger">{{form.highest_qual.errors}}</small>
+                        <div class="d-flex justify-content-center">
+                            <input type="submit" value="Verify" class="btn btn-success mt-2">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

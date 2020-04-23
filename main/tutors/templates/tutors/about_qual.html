@@ -1,0 +1,48 @@
+{% extends 'home/b.html' %}
+
+{% block links %}
+    <style>
+        .my-card{
+            border: solid 2px;
+            border-radius: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block nav %}
+    {% include 'tutors/navbar.html' %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="card card-body shadow mt-5 my-card mb-3 w-75">
+                    
+                <div class="">
+                    <div class="d-flex justify-content-center">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <h5 class="card-title">About Me</h5>
+                            <hr>
+
+                            <small class="text-info">Profile Tagline</small>
+                            <div class="input-group mb-3 w-75">
+                                {{about.tagline}}
+                            </div>
+
+                            <small class="text-info">This is an important section of your profile viewed by all</small>
+                            <div class="input-group mb-3">
+                                {{about.about}}
+                            </div>
+
+                            <div class="d-flex justify-content-center mt-3 float-left">
+                                    <input type="submit" value="Submit" class="btn btn-primary w-100 ">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

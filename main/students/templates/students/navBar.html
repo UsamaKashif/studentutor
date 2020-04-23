@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <!-- <img src="#"> -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse " id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="{% url 'student_dashboard' %}">{{user.username}}</a>
+                <a class="nav-item nav-link " href="{% url 'all_tutors' %}">Find Tutor</a>
+                <a class="nav-item nav-link" href="{% url 'invited' %}">Invited</a>
+                <a class="nav-item nav-link" href="{% url 'invitations_student' %}">Invitations</a>
+                <a class="nav-item nav-link" href="{% url 'ads' %}">ADS</a>
+                {% if user.student.profile_complete == True %}
+                    <a class="nav-item nav-link" href="{% url 'post_ad' user.id %}">Post An AD</a>
+                {% else %}
+                <a class="nav-item nav-link disabled" href="{% url 'post_ad' user.id %}">Post An AD</a>
+                {% endif %}
+                <a class="nav-item nav-link" href="{% url 'sign_out' %}">Sign Out</a>
+            </div>
+        </div>
+    </nav>

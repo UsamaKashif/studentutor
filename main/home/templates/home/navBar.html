@@ -1,0 +1,56 @@
+{% load static %}
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+    <div class="container">
+      <!-- <a class="navbar-brand js-scroll-trigger" href="{% url 'home_page' %}">StudenTutor</a> -->
+      <a class="navbar-brand js-scroll-trigger" href="{% url 'home_page' %}">
+        <img src="{% static 'home/img/logo.png' %}"> StudenTutor
+      </a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav text-uppercase ml-auto">
+          {% if page == "home" %}
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="{% url 'tutors' %}">Tutors</a>
+          </li>
+          {% endif %}
+
+          {% if user.is_authenticated %}
+            
+            {% if grp == "students" %}
+            <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{% url 'student_dashboard' %}">Dashboard</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="{% url 'tutor_dashboard' %}">Dashboard</a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="{% url 'sign_out' %}">Sign Out</a>
+                  </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="{% url 'sign_in' %}">Sign In</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger"  href="{% url 'register_as' %}">Register</a>
+          </li>
+          {% endif %}
+
+          {% if page == "home" %}
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>

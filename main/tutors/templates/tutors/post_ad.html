@@ -1,0 +1,94 @@
+{% extends "home/b.html" %}
+
+{% block links %}
+	<style>
+		.my-card{
+			border: solid 2px;
+			border-radius: 20px;
+		}
+	</style>
+{% endblock %}
+
+{% block nav %}
+	{% include 'tutors/navBar.html' %}
+{% endblock %}
+
+{% block content %}
+	<div class="container ">
+		{% if user.tutor.ad_post_count >= 5 %}
+			<div class="alert alert-danger mt-4" role="alert">
+				Active ADs Limit Reached
+			  </div>
+		{% endif %}
+		<div class="d-flex  ">
+			<div class="card card-body shadow mt-4  my-card">
+				<h5 class="card-title text-center">Post An AD</h5>
+				<hr>
+				<div class="container">
+					<form method="POST">
+						{% csrf_token %}
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text">Subject</i></span>
+							</div>
+							{{form.subject}}
+						</div>
+
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text">Tuition Level</i></span>
+							</div>
+							{{form.tuition_level}}
+						</div>
+						
+						
+						<small class="text-muted">Address Will only be shared with student if you choose '<b>Yes</b> in <b>Can Travel'</b> option</small>
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text">Address</i></span>
+							</div>
+							{{form.address}}
+						</div>
+						<small class="text-danger">{{form.address.errors}}</small>
+						
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text">Can Travel</i></span>
+							</div>
+							{{form.can_travel}}
+						</div>
+						<small class="text-danger">{{form.can_travel.errors}}</small>
+						
+						
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text">Estimated Fees</i></span>
+							</div>
+							{{form.estimated_fees}}
+						</div>
+						<small class="text-danger">{{form.estimated_fees.errors}}</small>
+
+						<div class="d-flex justify-content-center mt-3 login_container">
+							{% if user.tutor.ad_post_count < 5 %}
+							<input class="btn mt-3 text-info w-50 " type="submit" value="Post An AD">
+							{% elif user.tutor.ad_post_count >= 5 %}
+							<input class="btn mt-3 text-info w-50 "  value="Post An AD">
+							{% endif %}
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+	<script>
+		var form_fields = document.getElementsByTagName('input')
+		for (var field in form_fields){	
+			form_fields[field].className += ' form-control'
+		}
+	</script>
+{% endblock %}

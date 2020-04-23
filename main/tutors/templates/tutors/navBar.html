@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- <img src="#"> -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="{% url 'tutor_dashboard' %}">{{user.username}}</a>
+            <a class="nav-item nav-link " href="{% url 'all_students' %}">Find Student</a>
+            <a class="nav-item nav-link" href="{% url 'invitations' %}">Invitations</a>
+            <a class="nav-item nav-link" href="{% url 'invited_students' %}">Invited</a>
+            <a class="nav-item nav-link" href="{% url 'ads_tutor' %}">ADS</a>
+            {% if user.tutor.verified == True %}
+                <a class="nav-item nav-link" href="{% url 'post_ad_tutor' user.id %}" >Post An AD</a>
+                
+            {% elif user.tutor.verified == False %}
+                <a class="nav-item nav-link disabled" aria-disabled="true">Post An AD</a>
+                {% if user.tutor.about_complete == True and user.tutor.qual_complete == True %}
+                    {% if user.tutor.verification_sent == True %}
+                        <a class="nav-item nav-link disabled" href="{% url 'verify_tutor' %}">Verify Documents</a>
+                    {% else %}
+                        <a class="nav-item nav-link" href="{% url 'verify_tutor' %}">Verify Documents</a>
+                    {% endif %}
+                {% else %}
+                    <a class="nav-item nav-link disabled" >Verify Documents</a>
+                {% endif %}
+            {% endif %}
+            <a class="nav-item nav-link" href="{% url 'sign_out' %}">Sign Out</a>
+        </div>
+    </div>
+</nav>

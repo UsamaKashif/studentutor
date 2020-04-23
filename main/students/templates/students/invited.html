@@ -1,0 +1,79 @@
+{% extends "home/base.html" %}
+
+{% block nav %}
+    {% include "students/navBar.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+        {% if messages %}
+            <ul class="messages d-flex justify-content-center mb-2 mt-2">
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}}" role="alert">
+                <h5  {% if message.tags %} class="{{ message.tags }} "{% endif %}>{{ message }}</h5>
+                </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="row row-cols-1 row-cols-md-2 mt-3">
+            {% for invite in invited %}
+            <div class="col mb-4">
+                <div class="card shadow " style="height: 48rem;">
+                    <div class="card-body">
+                        
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <span class="d-flex justify-content-end">   
+                                    {% if invite.accepted %}
+                                        <h5 class="card-title text-success">Status: Accepted</h5>
+                                    {% elif invite.rejected == True %}
+                                        <h5 class="card-title text-danger">Status: Rejected</h5>
+                                    {% else %}
+                                        <h5 class="card-title text-info">Status: Pending</h5>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 container ">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{invite.tutor_ad.tutorUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 container">
+                            <div>
+                                <h5><b>Tutor Name: </b>{{invite.tutor_ad.tutorUser.first_name}} {{invite.tutor_ad.tutorUser.last_name}} </h5>
+                            </div>
+                            <div>
+                                <small style="text-align: justify;">{{invite.tutor_ad.tutorUser.tagline}}</small>
+                                <p style="text-align: justify;" class="mt-2">{{invite.tutor_ad.tutorUser.about}}</p>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.tutor_ad.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.tutor_ad.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{invite.tutor_ad.estimated_fees}} Estimated Fees</span></li>
+                                {% if invite.tutor_ad.can_travel == "Yes" %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Travel</span></li>
+                                {% else %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can not Travel</span></li>
+                                {% endif %}
+                                {% if invite.accepted %}
+                                    <li class="list-group-item text-light bg-info">View Your Email For <b>{{invite.tutor_ad.tutorUser.first_name}} {{invite.tutor_ad.tutorUser.last_name}}'s</b> Contact Details</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'home/b.html' %}
+
+{% block nav %}
+    {% include 'students/navBar.html' %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-center">
+                        <div class="card shadow w-50 mt-5 mb-5" style="height: auto;">
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-md-12">
+                                            <span class="d-flex justify-content-end"> 
+                                                {% if user.student.profile_complete == True%}
+                                                    <a class="btn btn-info" href="{% url 'tutor_invite' tutor.id %}">Invite For Demo</a>
+                                                {% else %}
+                                                    <a class="btn btn-info disabled">Invite For Demo</a>
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="row">
+                                        <div class="col-md-12 container ">
+                                            <div class="d-flex justify-content-center">
+                                                <img src="{{tutor.tutorUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                            </div>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="mt-4 container">
+                                        <div>
+                                            <h5> {{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}} </h5>
+                                        </div>
+                                        <div>
+                                            <small style="text-align: justify;">{{tutor.tutorUser.tagline}}</small>
+                                            <p class="mt-2 mb-2"><b><i class="fas fa-graduation-cap"></i></b> <span style="text-align: justify;">{{qual.highest_qual}} from {{qual.highest_qual_inst}}, {{qual.secondary_qaul}} from {{qual.secondary_qaul_inst}}</span></p>
+                                            <hr>
+                                            <p style="text-align: justify;" class="mt-2">{{tutor.tutorUser.about}}</p>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="container">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{tutor.subject}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{tutor.tuition_level}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{tutor.estimated_fees}} Estimated Fees</span></li>
+                                            {% if tutor.can_travel == "Yes" %}
+                                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Travel</span></li>
+                                            {% else %}
+                                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Not Travel</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                    
+                                </div>
+                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

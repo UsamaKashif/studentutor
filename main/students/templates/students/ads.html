@@ -1,0 +1,62 @@
+{% extends 'home/base.html' %}
+
+
+
+{% block nav %}
+    {% include 'students/navBar.html' %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 mt-3">
+            {% for ad in ads %}
+            <div class="col mb-4">
+                <div class="card shadow " style="height: auto;">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <span class="d-flex justify-content-end">   
+                                    <!-- <h5 class="card-title">{{user.first_name}}</h5>     -->
+                                    <a class="btn btn-danger  h-25" href="{% url 'ads_delete' ad.pk %}"><i class="fas fa-trash-alt"></i></a>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 container">
+                                <div class="d-flex justify-content-center" >
+                                    <img src="{{user.student.user_image.url}}" style="border: solid 2px; border-radius: 125px; border-color:white;" height="150" width="150">
+                                </div>
+                            </div>
+                        </div> 
+                        
+                        <div class="mt-4 container">
+                            <div class="d-flex justify-content-between">
+                                <h5> {{user.first_name}} {{user.last_name}} </h5>
+                                <span class=""><b class="text-primary">Views:</b> {{ad.views}}</span>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{ad.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{ad.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{ad.hours_per_day}} hrs/day</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{ad.days_per_week}} days/week</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{ad.estimated_fees}} Estimated Fees</span></li>
+                                {% if ad.tuition_type == "Online Tuition" %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Online Tuition</span></li>
+                                {% else %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Home Tuition</span></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+{% endblock %}

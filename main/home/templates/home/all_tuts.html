@@ -1,0 +1,63 @@
+{% extends 'home/base.html' %}
+
+{% load static %}
+
+{% block links %}
+    <style>
+        a {
+            
+            font-family: 'Kaushan Script', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        }
+    </style>
+{% endblock %}
+
+{% block nav %}
+<nav class="navbar navbar-light bg-dark">
+    <span class="navbar-brand mb-0 h1">
+            <a class="navbar-brand js-scroll-trigger" href="{% url 'home_page' %}" style="color: #fed136;">
+                    <img src="{% static 'home/img/logo.png' %}"> StudenTutor
+            </a>
+    </span>
+</nav>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container mt-5">
+<div class="row row-cols-1 row-cols-md-2 mt-3">
+        {% for tutor in tutors %}
+        <div class="col mb-4">
+            <div class="card shadow border border-primary" style="height: auto;">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <span class="d-flex justify-content-end"> 
+                                <a class="btn btn-info" href="{% url 'tutor_detail' tutor.id %}">View Tutor</a>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 container ">
+                            <div class="d-flex justify-content-center">
+                                <img src="{{tutor.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 container">
+                        <div>
+                            <h5> {{tutor.first_name}} {{tutor.last_name}} </h5>
+                        </div>
+                        <div>
+                            <small style="text-align: justify;">{{tutor.tagline}}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

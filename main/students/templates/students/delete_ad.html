@@ -1,0 +1,29 @@
+{% extends 'home/base.html' %}
+
+{% block nav %}
+    {% include 'students/navBar.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+
+    <br>
+    <div class="container">
+        <div class="row text-center d-flex justify-content-around mt-4">
+            <div class="col-md-6">
+                <div class="card card-body shadow">
+                    <p>Are you sure you want to delete <b>{{ad.subject}} : {{ad.tuition_level}}</b></p>
+
+                    <form method="POST" >
+                        {% csrf_token %}
+
+                        <a class="btn btn-warning" href="{% url 'ads' %}">cancel</a>
+                        <input class="btn btn-danger" type="submit" name="confirm">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "home/b.html" %}
+
+{% block nav %}
+    {% include "tutors/navBar.html" %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-center">
+                        <div class="card shadow w-50 mt-5 mb-5" style="height: auto;">
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-md-12">
+                                                <span class="d-flex justify-content-end">   
+                                                        <!-- <h5 class="card-title">{{user.first_name}}</h5>     -->
+                                                        {% if user.tutor.verified == False %}
+                                                            <a class="btn btn-info disabled" href="{% url 'student_invite' student.id %}">Ask For Demo</a>
+                                                        {% else %}
+                                                            <a class="btn btn-info" href="{% url 'student_invite' student.id %}">Ask For Demo</a>
+                                                        {% endif %}
+                                                    </span>
+                                        </div>
+                                    </div>
+            
+                                    <div class="row">
+                                        <div class="col-md-12 container ">
+                                            <div class="d-flex justify-content-center">
+                                                <img src="{{student.studentUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                            </div>
+                                        </div>
+                                    </div> 
+            
+                                    <div class="mt-4 container">
+                                        <div>
+                                            <h5> {{student.studentUser.first_name}} {{student.studentUser.last_name}} </h5>
+                                        </div>
+                                        <div>
+                                            <p style="text-align: justify;" class="mt-2">{{student.studentUser.textArea}}</p>
+                                        </div>
+                                    </div>
+            
+                                    <div class="container">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{student.subject}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{student.tuition_level}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{student.hours_per_day}} hrs/day</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{student.days_per_week}} days/week</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{student.estimated_fees}} Estimated Fees</span></li>
+                                            {% if student.tuition_type == "Online Tuition" %}
+                                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Online Tuition</span></li>
+                                            {% else %}
+                                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Home Tuitions</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+            
+                                </div>
+                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

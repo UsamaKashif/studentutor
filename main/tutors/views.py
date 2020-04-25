@@ -95,7 +95,8 @@ def tutorDashboard(request):
             
             return redirect("tutor_dashboard")
         else:
-            messages.error(request, "Unsupported file Extension")
+            messages.warning(request, 'Supported File Extensions are .jpg And .png, Max Image Size Is 1MB')
+            return redirect("tutor_dashboard")
         if form.is_valid():
             form.save()
 

@@ -80,7 +80,8 @@ def studentDashboard(request):
 
             return redirect("student_dashboard")
         else:
-            messages.error(request, 'Unsupported File Extension')
+            messages.warning(request, 'Supported File Extensions are .jpg And .png, Max Image Size Is 1MB')
+            return redirect("student_dashboard")
 
         if form.is_valid():
             form.save()

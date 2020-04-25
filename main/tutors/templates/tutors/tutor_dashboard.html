@@ -66,6 +66,8 @@
         <!-- Modal body -->
         <div class="modal-body">
             <small>250x250 Image Size</small>
+            <br>
+            <small class="mb-3"><b>Max Image Size Is 1MB</b></small>
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{p_form.image}}
@@ -103,7 +105,11 @@
     {% endif %}
     <div class="row mb-3">
         <div class="col-md-12">
-            <a class="btn btn-danger float-right"  href="{% url 'del_tutor' %}" style="color: white;">Delete Account</a>
+            {% if user.tutor.verified == True %}
+            <a class="btn btn-primary float-right"  href="{% url 'post_ad_tutor' user.id %}" style="color: white;">Post An AD</a>
+            {% else %}
+            <a class="btn btn-secondary disabled float-right"  href="{% url 'post_ad_tutor' user.id %}" style="color: white;">Post An AD</a>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-4">
@@ -319,6 +325,7 @@
                     </div>
                 {% endif %}
             </div>
+            <a class="btn btn-danger"  href="{% url 'del_tutor' %}" style="color: white;">Delete Account</a>
         </div>
     </div>
 </div>

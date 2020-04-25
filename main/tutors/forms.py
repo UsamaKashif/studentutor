@@ -239,6 +239,15 @@ class ProfilePicture(forms.Form):
 
     image = forms.ImageField(validators=[validate_file_extension], required=True)
 
+    def clean_image(self):
+        image = self.cleaned_data.get('image', False)
+        if image:
+            if image.size > 1*1024*1024:
+                raise ValidationError("Image file too large, > 1mb ")
+            return image
+        else:
+            raise ValidationError("Couldn't read uploaded image")
+
 
 class VerifyForm(forms.Form):
     cnic_front = forms.ImageField(validators=[validate_file_extension])

@@ -100,7 +100,11 @@
         {% endif %}
     <div class="row mb-3">
         <div class="col-md-12">
-            <a class="btn btn-danger float-right"  href="{% url 'del_account' %}" style="color: white;">Delete Account</a>
+            {% if user.student.profile_complete == True %}
+                <a class="btn btn-info float-right"  href="{% url 'post_ad' user.id %}" style="color: white;">Post An AD</a>
+            {% else %}
+                <a class="btn btn-secondary float-right disabled"  href="{% url 'post_ad' user.id %}" style="color: white;">Post An AD</a>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-4">
@@ -237,6 +241,7 @@
                     <a href="{% url 'student_about' %}" class="btn btn-info">Update</a>
                 </div>
             </div>
+            <a class="btn btn-danger mt-3" href="{% url 'del_account' %}">Delete Account</a>
         </div>
     </div>
 </div>

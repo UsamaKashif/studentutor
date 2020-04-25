@@ -168,6 +168,18 @@ class PostAnAdForm (forms.Form):
 
     estimated_fees = forms.IntegerField()
 
+    def clean_hours_per_day(self):
+        hours_per_day = self.cleaned_data['hours_per_day']
+        if hours_per_day > 6:
+            raise ValidationError("Hours Per Day Cannot be Greater Than 6")
+        return hours_per_day
+    
+    def clean_days_per_week(self):
+        days_per_week = self.cleaned_data['days_per_week']
+        if days_per_week > 7:
+            raise ValidationError("Days Per Day Cannot be Greater Than 7")
+        return days_per_week
+
 
 class AboutStudentForm(forms.Form):
     textArea = forms.CharField(

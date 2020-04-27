@@ -146,7 +146,7 @@
             </div>
             <div class="row mt-2">
                 <div class="col-md-6 mb-3">
-                    <div class="card card-body shadow">
+                    <div class="card card-body shadow border-dark">
                         <h5 class="card-title">Invitations Recieved</h5>
                         <hr>
                             {% if invitations_recieved < 1 and invitations_recieved_accepted < 1 and invitations_recieved_rejected < 1 %}
@@ -157,7 +157,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <div class="card card-body shadow">
+                    <div class="card card-body shadow border-dark">
                         <h5 class="card-title">Invitations Sent</h5>
                         <hr>
                             {% if invitations_sent < 1 and invitations_sent_accepted < 1 and invitations_sent_rejected < 1 %}
@@ -173,7 +173,7 @@
 
     <div class="row mb-5">
         <div class="col-md-5 mb-2">
-            <div class="card shadow p-4" style="width: auto;">
+            <div class="card shadow p-4 border-primary" style="width: auto;">
                 
 
                 <div class="row">
@@ -232,7 +232,7 @@
             </div>
         </div>
         <div class="col-md-7 ">
-            <div class="card card-body shadow w-100">
+            <div class="card card-body shadow w-100 border-primary">
                 <h5 class="text-center">About Me</h5>
                 {% if user.student.textArea == "" %}
                     <p class="text-center mt-3 text-muted">Nothing to show</p>

@@ -17,6 +17,7 @@
             background-color:#fec810;
             color:white;
             font-weight:600;
+            font-size: 17px;
         }
     </style>
 {% endblock %}
@@ -85,7 +86,7 @@
 
 {% if tutors %}
 <div class="container">
-        <button class="btn shadow " id="floating_btn" data-toggle="modal" data-target="#myModal" >Filter</button>
+        <button class="btn shadow text-center" id="floating_btn" data-toggle="modal" data-target="#myModal" >Filter Tutors</button>
 
 
         {% if user.student.profile_complete == False %}
@@ -106,7 +107,7 @@
             {% for tutor in tutors %}
             {% if tutor.tutorUser.verified == True %}
             <div class="col mb-4">
-                <div class="card shadow " style="height: auto;">
+                <div class="card shadow border-primary" style="height: auto;">
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-md-12">
@@ -135,12 +136,12 @@
 
                         <div class="container">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{tutor.subject}}</span></li>
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{tutor.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{tutor.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{tutor.tuition_level}}</span></li>
                                 {% if tutor.can_travel == "Yes" %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Travel</span></li>
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Travel</b></span></li>
                                 {% else %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Not Travel</span></li>
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Not Travel</b></span></li>
                                 {% endif %}
                             </ul>
                         </div>

@@ -6,11 +6,11 @@
 
 
 {% block content %}
-    <div class="container">
+    <div class="container mt-5">
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-6">
                 <div class="d-flex justify-content-center">
-                        <div class="card shadow mt-5 mb-5" style="height: auto; width:auto;">
+                        <div class="card shadow  mb-5 border-dark" style="height: auto; width:auto;">
                                 <div class="card-body">
                                     <div class="row mb-2">
                                         <div class="col-md-12">
@@ -46,19 +46,48 @@
                     
                                     <div class="container">
                                         <ul class="list-group list-group-flush">
-                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{tutor.subject}}</span></li>
-                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{tutor.tuition_level}}</span></li>
-                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{tutor.estimated_fees}} Estimated Fees</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{tutor.subject}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{tutor.tuition_level}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{tutor.estimated_fees}}</span></li>
                                             {% if tutor.can_travel == "Yes" %}
-                                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Travel</span></li>
+                                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Travel</b></span></li>
                                             {% else %}
-                                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Not Travel</span></li>
+                                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Not Travel</b></span></li>
                                             {% endif %}
                                         </ul>
                                     </div>
                     
                                 </div>
                             </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow border-primary p-3 mb-3">
+                    <h5 class="card-title text-center">Other ADs By This Tutor</h5>
+                    <hr>
+                    {% if tutors %}
+                        {% for tutor in tutors %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-body mb-3 border-success shadow">
+                                        <div class="d-flex justify-content-between">
+                                            <h5>{{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}}</h5>
+                                            <a href='{% url "specific_tutor" tutor.id %}' class="text-success">View AD</a>
+                                        </div>
+                                        <small>{{tutor.tutorUser.tagline}}</small>
+                                        <div class="conatiner mt-3 text-justify">
+                                            <small class="text-justify"><b>{{tutor.tutorUser.about}}</b></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="d-flex justify-content-center container">
+                            <h1 class="border p-3 mt-5 border-primary text-secondary"> NO OTHER AD BY THIS TUTOR </h1>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

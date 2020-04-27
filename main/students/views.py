@@ -209,9 +209,11 @@ def SpecificTutor(request, id):
     qual = AboutAndQualifications.objects.get(tutor__username = tutor.tutorUser.username)
     tutor.views += 1
     tutor.save()
+    tutors = PostAnAd_tutor.objects.filter(tutorUser__username = tutor.tutorUser.username).order_by("-id")
     context = {
         "tutor": tutor,
-        "qual": qual
+        "qual": qual,
+        "tutors": tutors
     }
     return render (request, "students/specific_tutor.html", context)
 

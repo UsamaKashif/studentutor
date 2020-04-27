@@ -16,68 +16,77 @@
                 </ul>
             {% endif %}
         <div class="row row-cols-1 row-cols-md-2 mt-3">
-        {% for invite in invites %}
-        <div class="col mb-4">
-            <div class="card shadow " style="height: auto;">
-                <div class="card-body">
-
-                    <div class="row mb-2">
-                        <div class="col-md-12">
-                            <span class="d-flex justify-content-end">   
-                                    {% if invite.accepted %}
-                                    <h5 class="text-success" href="#">Invitation Accepted</h5>
-                                    {% elif invite.rejected %}
-                                    <h5 class="text-success" href="#">Invitation Rejected</h5>
-                                    {% else %}
-                                    <a class="btn btn-info" href="{% url 'accept_invite' invite.id %}">Accept</a>
-                                    <a class="btn btn-danger" href="{% url 'reject_invite_std' invite.id %}">Reject</a>
-                                    {% endif %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12 container ">
-                            <div class="d-flex justify-content-center">
-                                <img src="{{invite.inivitaion_by_tutor.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+        {% if invites %}
+            {% for invite in invites %}
+            
+            <div class="col mb-4">
+                <div class="card shadow border-dark" style="height: auto;">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <span class="d-flex justify-content-end">   
+                                        {% if invite.accepted %}
+                                        <h5 class="text-success" href="#">Invitation Accepted</h5>
+                                        {% elif invite.rejected %}
+                                        <h5 class="text-success" href="#">Invitation Rejected</h5>
+                                        {% else %}
+                                        <a class="btn btn-info mr-3" href="{% url 'accept_invite' invite.id %}">Accept</a>
+                                        <a class="btn btn-danger" href="{% url 'reject_invite_std' invite.id %}">Reject</a>
+                                        {% endif %}
+                                </span>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="mt-4 container">
-                        <div>
-                            <h5> <b>Invitation By:</b> {{invite.inivitaion_by_tutor.first_name}} {{invite.inivitaion_by_tutor.last_name}} </h5>
+                        <div class="row">
+                            <div class="col-md-12 container ">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{invite.inivitaion_by_tutor.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <small style="text-align: justify;">{{invite.inivitaion_by_tutor.tagline}}</small>
-                            <p style="text-align: justify;">{{invite.inivitaion_by_tutor.about}}</p>
+
+                        <div class="mt-4 container">
+                            <div>
+                                <h5> <b>Invitation By:</b> {{invite.inivitaion_by_tutor.first_name}} {{invite.inivitaion_by_tutor.last_name}} </h5>
+                            </div>
+                            <div>
+                                <small style="text-align: justify;">{{invite.inivitaion_by_tutor.tagline}}</small>
+                                <p style="text-align: justify;">{{invite.inivitaion_by_tutor.about}}</p>
+                            </div>
                         </div>
+
+
+                        <div class="container">
+                            <ul class="list-group list-group-flush">
+                                <!-- <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Your AD</b></span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.hours_per_day}} hrs/day</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.days_per_week}} days/week</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{invite.student_ad.estimated_fees}} Estimated Fees</span></li>
+                                {% if invite.student_ad.tuition_type == "Online Tuition" %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Online Tuition</span></li>
+                                {% else %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Home Tuition</span></li>
+                                {% endif %} -->
+                                {% if invite.accepted %}
+                                    <li class="list-group-item text-light bg-info">View Your Email For <b>{{invite.inivitaion_by_tutor.first_name}} {{invite.inivitaion_by_tutor.last_name}}'s</b> Contact Details</li>
+                                {% endif %}
+                            </ul>
+
+                            <a class="btn btn-info float-left mt-3 " href="{% url 'view_your_ad_std' invite.id %}" style="color: white;">View Your AD</a>
+                        </div>
+                        
+
                     </div>
-
-
-                    <div class="container">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Your AD</b></span></li>
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.subject}}</span></li>
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.tuition_level}}</span></li>
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.hours_per_day}} hrs/day</span></li>
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.days_per_week}} days/week</span></li>
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{invite.student_ad.estimated_fees}} Estimated Fees</span></li>
-                            {% if invite.student_ad.tuition_type == "Online Tuition" %}
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Online Tuition</span></li>
-                            {% else %}
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Home Tuition</span></li>
-                            {% endif %}
-                            {% if invite.accepted %}
-                                <li class="list-group-item text-light bg-info">View Your Email For <b>{{invite.inivitaion_by_tutor.first_name}} {{invite.inivitaion_by_tutor.last_name}}'s</b> Contact Details</li>
-                            {% endif %}
-                        </ul>
-                    </div>
-
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+        {% else %}
+        <div class="d-flex justify-content-center container">
+                <h1 class="border p-3 mt-5 border-primary text-secondary"> NO INVITATIONS </h1>
+            </div>
+        {% endif %}
         </div>
     </div>
 {% endblock %}

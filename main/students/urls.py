@@ -20,6 +20,7 @@ urlpatterns = [
     path("rejectinvite/<int:id>/", views.rejectInvite , name="reject_invite_std"),
     path("about/", views.aboutStudent , name="student_about"),
     path("delaccount/", views.del_account_student , name="del_account"),
+    path("yourad/<int:id>/", views.view_your_ad, name="view_your_ad_std"),
 ]
 
 

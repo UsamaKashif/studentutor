@@ -291,6 +291,19 @@ def invitations(request):
 
     return render(request, 'students/invitations.html', context)
 
+@login_required(login_url="sign_in")
+@allowed_users(allowed_roles=["students"])
+def view_your_ad(request, id):
+    student_ad = TutorInvitaions.objects.get(id = id)
+    try:
+        tutors = PostAnAd_tutor.objects.filter(subject = student_ad.student_ad.subject)[4]
+    except:
+        tutors = PostAnAd_tutor.objects.filter(subject = student_ad.student_ad.subject)
+    context = {
+        "invite":student_ad,
+        "tutors": tutors
+    }
+    return render(request,'students/view_your_ad.html', context)
 
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["students"])

@@ -7,28 +7,28 @@
 {% block content %}
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="card p-3 shadow border-primary mb-3">
                     <h5 class="card-title text-center">Your AD</h5>
                     <hr>
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.subject}}</span></li>
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.tuition_level}}</span></li>
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.hours_per_day}} hrs/day</span></li>
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.student_ad.days_per_week}} days/week</span></li>
-                            <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{invite.student_ad.estimated_fees}} Estimated Fees</span></li>
+                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{invite.student_ad.subject}}</span></li>
+                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{invite.student_ad.tuition_level}}</span></li>
+                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>hrs/day: </b>{{invite.student_ad.hours_per_day}} hrs/day</span></li>
+                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>days/week: </b>{{invite.student_ad.days_per_week}} days/week</span></li>
+                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{invite.student_ad.estimated_fees}}</span></li>
                             {% if invite.student_ad.tuition_type == "Online Tuition" %}
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Online Tuition</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Online Tuition</b></span></li>
                             {% else %}
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Home Tuition</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Home Tuition</b></span></li>
                             {% endif %}
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <div class="card p-3 mb-3 shadow border-danger">
                     <h5 class="card-title text-center">Other Tutors Teaching Same Subject</h5>
                     <hr>

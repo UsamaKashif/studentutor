@@ -8,7 +8,7 @@
                 <a class="nav-item nav-link active" href="{% url 'student_dashboard' %}">{{user.username}}</a>
                 <a class="nav-item nav-link " href="{% url 'all_tutors' %}">Find Tutor</a>
                 <a class="nav-item nav-link" href="{% url 'invited' %}">Invited</a>
-                <a class="nav-item nav-link" href="{% url 'invitations_student' %}">Invitations</a>
+                <a class="nav-item nav-link" href="{% url 'invitations_student' %}">Demo Requests</a>
                 <a class="nav-item nav-link" href="{% url 'ads' %}">ADS</a>
                 {% if user.student.profile_complete == True %}
                     <a class="nav-item nav-link" href="{% url 'post_ad' user.id %}">Post An AD</a>

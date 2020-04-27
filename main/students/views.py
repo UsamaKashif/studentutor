@@ -149,10 +149,10 @@ def postAd(request, pk):
 @allowed_users(allowed_roles=["students"])
 def Ads(request):
     try:
-        studentAbout = AboutStudent.objects.get(student__username = request.user.username)
+        studentAbout = AboutStudent.objects.get(student__username = request.user.username).order_by("-id")
     except:
         studentAbout = None
-    ads = PostAnAd.objects.filter(studentUser=request.user.student)
+    ads = PostAnAd.objects.filter(studentUser=request.user.student).order_by("-id")
     context = {
         "ads":ads,
         "about": studentAbout
@@ -181,20 +181,20 @@ def AdsDelete(request, pk):
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["students"])
 def allTutors(request):
-    tutors = PostAnAd_tutor.objects.all()
+    tutors = PostAnAd_tutor.objects.all().order_by("-id")
     tuition_level_contains_query = request.GET.get('TuitionLevel')
     subject_contains_query = request.GET.get('Subject')
     city_contains_query = request.GET.get('City')
 
     if tutors:
         if tuition_level_contains_query != "" and tuition_level_contains_query is not None and tuition_level_contains_query != "All":
-            tutors = tutors.filter(tuition_level = tuition_level_contains_query)
+            tutors = tutors.filter(tuition_level = tuition_level_contains_query).order_by("-id")
 
         if subject_contains_query != "" and subject_contains_query is not None:
-            tutors = tutors.filter(subject__icontains = subject_contains_query)
+            tutors = tutors.filter(subject__icontains = subject_contains_query).order_by("-id")
 
         if city_contains_query != "" and city_contains_query is not None:
-            tutors = tutors.filter(tutorUser__city__icontains = city_contains_query)
+            tutors = tutors.filter(tutorUser__city__icontains = city_contains_query).order_by("-id")
 
 
     context = {
@@ -220,7 +220,7 @@ from tutors.models import Tutor
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["students"])
 def inviteFordemo(request, id):
-    ad = PostAnAd_tutor.objects.get(id = id)
+    ad = PostAnAd_tutor.objects.get(id = id).order_by("-id")
 
     tutor = Tutor.objects.get ( username = ad.tutorUser.username)
 
@@ -275,7 +275,7 @@ def inviteFordemo(request, id):
 @allowed_users(allowed_roles=["students"])
 def invited(request):
     student = Student.objects.get(username = request.user.username)
-    invited = Invitaions.objects.filter(inivitaion_by_student= student)
+    invited = Invitaions.objects.filter(inivitaion_by_student= student).order_by("-id")
     context={
         "invited": invited,
     }
@@ -284,7 +284,7 @@ def invited(request):
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["students"])
 def invitations(request):
-    invites = TutorInvitaions.objects.filter(student_ad__studentUser = request.user.student)
+    invites = TutorInvitaions.objects.filter(student_ad__studentUser = request.user.student).order_by("-id")
     context = {
         "invites":invites
     }

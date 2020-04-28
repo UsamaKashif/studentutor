@@ -147,7 +147,7 @@ def postAd(request, pk):
                 messages.info(request, "Your post is Successfully Created")
                 return redirect("student_dashboard")
             else:
-                messages.info(request, "This AD Already exists")
+                messages.info(request, "This AD Already Exists")
                 return redirect("student_dashboard")
     context = {
         "form": postform

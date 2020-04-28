@@ -62,13 +62,13 @@
 
                         <div class="container">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.tutor_ad.subject}}</span></li>
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.tutor_ad.tuition_level}}</span></li>
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{invite.tutor_ad.estimated_fees}} Estimated Fees</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{invite.tutor_ad.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{invite.tutor_ad.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{invite.tutor_ad.estimated_fees}}</span></li>
                                 {% if invite.tutor_ad.can_travel == "Yes" %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Travel</span></li>
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Travel</b></span></li>
                                 {% else %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can not Travel</span></li>
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can not Travel</b></span></li>
                                 {% endif %}
                                 {% if invite.accepted %}
                                     <li class="list-group-item text-light bg-info">View Your Email For <b>{{invite.tutor_ad.tutorUser.first_name}} {{invite.tutor_ad.tutorUser.last_name}}'s</b> Contact Details</li>

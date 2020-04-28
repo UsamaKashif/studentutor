@@ -109,6 +109,8 @@ def postAd(request, pk):
 
     postCount = user.ad_post_count
 
+    studentAds = PostAnAd.objects.filter(studentUser__username = request.user.username)
+
     if request.method == "POST":
         postform = PostAnAdForm(request.POST)
         
@@ -122,22 +124,31 @@ def postAd(request, pk):
             days_per_week = postform.cleaned_data["days_per_week"]
             estimated_fees = postform.cleaned_data["estimated_fees"]
 
-            PostAnAd.objects.create(
-                studentUser = user,
-                subject = subject,
-                tuition_level = tuition_level,
-                tuition_type = tuition_type,
-                address = address,
-                hours_per_day = hours_per_day,
-                days_per_week = days_per_week,
-                estimated_fees = estimated_fees
-            )
+            adAvailabel = False
 
-            user.total_ads += 1
-            user.ad_post_count += 1
-            user.save()
-            messages.info(request, "Your post is Successfully Created")
-            return redirect("student_dashboard")
+            for ad in studentAds:
+                if ad.subject == subject and ad.tuition_level == tuition_level:
+                    adAvailabel = True
+            if adAvailabel == False:
+                PostAnAd.objects.create(
+                    studentUser = user,
+                    subject = subject,
+                    tuition_level = tuition_level,
+                    tuition_type = tuition_type,
+                    address = address,
+                    hours_per_day = hours_per_day,
+                    days_per_week = days_per_week,
+                    estimated_fees = estimated_fees
+                )
+
+                user.total_ads += 1
+                user.ad_post_count += 1
+                user.save()
+                messages.info(request, "Your post is Successfully Created")
+                return redirect("student_dashboard")
+            else:
+                messages.info(request, "This AD Already exists")
+                return redirect("student_dashboard")
     context = {
         "form": postform
     }
@@ -222,7 +233,7 @@ from tutors.models import Tutor
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["students"])
 def inviteFordemo(request, id):
-    ad = PostAnAd_tutor.objects.get(id = id).order_by("-id")
+    ad = PostAnAd_tutor.objects.get(id = id)
 
     tutor = Tutor.objects.get ( username = ad.tutorUser.username)
 
@@ -304,7 +315,7 @@ def view_your_ad(request, id):
 
     context = {
         "invite":student_ad,
-        "tutors": tutors
+        "tutors": tutors.exclude(tutorUser__username = student_ad.inivitaion_by_tutor.username)
     }
     return render(request,'students/view_your_ad.html', context)
 

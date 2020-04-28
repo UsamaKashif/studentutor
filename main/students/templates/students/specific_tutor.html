@@ -34,11 +34,12 @@
                     
                                     <div class="mt-4 container">
                                         <div>
-                                            <h5> {{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}} </h5>
+                                            <h5><b>Tutor: </b>{{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}} </h5>
                                         </div>
                                         <div>
                                             <small style="text-align: justify;">{{tutor.tutorUser.tagline}}</small>
-                                            <p class="mt-2 mb-2"><b><i class="fas fa-graduation-cap"></i></b> <span style="text-align: justify;">{{qual.highest_qual}} from {{qual.highest_qual_inst}}, {{qual.secondary_qaul}} from {{qual.secondary_qaul_inst}}</span></p>
+                                            <p class="mt-2 mb-2"><b><i class="fas fa-graduation-cap"></i></b> <span style="text-align: justify;">{{qual.highest_qual}} from {{qual.highest_qual_inst}}</span></p>
+                                            <p class="mt-2 mb-2"><b><i class="fas fa-graduation-cap"></i></b> <span style="text-align: justify;">{{qual.secondary_qaul}} from {{qual.secondary_qaul_inst}}</span></p>
                                             <hr>
                                             <p style="text-align: justify;" class="mt-2">{{tutor.tutorUser.about}}</p>
                                         </div>
@@ -77,7 +78,11 @@
                                         </div>
                                         <small>{{tutor.tutorUser.tagline}}</small>
                                         <div class="conatiner mt-3 text-justify">
-                                            <small class="text-justify"><b>{{tutor.tutorUser.about}}</b></small>
+                                            <small class="text-justify"><b>Subject: </b>{{tutor.subject}}</small>
+                                            <br>
+                                            <small class="text-justify"><b>Tuition Level: </b>{{tutor.tuition_level}}</small>
+                                            <br>
+                                            <small class="text-justify"><b>Estimated fees: </b>PKR {{tutor.estimated_fees}}</small>
                                         </div>
                                     </div>
                                 </div>

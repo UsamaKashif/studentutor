@@ -215,6 +215,8 @@ def allTutors(request):
 
 from tutors.models import AboutAndQualifications
 
+@login_required(login_url="sign_in")
+@allowed_users(allowed_roles=["students"])
 def SpecificTutor(request, id):
     tutor = PostAnAd_tutor.objects.get(id = id)
     qual = AboutAndQualifications.objects.get(tutor__username = tutor.tutorUser.username)

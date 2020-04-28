@@ -16,9 +16,17 @@
             </ul>
         {% endif %}
         <div class="row row-cols-1 row-cols-md-2 mt-3">
+            {% if invited %}
             {% for invite in invited %}
             <div class="col mb-4">
-                <div class="card shadow " style="height: auto;">
+                <div  
+                
+                    {% if invite.accepted %}
+                        class="border-success card shadow"
+                    {% else %}
+                        class="border-dark card shadow"
+                    {%endif%} 
+                    style="height: auto;">
                     <div class="card-body">
                         
                         <div class="row mb-2">
@@ -49,7 +57,6 @@
                             </div>
                             <div>
                                 <small style="text-align: justify;">{{invite.tutor_ad.tutorUser.tagline}}</small>
-                                <p style="text-align: justify;" class="mt-2">{{invite.tutor_ad.tutorUser.about}}</p>
                             </div>
                         </div>
 
@@ -74,6 +81,11 @@
                 </div>
             </div>
             {% endfor %}
+            {% else %}
+            <div class="d-flex justify-content-center container">
+                    <h1 class="border p-3 mt-5 border-primary text-secondary"> NO TUTOR INVITED </h1>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

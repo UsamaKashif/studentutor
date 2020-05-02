@@ -12,7 +12,8 @@
   <div class="container">
     <div class="intro-text">
       <div class="intro-lead-in">Welcome To StudenTutor!</div>
-      <div class="intro-heading text-uppercase">Education is a progressive discovery of our own ignorance - <small>Will Durant</small></div>
+      <!-- <div class="intro-heading text-uppercase">Education is a progressive discovery of our own ignorance - <small>Will Durant</small></div> -->
+      <div class="intro-heading text-uppercase">A Platform For Students nd Tutors To Connect Together</div>
       {% if user.is_authenticated %}
         {% if grp == "students" %}
           <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'student_dashboard' %}">Start Now</a>
@@ -30,7 +31,7 @@
 
 
 <!-- About -->
-<section class="page-section" id="about">
+<section class="page-section" id="about" style="width: auto;">
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
@@ -50,7 +51,7 @@
                 <h4 class="subheading">Register Yourself</h4>
               </div>
               <div class="timeline-body">
-                <p class="text-muted">New to this site? Register yourself. You can sign up as Student or Tutor. Tutors need to verify their documents to get started.</p>
+                <p class="text-muted">New to this site? Register yourself. You can sign up as Student or Tutor.</p>
               </div>
             </div>
           </li>
@@ -63,7 +64,7 @@
                 <h4 class="subheading">Post An AD</h4>
               </div>
               <div class="timeline-body">
-                <p class="text-muted">Both Students and Tutors can post an AD.</p>
+                <p class="text-muted">Post an AD according to your needs. Maximum of five ADs can be posted at a time.</p>
               </div>
             </div>
           </li>
@@ -184,7 +185,7 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-4">
-          <span class="copyright">Copyright &copy; Your Website 2019</span>
+          <span class="copyright">Copyright &copy; StudenTuor 2020</span>
         </div>
         <div class="col-md-4">
           <ul class="list-inline social-buttons">
@@ -194,7 +195,7 @@
               </a>
             </li>
             <li class="list-inline-item">
-              <a href="#">
+              <a href="https://www.facebook.com/StudenTutorOfficial" target="blank">
                 <i class="fab fa-facebook-f"></i>
               </a>
             </li>

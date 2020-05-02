@@ -155,7 +155,7 @@ def postAnAd(request, pk):
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["tutors"])
 def ads(request):
-    ads = PostAnAd_tut.objects.filter(tutorUser=request.user.tutor)
+    ads = PostAnAd_tut.objects.filter(tutorUser=request.user.tutor).order_by("-id")
     try:
         tutorAbout = AboutAndQualifications.objects.get(tutor__username = request.user.username)
     except:
@@ -192,7 +192,7 @@ from students.models import Student
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["tutors"])
 def invitations(request):
-    invites = Invitaions.objects.filter(tutor_ad__tutorUser = request.user.tutor)
+    invites = Invitaions.objects.filter(tutor_ad__tutorUser = request.user.tutor).order_by("-id")
     
 
     context = {
@@ -200,6 +200,21 @@ def invitations(request):
     }
 
     return render(request, 'tutors/invitations.html', context)
+
+@login_required(login_url="sign_in")
+@allowed_users(allowed_roles=["tutors"])
+def view_your_ad(request, id):
+    tutor_ad = Invitaions.objects.get(id = id)
+    try:
+        students = PostAnAd_std.objects.filter(subject = tutor_ad.tutor_ad.subject)[4]
+    except:
+        students = PostAnAd_std.objects.filter(subject = tutor_ad.tutor_ad.subject)
+
+    context = {
+        "invite":tutor_ad,
+        "students": students.exclude(studentUser__username = tutor_ad.inivitaion_by_student.username)
+    }
+    return render(request,'tutors/view_your_ad.html', context)
 
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["tutors"])
@@ -277,8 +292,10 @@ def specificStudent(request, id):
     student = PostAnAd_std.objects.get(id = id)
     student.views += 1
     student.save()
+    students = PostAnAd_std.objects.filter(studentUser__username = student.studentUser.username).order_by("-id")
     context = {
-        "student": student
+        "student": student,
+        "students":students.exclude(id = id)
     }
     return render(request, "tutors/specific_std.html", context)
 

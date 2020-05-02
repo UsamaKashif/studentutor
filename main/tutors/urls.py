@@ -19,5 +19,6 @@ urlpatterns = [
     path("about/", views.about_qual , name="about_tutor"),
     path("qualifications/", views.qual , name="qual_tutor"),
     path("verification/", views.verifydoc , name="verify_tutor"),
+    path("yourad/<int:id>/", views.view_your_ad, name="view_your_ad_tut"),
     path("deltutor/", views.del_account_student , name="del_tutor"),
 ]

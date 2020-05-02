@@ -226,7 +226,7 @@ def SpecificTutor(request, id):
     context = {
         "tutor": tutor,
         "qual": qual,
-        "tutors": tutors
+        "tutors": tutors.exclude(id = id)
     }
     return render (request, "students/specific_tutor.html", context)
 

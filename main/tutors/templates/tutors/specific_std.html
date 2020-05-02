@@ -8,9 +8,9 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-6">
                 <div class="d-flex justify-content-center">
-                        <div class="card shadow  mt-5 mb-5" style="height: auto; width:auto">
+                        <div class="card shadow  mt-5 mb-3 border-dark" style="height: auto; width:auto">
                                 <div class="card-body">
                                     <div class="row mb-2">
                                         <div class="col-md-12">
@@ -44,15 +44,15 @@
             
                                     <div class="container">
                                         <ul class="list-group list-group-flush">
-                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{student.subject}}</span></li>
-                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{student.tuition_level}}</span></li>
-                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{student.hours_per_day}} hrs/day</span></li>
-                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">{{student.days_per_week}} days/week</span></li>
-                                            <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{student.estimated_fees}} Estimated Fees</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{student.subject}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{student.tuition_level}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Hrs/day: </b>{{student.hours_per_day}} hrs/day</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Days/week: </b>{{student.days_per_week}} days/week</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{student.estimated_fees}} </span></li>
                                             {% if student.tuition_type == "Online Tuition" %}
-                                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Online Tuition</span></li>
+                                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Online Tuition</b></span></li>
                                             {% else %}
-                                                <li class="list-group-item"><span class="p-2 border-primary mr-2">Home Tuitions</span></li>
+                                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Home Tuitions</b></span></li>
                                             {% endif %}
                                         </ul>
                                     </div>
@@ -61,6 +61,42 @@
                             </div>
                 </div>
             </div>
+            <div class="col-md-6">
+                    <div class="card shadow border-primary p-3 mb-3 mt-5">
+                        <h5 class="card-title text-center">Other ADs By This Student</h5>
+                        <hr>
+                        {% if students %}
+                            {% for student in students %}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card card-body mb-3 border-success shadow">
+                                            <div class="d-flex justify-content-between">
+                                                <h5>{{student.studentUser.first_name}} {{student.studentUser.last_name}}</h5>
+                                                <a href='{% url "specific_students" student.id %}' class="text-success">View AD</a>
+                                            </div>
+                                            <small>{{tutor.tutorUser.tagline}}</small>
+                                            <div class="conatiner mt-3 text-justify">
+                                                <small class="text-justify"><b>Subject: </b>{{student.subject}}</small>
+                                                <br>
+                                                <small class="text-justify"><b>Tuition Level: </b>{{student.tuition_level}}</small>
+                                                <br>
+                                                <small class="text-justify"><b>Estimated fees: </b>PKR {{student.estimated_fees}}</small>
+                                                <br>
+                                                <small class="text-justify"><b>Hrs/day: </b>PKR {{student.hours_per_day}}</small>
+                                                <br>
+                                                <small class="text-justify"><b>Days/week: </b>PKR {{student.days_per_week}}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                        <div class="d-flex justify-content-center container">
+                                <h1 class="border p-3 mt-5 border-primary text-secondary"> NO OTHER AD BY THIS Student </h1>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
         </div>
     </div>
 {% endblock %}

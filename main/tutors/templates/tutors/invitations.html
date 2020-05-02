@@ -16,9 +16,17 @@
             </ul>
             {% endif %}
         <div class="row row-cols-1 row-cols-md-2 mt-3">
-                {% for invite in invites %}
+
+        {% if invites %}    
+        {% for invite in invites %}
         <div class="col mb-4">
-            <div class="card shadow " style="height: auto;">
+            <div 
+            {% if invite.accepted %}
+                class="card shadow border-success"
+            {% else %}
+                class="card shadow border-dark"
+            {% endif %}
+            style="height: auto;">
                 <div class="card-body">
                     
                     <div class="row mb-2">
@@ -29,7 +37,7 @@
                                 {% elif  invite.rejected %}
                                 <h5 class="text-danger">Invitation Rejected</h5>
                                 {% else %}
-                                <a class="btn btn-info" href="{% url 'confirm_invite' invite.id %}">Accept</a>
+                                <a class="btn btn-info mr-3" href="{% url 'confirm_invite' invite.id %}">Accept</a>
                                 <a class="btn btn-danger" href="{% url 'reject_invite' invite.id %}">Reject</a>
                                 {% endif %}
                             </span>
@@ -55,7 +63,7 @@
 
                     <div class="container">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Your AD</b></span></li>
+                                <!-- <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Your AD</b></span></li>
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.tutor_ad.subject}}</span></li>
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.tutor_ad.tuition_level}}</span></li>
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{invite.tutor_ad.estimated_fees}} Estimated Fees</span></li>
@@ -63,19 +71,27 @@
                                     <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Travel</span></li>
                                 {% else %}
                                     <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Not Travel</span></li>
-                                {% endif %}
+                                {% endif %} -->
                                 {% if invite.accepted %}
                                     <li class="list-group-item text-light bg-info">View Your Email For <b>{{invite.inivitaion_by_student.first_name}} {{invite.inivitaion_by_student.last_name}}'s</b> Contact Details</li>
                                 {% elif invite.rejected %}
                                 <li class="list-group-item text-light bg-danger">You rejected the invite for demo request from <b>{{invite.inivitaion_by_student}}</b></li>
                                 {% endif %}
                             </ul>
+                            {% if not invite.accepted %}
+                            <a class="btn btn-info float-left mt-3 " href="{% url 'view_your_ad_tut' invite.id %}" style="color: white;">View Your AD</a>
+                            {% endif %}
                         </div>
 
                 </div>
             </div>
         </div>
     {% endfor %}
+    {% else %}
+    <div class="d-flex justify-content-center container">
+            <h1 class="border p-3 mt-5 border-primary text-secondary"> NO INVITATIONS </h1>
+        </div>
+    {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -10,7 +10,7 @@
         <div class="row row-cols-1 row-cols-md-2 mt-3">
             {% for ad in ads %}
             <div class="col mb-4">
-                <div class="card shadow " style="height: auto;">
+                <div class="card shadow border-primary" style="height: auto;">
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-md-12">
@@ -38,13 +38,13 @@
 
                         <div class="container">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{ad.subject}}</span></li>
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{ad.tuition_level}}</span></li>
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{ad.estimated_fees}} Estimated Fees</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{ad.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{ad.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{ad.estimated_fees}}</span></li>
                                 {% if ad.can_travel == "Yes" %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Travel</span></li>
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Travel</b></span></li>
                                 {% else %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Not Travel</span></li>
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Not Travel</b></span></li>
                                 {% endif %}
                             </ul>
                         </div>

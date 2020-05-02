@@ -125,6 +125,8 @@ def tutorDashboard(request):
 def postAnAd(request, pk):
     postForm = PostAnAdForm()
     user = Tutor.objects.get(username = request.user.username)
+
+    tutorAds = PostAnAd_tut.objects.filter(tutorUser__username = request.user.username)
     if request.method == "POST":
         postForm = PostAnAdForm(request.POST)
         if postForm.is_valid():
@@ -133,19 +135,30 @@ def postAnAd(request, pk):
             can_travel = postForm.cleaned_data['can_travel']
             estimated_fees = postForm.cleaned_data['estimated_fees']
             address = postForm.cleaned_data['address']
-            PostAnAd_tut.objects.create(
-                tutorUser = user,
-                subject = subject,
-                tuition_level = tuition_level,
-                can_travel = can_travel,
-                estimated_fees = estimated_fees,
-                address = address
-            )
-            user.total_ads += 1
-            user.ad_post_count += 1
-            user.save()
-            messages.info(request, "Your post is Successfully Created")
-            return redirect('tutor_dashboard')
+
+            adAvailabel = False
+
+            for ad in tutorAds:
+                if ad.subject == subject and ad.tuition_level == tuition_level:
+                    adAvailabel = True
+            
+            if adAvailabel  == False:
+                PostAnAd_tut.objects.create(
+                    tutorUser = user,
+                    subject = subject,
+                    tuition_level = tuition_level,
+                    can_travel = can_travel,
+                    estimated_fees = estimated_fees,
+                    address = address
+                )
+                user.total_ads += 1
+                user.ad_post_count += 1
+                user.save()
+                messages.info(request, "Your post is Successfully Created")
+                return redirect('tutor_dashboard')
+            else:
+                messages.info(request, "This AD Already Exists")
+                return redirect('tutor_dashboard')
     context = {
         "form":postForm
     }

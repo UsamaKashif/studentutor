@@ -14,6 +14,14 @@ from tutors.models import Tutor, AboutAndQualifications
 
 def tutors(request):
     allTutors = Tutor.objects.all()
+    notVerified = 0
+    for t in allTutors:
+        if not t.verified:
+            notVerified += 1
+
+    if len(allTutors) > 1 and notVerified > 1:
+        allTutors = None
+
     context = {
         "tutors":allTutors
     }

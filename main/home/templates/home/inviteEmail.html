@@ -1,0 +1,16 @@
+{% if invited_to == "Student" %}
+You have requested {{firstname}} {{lastname}} for a demo
+{% else %}
+You have invited {{firstname}} {{lastname}} for a demo
+{% endif %}
+
+{{invited_to}} AD:
+Subject: {{ad.subject}}
+Tuition Level: {{ad.tuition_level}}
+{% if invited_to == "Student" %}
+Hrs/day:  {{ad.hours_per_day}}
+Days/week: {{ad.days_per_week}} 
+{% endif %}
+Estimated Fees: {{ad.estimated_fees}}
+
+studenTutor

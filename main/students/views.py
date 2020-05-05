@@ -15,6 +15,10 @@ from tutors.models import PostAnAd as PostAnAd_tutor
 from tutors.models import Invitaions
 
 from django.contrib import messages
+
+from django.core.mail import EmailMessage
+from django.conf import settings 
+from django.template.loader import render_to_string
 # Create your views here.
 
 
@@ -45,6 +49,21 @@ def studentRegister(request):
                 first_name = firstName,
                 last_name = lastName
             )
+
+            template = render_to_string("home/registerEmail.html", {
+                "firstname": firstName,
+                "lastname": lastName,
+                "register_as" : "student"
+            })
+            registerEmail = EmailMessage(
+                'Registration Successful',
+                template,
+                settings.EMAIL_HOST_USER,
+                [email]
+            )
+            registerEmail.fail_silently = False
+            registerEmail.send()
+
             messages.success(request,'account was created for ' + username)
             return redirect("sign_in")
 
@@ -264,6 +283,38 @@ def inviteFordemo(request, id):
                 user.save()
                 tutor.invitations_recieved += 1
                 tutor.save()
+
+                template = render_to_string("home/inviteEmail.html", {
+                    "firstname": ad.tutorUser.first_name,
+                    "lastname": ad.tutorUser.last_name,
+                    "ad": ad,
+                    "invited_to": "Tutor"
+                    })
+                registerEmail = EmailMessage(
+                    'Invite For Demo',
+                    template,
+                    settings.EMAIL_HOST_USER,
+                    [request.user.email]
+                )
+                registerEmail.fail_silently = False
+                registerEmail.send()
+
+                intemplate = render_to_string("home/invitationEmail.html", {
+                "firstname": request.user.student.first_name,
+                "lastname": request.user.student.last_name,
+                "ad": ad,
+                "invited_to": "Tutor"
+                    })
+
+                email = EmailMessage(
+                    'Invitation',
+                    intemplate,
+                    settings.EMAIL_HOST_USER,
+                    [ad.tutorUser.email]
+                )
+                email.fail_silently = False
+                email.send()
+
                 messages.info(request, f'Invited {tutor.first_name} {tutor.last_name} For A Demo')
                 return redirect("invited")
 
@@ -279,6 +330,38 @@ def inviteFordemo(request, id):
             user.save()
             tutor.invitations_recieved += 1
             tutor.save()
+
+            template = render_to_string("home/inviteEmail.html", {
+                    "firstname": ad.tutorUser.first_name,
+                    "lastname": ad.tutorUser.last_name,
+                    "ad": ad,
+                    "invited_to": "Tutor"
+                    })
+            registerEmail = EmailMessage(
+                'Invite For Demo',
+                template,
+                settings.EMAIL_HOST_USER,
+                [request.user.email]
+            )
+            registerEmail.fail_silently = False
+            registerEmail.send()
+            
+            
+            intemplate = render_to_string("home/invitationEmail.html", {
+                    "firstname": request.user.student.first_name,
+                    "lastname": request.user.student.last_name,
+                    "ad": ad,
+                    "invited_to": "Tutor"
+                    })
+            email = EmailMessage(
+                'Invitation',
+                intemplate,
+                settings.EMAIL_HOST_USER,
+                [ad.tutorUser.email]
+            )
+            email.fail_silently = False
+            email.send()
+
             messages.info(request, f'Invited {tutor.first_name} {tutor.last_name} For A Demo')
             return redirect("invited")
     context = {
@@ -336,6 +419,19 @@ def acceptInvitation(request, id):
         student.save()
         tutor.invitations_sent_accepted += 1
         tutor.save()
+
+        template = render_to_string("home/acceptEmail.html", {
+                    
+                    })
+        registerEmail = EmailMessage(
+            'Request A Demo',
+            template,
+            settings.EMAIL_HOST_USER,
+            [request.user.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
         messages.info(request, f'Accepted Invitation Request from {tutor.first_name} {tutor.last_name}')
         return redirect("invitations_student")
     context = {
@@ -394,9 +490,25 @@ def aboutStudent(request):
 @allowed_users(allowed_roles=["students"])
 def del_account_student(request):
     student = User.objects.get(username = request.user.username)
+    print(request.user.student.first_name)
     if request.method == "POST":
         student.is_active = False
         student.save()
+        
+        template = render_to_string("home/delEmail.html", {
+                "register_as": "student",
+                "email": request.user.email,
+            })
+        registerEmail = EmailMessage(
+            'Account Deletion',
+            template,
+            settings.EMAIL_HOST_USER,
+            [request.user.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
+
         return redirect("student_dashboard")
     context = {}
     return render(request, "students/del_account.html", context)

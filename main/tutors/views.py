@@ -56,6 +56,20 @@ def tutorRegister(request):
                 phone = phone
             )
 
+            template = render_to_string("home/registerEmail.html", {
+                "firstname": firstName,
+                "lastname": lastName,
+                "register_as" : "tutor"
+            })
+            registerEmail = EmailMessage(
+                'Registration Successful',
+                template,
+                settings.EMAIL_HOST_USER,
+                [email]
+            )
+            registerEmail.fail_silently = False
+            registerEmail.send()
+
             messages.success(request,'account was created for ' + username)
             return redirect("sign_in")
 
@@ -343,6 +357,37 @@ def inviteForDemo(request, id):
                 tutor.save()
                 std.invitations_recieved += 1
                 std.save()
+
+                template = render_to_string("home/inviteEmail.html", {
+                    "firstname": ad.studentUser.first_name,
+                    "lastname": ad.studentUser.last_name,
+                    "ad": ad,
+                    "invited_to": "Student"
+                    })
+                registerEmail = EmailMessage(
+                    'Request A Demo',
+                    template,
+                    settings.EMAIL_HOST_USER,
+                    [request.user.email]
+                )
+                registerEmail.fail_silently = False
+                registerEmail.send()
+
+                intemplate = render_to_string("home/invitationEmail.html", {
+                    "firstname": request.user.tutor.first_name,
+                    "lastname": request.user.tutor.last_name,
+                    "ad": ad,
+                    "invited_to": "Student"
+                    })
+                email = EmailMessage(
+                    'Invitation',
+                    intemplate,
+                    settings.EMAIL_HOST_USER,
+                    [ad.studentUser.email]
+                )
+                email.fail_silently = False
+                email.send()
+
                 messages.info(request, f'Asked {std.first_name} {std.last_name} For A Demo')
                 return redirect("invited_students")
         else:
@@ -357,6 +402,38 @@ def inviteForDemo(request, id):
             tutor.save()
             std.invitations_recieved += 1
             std.save()
+
+            template = render_to_string("home/inviteEmail.html", {
+                    "firstname": ad.studentUser.first_name,
+                    "lastname": ad.studentUser.last_name,
+                    "ad": ad,
+                    "invited_to": "Student"
+                    })
+            registerEmail = EmailMessage(
+                    'Request A Demo',
+                    template,
+                    settings.EMAIL_HOST_USER,
+                    [request.user.email]
+                )
+            registerEmail.fail_silently = False
+            registerEmail.send()
+
+            intemplate = render_to_string("home/invitationEmail.html", {
+                "firstname": request.user.tutor.first_name,
+                "lastname": request.user.tutor.last_name,
+                "ad": ad,
+                "invited_to": "Student"
+                })
+            email = EmailMessage(
+                'Invitation',
+                intemplate,
+                settings.EMAIL_HOST_USER,
+                [ad.studentUser.email]
+            )
+            email.fail_silently = False
+            email.send()
+
+
             messages.info(request, f'Asked {std.first_name} {std.last_name} For A Demo')
             return redirect("invited_students")
     context = {
@@ -491,6 +568,20 @@ def del_account_student(request):
     if request.method == "POST":
         tutor.is_active = False
         tutor.save()
+
+        template = render_to_string("home/delEmail.html", {
+                "register_as": "tutor",
+                "email": request.user.email,
+            })
+        registerEmail = EmailMessage(
+            'Account Deletion',
+            template,
+            settings.EMAIL_HOST_USER,
+            [request.user.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
         return redirect("tutor_dashboard")
     context = {}
     return render(request, "tutors/del_tutor.html", context)

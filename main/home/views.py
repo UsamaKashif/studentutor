@@ -27,6 +27,10 @@ def tutors(request):
     }
     return render(request, "home/all_tuts.html", context)
 
+def zoho(request):
+    context = {}
+    return render(request,"home/verifyforzoho.html",context)
+
 def tutorDetail (request, id):
     tutor = Tutor.objects.get(id = id)
     qual = AboutAndQualifications.objects.get(tutor__username = tutor.username)

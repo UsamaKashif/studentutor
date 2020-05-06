@@ -412,6 +412,7 @@ def acceptInvitation(request, id):
     student = Student.objects.get(username = request.user.username)
     tutor = Tutor.objects.get(username = invite.inivitaion_by_tutor.username)
     if request.method == "POST":
+
         invite.accepted = True
         invite.rejected = False
         invite.save()
@@ -420,17 +421,22 @@ def acceptInvitation(request, id):
         tutor.invitations_sent_accepted += 1
         tutor.save()
 
+        
         template = render_to_string("home/acceptEmail.html", {
-                    
+                    "firstname": request.user.student.first_name,
+                    "lastname": request.user.student.last_name,
+                    "student_email": request.user.email,
+                    "register_as": "Student"
                     })
         registerEmail = EmailMessage(
-            'Request A Demo',
+            'Invitation Accepted',
             template,
             settings.EMAIL_HOST_USER,
-            [request.user.email]
+            [invite.inivitaion_by_tutor.email]
         )
         registerEmail.fail_silently = False
         registerEmail.send()
+
 
         messages.info(request, f'Accepted Invitation Request from {tutor.first_name} {tutor.last_name}')
         return redirect("invitations_student")
@@ -454,6 +460,21 @@ def rejectInvite(request, id):
 
         tutor.invitations_sent_rejected += 1
         tutor.save()
+
+        template = render_to_string("home/rejectEmail.html", {
+                    "firstname": request.user.student.first_name,
+                    "lastname": request.user.student.last_name,
+                    "student_email": request.user.email
+                    })
+        registerEmail = EmailMessage(
+            'Invitation Rejected',
+            template,
+            settings.EMAIL_HOST_USER,
+            [invite.inivitaion_by_tutor.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
         messages.warning(request, f'Rejected Invite From {tutor.first_name} {tutor.last_name}')
         return redirect("invitations_student")
     context = {}

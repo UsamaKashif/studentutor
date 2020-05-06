@@ -262,6 +262,22 @@ def confirmInvite(request, id):
 
         std.invitations_sent_accepted += 1
         std.save()
+
+        template = render_to_string("home/acceptEmail.html", {
+                    "firstname": request.user.tutor.first_name,
+                    "lastname": request.user.tutor.last_name,
+                    "student_email": request.user.email,
+                    "register_as": "Tutor"
+                    })
+        registerEmail = EmailMessage(
+            'Invitation Accepted',
+            template,
+            settings.EMAIL_HOST_USER,
+            [invite.inivitaion_by_student.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
         messages.info(request, f'Accepted Invitation Request from {std.first_name} {std.last_name}')
         return redirect("invitations")
     context = {
@@ -283,6 +299,21 @@ def rejectInvite(request, id):
         tutor.save()
         student.invitations_sent_rejected += 1
         student.save()
+
+        template = render_to_string("home/rejectEmail.html", {
+                    "firstname": request.user.tutor.first_name,
+                    "lastname": request.user.tutor.last_name,
+                    "student_email": request.user.email
+                    })
+        registerEmail = EmailMessage(
+            'Invitation Rejected',
+            template,
+            settings.EMAIL_HOST_USER,
+            [invite.inivitaion_by_student.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
         messages.warning(request, f'Rejected Invite From {student.first_name} {student.last_name}')
         return redirect("invitations")
     context = {

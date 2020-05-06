@@ -133,8 +133,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST = "smtp.zoho.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "studentutorofficial@gmail.com"
-EMAIL_HOST_PASSWORD = "Fg7zmcWcBXP/BF#E"
+EMAIL_HOST_USER = "contact@studentutor.online"
+EMAIL_HOST_PASSWORD = "Xqf-4Fd9[=~Nn^A'"

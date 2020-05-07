@@ -62,6 +62,7 @@ def home(request):
         )
         registerEmail.fail_silently = False
         registerEmail.send()
+        return render("/")
 
     if request.user.groups.exists():
         group = request.user.groups.all()[0].name

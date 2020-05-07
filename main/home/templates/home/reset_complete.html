@@ -1,0 +1,18 @@
+{% extends "home/b.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="d-flex justify-content-center">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-6">
+                    <div class="card card-body shadow border-dark " style="width: auto;">
+                        <h5 class="card-title">Password reset complete</h5>
+                        <hr>
+                        <p>Your password has been set. You may go ahead and log in now.</p>
+                        <a href="{% url 'sign_in' %}" class="btn btn-primary mt-3">Sign In</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

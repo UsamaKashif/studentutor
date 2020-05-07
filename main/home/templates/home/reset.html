@@ -1,0 +1,17 @@
+{% extends "home/b.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="d-flex justify-content-center">
+            <div class="card card-body shadow border-dark w-50" style="width: 50%;">
+                <h5 class="card-title">Enter new password</h5>
+                <hr>
+                <p>Please enter your new password twice so we can verify you typed it in correctly.</p>
+                <form method="POST" action="">
+                    {{form.as_p}}
+                    <input type="submit" class="btn btn-secondary" value="Reset">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

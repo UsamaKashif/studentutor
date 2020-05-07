@@ -136,5 +136,6 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.zoho.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = "contact@studentutor.online"
 EMAIL_HOST_USER = "contact@studentutor.online"
 EMAIL_HOST_PASSWORD = "Xqf-4Fd9[=~Nn^A'"

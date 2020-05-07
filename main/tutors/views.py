@@ -15,6 +15,10 @@ from students.decorators import unauthenticated_user, allowed_users, admin_only
 from django.contrib.auth.decorators import login_required
 
 from django.contrib import messages
+
+from django.core.mail import EmailMessage
+from django.conf import settings 
+from django.template.loader import render_to_string
 # Create your views here.
 
 
@@ -585,6 +589,23 @@ def verifydoc (request):
             tutor = user.tutor
             tutor.verification_sent = True
             tutor.save()
+
+            template = render_to_string("home/tutorVerify.html", {
+                    "firstname": request.user.tutor.first_name,
+                    "lastname": request.user.tutor.last_name,
+                    "tutor_id": request.user.tutor.id,
+                    "tutor_email": request.user.email
+                    })
+            registerEmail = EmailMessage(
+                f'Tutor Verification: tutor ID {request.user.tutor.id}',
+                template,
+                settings.EMAIL_HOST_USER,
+                [settings.EMAIL_HOST_USER]
+            )
+            registerEmail.fail_silently = False
+            registerEmail.send()
+
+
             return redirect("tutor_dashboard")
     context = {
         "form": form

@@ -6,6 +6,10 @@ from django.contrib import messages
 
 from students.models import Student
 
+from django.core.mail import EmailMessage
+from django.conf import settings 
+from django.template.loader import render_to_string
+
 #testing
 
 from tutors.models import Tutor, AboutAndQualifications
@@ -39,16 +43,31 @@ def tutorDetail (request, id):
 
 def home(request):
     group = None
-    tutors = Tutor.objects.all().order_by('-invitations_recieved')[:4]
+    
+    name = request.GET.get('name')
+    email = request.GET.get('email')
+    message = request.GET.get('message')
 
-    if not(len(tutors) >=3) :
-        tutors = None
+    if request.method == "POST":
+        template = render_to_string("home/contact.html", {
+            "name": name,
+            "email": email,
+            "message": message
+        })
+        registerEmail = EmailMessage(
+            'User Contact',
+            template,
+            settings.EMAIL_HOST_USER,
+            [settings.EMAIL_HOST_USER]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
     if request.user.groups.exists():
         group = request.user.groups.all()[0].name
     context = {
         'grp': group,
         "page":"home",
-        "tutors": tutors
     }
     return render(request, 'home/index_page.html' , context)
 

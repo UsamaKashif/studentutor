@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+Hello {{firstname}} {{lastname}}
+Please click the link below to activate your account
+http://{{domain}}{% url 'activate_tut' uidb64=uid token=token %}
+
+StundenTutor
+{% endautoescape %}

@@ -19,6 +19,11 @@ from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.conf import settings 
 from django.template.loader import render_to_string
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
+from .utils import generate_token
 # Create your views here.
 
 
@@ -36,6 +41,7 @@ def studentRegister(request):
             city = form.cleaned_data.get('city')
             firstName = form.cleaned_data.get('first_name')
             lastName = form.cleaned_data.get('last_name')
+            phone = form.cleaned_data.get("phone")
 
             group = Group.objects.get(name="students")
             student.groups.add(group)
@@ -47,16 +53,24 @@ def studentRegister(request):
                 age =age,
                 city = city,
                 first_name = firstName,
-                last_name = lastName
+                last_name = lastName,
+                phone = phone
             )
 
-            template = render_to_string("home/registerEmail.html", {
+            student.is_active = False
+            student.save()
+
+            current_site = get_current_site(request)
+
+            template = render_to_string("students/activate.html", {
                 "firstname": firstName,
                 "lastname": lastName,
-                "register_as" : "student"
+                "domain": current_site,
+                "uid": urlsafe_base64_encode(force_bytes(student.pk)),
+                "token": generate_token.make_token(student)
             })
             registerEmail = EmailMessage(
-                'Registration Successful',
+                'Account Activation',
                 template,
                 settings.EMAIL_HOST_USER,
                 [email]
@@ -64,14 +78,42 @@ def studentRegister(request):
             registerEmail.fail_silently = False
             registerEmail.send()
 
-            messages.success(request,'account was created for ' + username)
-            return redirect("sign_in")
+            return render(request,"students/activation_sent.html",{})
 
     context = {
         "form": form
     }
     return render(request, 'students/student_sign_up.html', context)
 
+
+def activate_view(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        student = User.objects.get(pk = uid)
+    except:
+        student = None
+    
+    if student is not None and generate_token.check_token(student, token):
+        student.is_active = True
+        student.save()
+
+        template = render_to_string("home/registerEmail.html", {
+            "firstname": student.first_name,
+            "lastname": student.last_name,
+            "register_as" : "student"
+        })
+        registerEmail = EmailMessage(
+            'Registration Successful',
+            template,
+            settings.EMAIL_HOST_USER,
+            [student.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
+        messages.success(request,'account was created for ' + student.username)
+        return redirect("sign_in")
+    return render(request, 'students/activate_failed.html', status=401)
 
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["students"])
@@ -425,8 +467,9 @@ def acceptInvitation(request, id):
         template = render_to_string("home/acceptEmail.html", {
                     "firstname": request.user.student.first_name,
                     "lastname": request.user.student.last_name,
-                    "student_email": request.user.email,
-                    "register_as": "Student"
+                    "email": request.user.email,
+                    "register_as": "Student",
+                    "phone": request.user.student.phone
                     })
         registerEmail = EmailMessage(
             'Invitation Accepted',

@@ -21,4 +21,5 @@ urlpatterns = [
     path("verification/", views.verifydoc , name="verify_tutor"),
     path("yourad/<int:id>/", views.view_your_ad, name="view_your_ad_tut"),
     path("deltutor/", views.del_account_student , name="del_tutor"),
+    path("activate/<uidb64>/<token>/", views.activate_view, name="activate_tut")
 ]

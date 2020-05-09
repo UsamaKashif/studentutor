@@ -20,6 +20,7 @@ class Student(models.Model):
     last_name = models.CharField(max_length=100, default="last name")
     total_ads = models.IntegerField(default=0)
     ads_deleted = models.IntegerField(default=0)
+    phone=models.CharField(max_length=11)
 
     profile_complete = models.BooleanField(default=False)
 

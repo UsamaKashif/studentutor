@@ -41,6 +41,10 @@
                   </div>
                   <small class="text-danger">{{form.email.errors}}</small>
                   <div class="form-label-group">
+                        {{form.phone}}
+                  </div>
+                  <small class="text-danger">{{form.email.phone}}</small>
+                  <div class="form-label-group">
                         {{form.age}}
                   </div>
                   <small class="text-danger">{{form.age.errors}}</small>
@@ -85,10 +89,11 @@
         form_fields[2].placeholder='First Name';
         form_fields[3].placeholder='Last Name';
         form_fields[4].placeholder='Email';
-        form_fields[5].placeholder='Age';
-        form_fields[6].placeholder='City';
-        form_fields[7].placeholder='Password';
-        form_fields[8].placeholder='Password Again';
+        form_fields[5].placeholder='Phone';
+        form_fields[6].placeholder='Age';
+        form_fields[7].placeholder='City';
+        form_fields[8].placeholder='Password';
+        form_fields[9].placeholder='Password Again';
         for (var field in form_fields){	
 			form_fields[field].className += ' form-control'
 		}

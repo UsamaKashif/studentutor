@@ -16,15 +16,22 @@ class StudentSignupForm (UserCreationForm):
     city = forms.CharField(max_length=150)
     first_name = forms.CharField(max_length=100)
     last_name = forms.CharField(max_length=100)
+    phone=forms.CharField(max_length=11)
     class Meta:
         model = User
-        fields = ['username',"email","first_name","last_name",'age', 'city' , "password1", 'password2']
+        fields = ['username',"email","first_name","last_name",'age', 'city','phone' , "password1", 'password2']
 
     def clean_email(self):
         email = self.cleaned_data['email']
         if User.objects.filter(email=email).exists():
             raise ValidationError("Account with that email already exists")
         return email
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if len(phone) < 11 or phone.isdigit() != True:
+            raise ValidationError("Phone Number must be of 11 digits")
+        return phone
 
 
 class StudentProfile (ModelForm):

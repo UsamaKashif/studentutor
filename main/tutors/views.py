@@ -19,6 +19,11 @@ from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.conf import settings 
 from django.template.loader import render_to_string
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
+from students.utils import generate_token
 # Create your views here.
 
 
@@ -60,27 +65,64 @@ def tutorRegister(request):
                 phone = phone
             )
 
-            template = render_to_string("home/registerEmail.html", {
+            tutor.is_active = False
+            tutor.save()
+
+            current_site = get_current_site(request)
+
+            template = render_to_string("tutors/activate.html", {
                 "firstname": firstName,
                 "lastname": lastName,
-                "register_as" : "tutor"
+                "domain": current_site,
+                "uid": urlsafe_base64_encode(force_bytes(tutor.pk)),
+                "token": generate_token.make_token(tutor)
             })
             registerEmail = EmailMessage(
-                'Registration Successful',
+                'Account Activation',
                 template,
                 settings.EMAIL_HOST_USER,
                 [email]
             )
             registerEmail.fail_silently = False
             registerEmail.send()
+            return render(request,"students/activation_sent.html",{})
 
-            messages.success(request,'account was created for ' + username)
-            return redirect("sign_in")
+            
 
     context = {
         "form": form,
     }
     return render(request, "tutors/tutor_register.html", context)
+
+
+def activate_view(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        tutor = User.objects.get(pk = uid)
+    except:
+        tutor = None
+    
+    if tutor is not None and generate_token.check_token(tutor, token):
+        tutor.is_active = True
+        tutor.save()
+
+        template = render_to_string("home/registerEmail.html", {
+            "firstname": tutor.first_name,
+            "lastname": tutor.last_name,
+            "register_as" : "tutor"
+        })
+        registerEmail = EmailMessage(
+            'Registration Successful',
+            template,
+            settings.EMAIL_HOST_USER,
+            [tutor.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
+        messages.success(request,'account was created for ' + tutor.username)
+        return redirect("sign_in")
+    return render(request, 'students/activate_failed.html', status=401)
 
 
 @login_required(login_url="sign_in")
@@ -270,8 +312,9 @@ def confirmInvite(request, id):
         template = render_to_string("home/acceptEmail.html", {
                     "firstname": request.user.tutor.first_name,
                     "lastname": request.user.tutor.last_name,
-                    "student_email": request.user.email,
-                    "register_as": "Tutor"
+                    "email": request.user.email,
+                    "register_as": "Tutor",
+                    "phone": request.user.tutor.phone
                     })
         registerEmail = EmailMessage(
             'Invitation Accepted',

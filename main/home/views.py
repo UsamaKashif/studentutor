@@ -109,3 +109,7 @@ def signOut(request):
 
     logout(request)
     return redirect("sign_in")
+
+
+def privcy_policy(request):
+    return render (request, "home/privacyPolicy.html",{})

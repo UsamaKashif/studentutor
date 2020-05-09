@@ -113,3 +113,7 @@ def signOut(request):
 
 def privcy_policy(request):
     return render (request, "home/privacyPolicy.html",{})
+
+
+def terms_of_use(request):
+    return render (request, "home/terms.html",{})

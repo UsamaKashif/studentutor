@@ -324,6 +324,20 @@ def confirmInvite(request, id):
         )
         registerEmail.fail_silently = False
         registerEmail.send()
+        
+        
+        recieve_temp = render_to_string("home/accept_recieve_Email.html", {
+                    "request_from" : std,
+                    "request": "Student"
+                    })
+        Email = EmailMessage(
+            'Invitation Accepted',
+            recieve_temp,
+            settings.EMAIL_HOST_USER,
+            [request.user.email]
+        )
+        Email.fail_silently = False
+        Email.send()
 
         messages.info(request, f'Accepted Invitation Request from {std.first_name} {std.last_name}')
         return redirect("invitations")
@@ -371,23 +385,29 @@ def rejectInvite(request, id):
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["tutors"])
 def allStudents(request):
-    students = PostAnAd_std.objects.all()
+    students = PostAnAd_std.objects.all().order_by("-id")
     tuition_level_contains_query = request.GET.get('TuitionLevel')
     subject_contains_query = request.GET.get('Subject')
     city_contains_query = request.GET.get('City')
 
+    number = students.count()
+
     if students:
         if tuition_level_contains_query != "" and tuition_level_contains_query is not None and tuition_level_contains_query != "All":
-            students = students.filter(tuition_level = tuition_level_contains_query)
+            students = students.filter(tuition_level = tuition_level_contains_query).order_by("-id")
+            number = students.count()
 
         if subject_contains_query != "" and subject_contains_query is not None:
-            students = students.filter(subject__icontains = subject_contains_query)
+            students = students.filter(subject__icontains = subject_contains_query).order_by("-id")
+            number = students.count()
 
         if city_contains_query != "" and city_contains_query is not None:
-            students = students.filter(studentUser__city__icontains = city_contains_query)
+            students = students.filter(studentUser__city__icontains = city_contains_query).order_by("-id")
+            number = students.count()
 
     context = {
-        "students":students
+        "students":students,
+        "number": number
     }
     return render(request, "tutors/all_students.html", context)
 
@@ -440,7 +460,8 @@ def inviteForDemo(request, id):
                     "firstname": ad.studentUser.first_name,
                     "lastname": ad.studentUser.last_name,
                     "ad": ad,
-                    "invited_to": "Student"
+                    "invited_to": "Student",
+                    "area": ad.studentUser.address
                     })
                 registerEmail = EmailMessage(
                     'Request A Demo',
@@ -455,7 +476,8 @@ def inviteForDemo(request, id):
                     "firstname": request.user.tutor.first_name,
                     "lastname": request.user.tutor.last_name,
                     "ad": ad,
-                    "invited_to": "Student"
+                    "invited_to": "Student",
+                    "area": ad.studentUser.address
                     })
                 email = EmailMessage(
                     'Invitation',
@@ -485,7 +507,8 @@ def inviteForDemo(request, id):
                     "firstname": ad.studentUser.first_name,
                     "lastname": ad.studentUser.last_name,
                     "ad": ad,
-                    "invited_to": "Student"
+                    "invited_to": "Student",
+                    "area": ad.studentUser.address
                     })
             registerEmail = EmailMessage(
                     'Request A Demo',
@@ -500,7 +523,8 @@ def inviteForDemo(request, id):
                 "firstname": request.user.tutor.first_name,
                 "lastname": request.user.tutor.last_name,
                 "ad": ad,
-                "invited_to": "Student"
+                "invited_to": "Student",
+                "area": ad.studentUser.address
                 })
             email = EmailMessage(
                 'Invitation',

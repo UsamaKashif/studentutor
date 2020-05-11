@@ -258,19 +258,25 @@ def allTutors(request):
     subject_contains_query = request.GET.get('Subject')
     city_contains_query = request.GET.get('City')
 
+    number = tutors.count()
+
     if tutors:
         if tuition_level_contains_query != "" and tuition_level_contains_query is not None and tuition_level_contains_query != "All":
             tutors = tutors.filter(tuition_level = tuition_level_contains_query).order_by("-id")
+            number = tutors.count()
 
         if subject_contains_query != "" and subject_contains_query is not None:
             tutors = tutors.filter(subject__icontains = subject_contains_query).order_by("-id")
+            number = tutors.count()
 
         if city_contains_query != "" and city_contains_query is not None:
             tutors = tutors.filter(tutorUser__city__icontains = city_contains_query).order_by("-id")
+            number = tutors.count()
 
 
     context = {
-        "tutors":tutors
+        "tutors":tutors,
+        "number": number
     }
     return render(request, 'students/all_tutors.html', context)
 
@@ -330,7 +336,8 @@ def inviteFordemo(request, id):
                     "firstname": ad.tutorUser.first_name,
                     "lastname": ad.tutorUser.last_name,
                     "ad": ad,
-                    "invited_to": "Tutor"
+                    "invited_to": "Tutor",
+                    "area":ad.tutorUser.address
                     })
                 registerEmail = EmailMessage(
                     'Invite For Demo',
@@ -345,7 +352,8 @@ def inviteFordemo(request, id):
                 "firstname": request.user.student.first_name,
                 "lastname": request.user.student.last_name,
                 "ad": ad,
-                "invited_to": "Tutor"
+                "invited_to": "Tutor",
+                "area":ad.tutorUser.address
                     })
 
                 email = EmailMessage(
@@ -377,7 +385,8 @@ def inviteFordemo(request, id):
                     "firstname": ad.tutorUser.first_name,
                     "lastname": ad.tutorUser.last_name,
                     "ad": ad,
-                    "invited_to": "Tutor"
+                    "invited_to": "Tutor",
+                    "area":ad.tutorUser.address
                     })
             registerEmail = EmailMessage(
                 'Invite For Demo',
@@ -387,13 +396,15 @@ def inviteFordemo(request, id):
             )
             registerEmail.fail_silently = False
             registerEmail.send()
+
             
             
             intemplate = render_to_string("home/invitationEmail.html", {
                     "firstname": request.user.student.first_name,
                     "lastname": request.user.student.last_name,
                     "ad": ad,
-                    "invited_to": "Tutor"
+                    "invited_to": "Tutor",
+                    "area":ad.tutorUser.address
                     })
             email = EmailMessage(
                 'Invitation',
@@ -480,6 +491,18 @@ def acceptInvitation(request, id):
         registerEmail.fail_silently = False
         registerEmail.send()
 
+        recieve_temp = render_to_string("home/accept_recieve_Email.html", {
+                    "request_from" :tutor,
+                    "request": "Tutor"
+                    })
+        Email = EmailMessage(
+            'Invitation Accepted',
+            recieve_temp,
+            settings.EMAIL_HOST_USER,
+            [request.user.email]
+        )
+        Email.fail_silently = False
+        Email.send()
 
         messages.info(request, f'Accepted Invitation Request from {tutor.first_name} {tutor.last_name}')
         return redirect("invitations_student")

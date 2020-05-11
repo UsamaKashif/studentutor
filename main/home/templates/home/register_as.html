@@ -24,10 +24,18 @@
             <div class="intro-text">
                 <div class="intro-lead-in">Sign-Up As</div>
                 <div class="intro-heading text-uppercase">Education is a progressive discovery of our own ignorance - <small>Will Durant</small></div>
-                <span class="d-flex justify-content-around">
+                <!-- <span class="d-flex justify-content-around">
                         <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'student_register' %}">Student</a>
                         <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'tutor_register' %}">Tutor</a>
-                </span>
+                </span> -->
+                <div class="row d-flex justify-content-around">
+                    <div class="col-md-3 mb-3">
+                            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'student_register' %}">Student</a>
+                    </div>
+                    <div class="col-md-3">
+                            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'tutor_register' %}">Tutor</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

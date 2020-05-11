@@ -17,17 +17,19 @@ from tutors.models import Tutor, AboutAndQualifications
 
 
 def tutors(request):
-    allTutors = Tutor.objects.all()
+    allTutors = Tutor.objects.all().order_by("-id")
     notVerified = 0
     for t in allTutors:
         if not t.verified:
             notVerified += 1
-
+    number = allTutors.count()
     if len(allTutors) > 1 and notVerified > 1:
         allTutors = None
+        number = None
 
     context = {
-        "tutors":allTutors
+        "tutors":allTutors,
+        "number": number
     }
     return render(request, "home/all_tuts.html", context)
 

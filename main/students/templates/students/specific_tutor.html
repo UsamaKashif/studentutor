@@ -53,6 +53,7 @@
                                             {% if tutor.can_travel == "Yes" %}
                                                 <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Travel</b></span></li>
                                             {% else %}
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{tutor.address}}</span></li>
                                                 <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Not Travel</b></span></li>
                                             {% endif %}
                                         </ul>

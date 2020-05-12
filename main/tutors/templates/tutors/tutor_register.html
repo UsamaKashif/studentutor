@@ -72,7 +72,11 @@
                         {{form.password2}}
                   </div>
                   <small class="text-danger">{{form.password2.errors}}</small>
-    
+
+
+                  <div class="d-flex justify-content-center text-center mb-3 mt-3">
+                        <small>By clicking register you <b>accept</b> our <br> <a href="{% url 'privacy_policy' %}" target="blank"><b>Privacy Policy</b></a> and <a href="{% url 'terms' %}"><b>Terms Of Use</b></a></small>
+                  </div>
                   <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
                   <a class="d-block text-center mt-2 small" href="{% url 'sign_in'  %}">Sign In</a>
                   <hr class="my-4">

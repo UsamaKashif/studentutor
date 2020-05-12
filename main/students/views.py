@@ -337,7 +337,8 @@ def inviteFordemo(request, id):
                     "lastname": ad.tutorUser.last_name,
                     "ad": ad,
                     "invited_to": "Tutor",
-                    "area":ad.address
+                    "area":ad.address,
+                    "city":ad.tutorUser.city
                     })
                 registerEmail = EmailMessage(
                     'Invite For Demo',
@@ -353,7 +354,8 @@ def inviteFordemo(request, id):
                 "lastname": request.user.student.last_name,
                 "ad": ad,
                 "invited_to": "Tutor",
-                "area":ad.address
+                "area":ad.address,
+                "city":ad.tutorUser.city
                     })
 
                 email = EmailMessage(
@@ -386,7 +388,8 @@ def inviteFordemo(request, id):
                     "lastname": ad.tutorUser.last_name,
                     "ad": ad,
                     "invited_to": "Tutor",
-                    "area":ad.address
+                    "area":ad.address,
+                    "city":ad.tutorUser.city
                     })
             registerEmail = EmailMessage(
                 'Invite For Demo',
@@ -404,7 +407,8 @@ def inviteFordemo(request, id):
                     "lastname": request.user.student.last_name,
                     "ad": ad,
                     "invited_to": "Tutor",
-                    "area":ad.address
+                    "area":ad.address,
+                    "city":ad.tutorUser.city
                     })
             email = EmailMessage(
                 'Invitation',

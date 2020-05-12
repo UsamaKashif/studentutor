@@ -49,6 +49,7 @@
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Hrs/day: </b>{{student.hours_per_day}} hrs/day</span></li>
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Days/week: </b>{{student.days_per_week}} days/week</span></li>
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{student.estimated_fees}} </span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{student.studentUser.city}} </span></li>
                                             {% if student.tuition_type == "Online Tuition" %}
                                                 <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Online Tuition</b></span></li>
                                             {% else %}

@@ -8,18 +8,19 @@ Your AD
 Subject: {{ad.subject}}
 Tuition Level: {{ad.tuition_level}}
 Estimated Fees: {{ad.estimated_fees}}
+City: {{city}}
 {% if invited_to == "Student" %}
 Hrs/day:  {{ad.hours_per_day}}
 Days/week: {{ad.days_per_week}} 
 {% if ad.tuition_type == "Home Tuition" %}
 Home Tuition
-{{area}}
+Area: {{area}}
 {% else %}
 Online Tuition
 {% endif %}
 {% else %}
 {% if ad.can_travel == "No" %}
-{{area}}
+Area: {{area}}
 {% endif %}
 {% endif %}
 

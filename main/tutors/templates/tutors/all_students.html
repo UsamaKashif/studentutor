@@ -140,6 +140,7 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{student.subject}}</span></li>
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{student.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{student.studentUser.city}}</span></li>
                                 {% if student.tuition_type == "Online Tuition" %}
                                     <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Online Tuition</b></span></li>
                                 {% else %}

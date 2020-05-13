@@ -17,19 +17,29 @@ from tutors.models import Tutor, AboutAndQualifications
 
 
 def tutors(request):
-    allTutors = Tutor.objects.all().order_by("-id")
-    notVerified = 0
-    for t in allTutors:
-        if not t.verified:
-            notVerified += 1
-    number = allTutors.count()
-    if len(allTutors) > 1 and notVerified > 1:
+    # allTutors = Tutor.objects.all().order_by("-id")
+    # notVerified = 0
+    # for t in allTutors:
+    #     if not t.verified:
+    #         notVerified += 1
+    # number = allTutors.count()
+    # if len(allTutors) > 1 and notVerified > 1:
+    #     allTutors = None
+    #     number = None
+
+    try:
+        allTutors = Tutor.objects.all().order_by("-id")
+    except:
         allTutors = None
-        number = None
+    tuts = []
+    if allTutors != None:
+        for t in allTutors:
+            if t.verified and t.tutor.is_active:
+                tuts.append(t)
 
     context = {
-        "tutors":allTutors,
-        "number": number
+        "tutors":tuts,
+        "number": len(tuts)
     }
     return render(request, "home/all_tuts.html", context)
 

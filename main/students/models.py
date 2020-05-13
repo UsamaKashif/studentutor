@@ -39,7 +39,7 @@ class Student(models.Model):
 
 
     def __str__(self):
-        return self.username
+        return f'{self.username} : {self.id}'
 
     def save(self,*args, **kwargs):
         super().save(*args, **kwargs)
@@ -76,7 +76,7 @@ class PostAnAd(models.Model):
 
 
     def __str__(self):
-        return f'{self.subject} : {self.tuition_level} : {self.studentUser}'
+        return f'{self.subject} : {self.tuition_level} : {self.studentUser.username} : {self.studentUser.id}'
 
 from tutors.models import Tutor
 
@@ -88,4 +88,4 @@ class TutorInvitaions(models.Model):
     invitation_sent = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'Invitaion By {self.inivitaion_by_tutor}'
+        return f'Invitaion By {self.inivitaion_by_tutor.username} : {self.inivitaion_by_tutor.id}'

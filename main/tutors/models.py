@@ -44,7 +44,7 @@ class Tutor(models.Model):
     user_image = models.ImageField(default="user_profile_default.jpg", upload_to="profile_pics_tutors")
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.username} : {self.id}'
 
     def save(self,*args, **kwargs):
         super().save(*args, **kwargs)
@@ -76,7 +76,7 @@ class PostAnAd(models.Model):
 
 
     def __str__(self):
-        return f'{self.subject} : {self.tuition_level} : {self.tutorUser}'
+        return f'{self.subject} : {self.tuition_level} : {self.tutorUser.username} : {self.tutorUser.id}'
 
 from students.models import Student
 
@@ -88,7 +88,7 @@ class Invitaions(models.Model):
     invitation_sent = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'Invitaion By {self.inivitaion_by_student}'
+        return f'Invitaion By {self.inivitaion_by_student.username} : {self.inivitaion_by_student.id}'
 
 class AboutAndQualifications (models.Model):
     tutor = models.OneToOneField(Tutor, on_delete=models.CASCADE)
@@ -100,7 +100,7 @@ class AboutAndQualifications (models.Model):
     secondary_qaul_inst = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.tutor.username
+        return (f'{self.tutor.username} : {self.tutor.id}')
 
 
 class Verify(models.Model):
@@ -112,4 +112,4 @@ class Verify(models.Model):
 
 
     def __str__(self):
-        return self.tutor.username
+        return f'{self.tutor.username} : {self.tutor.id}'

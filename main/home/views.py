@@ -56,11 +56,12 @@ def tutorDetail (request, id):
 def home(request):
     group = None
     
-    name = request.GET.get('name')
-    email = request.GET.get('email')
-    message = request.GET.get('message')
+    
 
     if request.method == "POST":
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
         template = render_to_string("home/contact.html", {
             "name": name,
             "email": email,
@@ -74,7 +75,7 @@ def home(request):
         )
         registerEmail.fail_silently = False
         registerEmail.send()
-        return render("/")
+        return redirect("home_page")
 
     if request.user.groups.exists():
         group = request.user.groups.all()[0].name

@@ -130,3 +130,4 @@ def privcy_policy(request):
 
 def terms_of_use(request):
     return render (request, "home/terms.html",{})
+

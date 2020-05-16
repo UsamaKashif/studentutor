@@ -38,8 +38,8 @@ def tutors(request):
             if t.verified and t.tutor.is_active:
                 tuts.append(t)
 
-    # if len(tuts) > 1:
-    #     tuts = tuts[2]
+    if len(tuts) > 1:
+        tuts = tuts[0:3]
 
     tutors = PostAnAd_tutor.objects.all().order_by("-id")
     tuition_level_contains_query = request.GET.get('TuitionLevel')

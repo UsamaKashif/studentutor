@@ -1,0 +1,13 @@
+{% autoescape off %}
+
+Hello {{firstname}} {{lastname}}
+Please click the link below to activate your account and send the invitation request.
+http://{{domain}}{% url 'activate_invite' uidb64=uid token=token id=id %}
+
+
+Follow us on:
+FACEBOOK: https://www.facebook.com/StudenTutorOfficial
+TWITTER: https://twitter.com/TutorStuden
+
+StundenTutor
+{% endautoescape %}

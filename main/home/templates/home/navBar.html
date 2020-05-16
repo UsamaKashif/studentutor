@@ -17,9 +17,17 @@
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="#about">How It Works</a>
           </li>
+          {% if user.is_authenticated and grp == "students" %}
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="{% url 'tutors' %}">Tutors</a>
+              <a class="nav-link js-scroll-trigger" href="{% url 'all_tutors' %}">Tutors</a>
           </li>
+          {% else %}
+          <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="{% url 'tutors' %}">Tutors</a>
+            </li>
+          {% endif %}
+
+
           {% endif %}
 
           {% if user.is_authenticated %}

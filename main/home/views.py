@@ -5,6 +5,7 @@ from django.contrib import messages
 
 
 from students.models import Student
+from django.contrib.auth.models import User
 
 from django.core.mail import EmailMessage
 from django.conf import settings 
@@ -12,20 +13,20 @@ from django.template.loader import render_to_string
 
 #testing
 
-from tutors.models import Tutor, AboutAndQualifications
+from tutors.models import Tutor, AboutAndQualifications, Invitaions
+from tutors.models import PostAnAd as PostAnAd_tutor
+
+from students.forms import StudentSignupForm
+from django.contrib.auth.models import Group
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
+from students.utils import generate_token
 # Create your views here.
 
 
 def tutors(request):
-    # allTutors = Tutor.objects.all().order_by("-id")
-    # notVerified = 0
-    # for t in allTutors:
-    #     if not t.verified:
-    #         notVerified += 1
-    # number = allTutors.count()
-    # if len(allTutors) > 1 and notVerified > 1:
-    #     allTutors = None
-    #     number = None
 
     try:
         allTutors = Tutor.objects.all().order_by("-id")
@@ -37,11 +38,194 @@ def tutors(request):
             if t.verified and t.tutor.is_active:
                 tuts.append(t)
 
+    if len(tuts) > 1:
+        tuts = tuts[2]
+
+    tutors = PostAnAd_tutor.objects.all().order_by("-id")
+    tuition_level_contains_query = request.GET.get('TuitionLevel')
+    subject_contains_query = request.GET.get('Subject')
+    city_contains_query = request.GET.get('City')
+
+    number = tutors.count()
+
+    if tutors:
+        if tuition_level_contains_query != "" and tuition_level_contains_query is not None and tuition_level_contains_query != "All":
+            tutors = tutors.filter(tuition_level = tuition_level_contains_query).order_by("-id")
+            number = tutors.count()
+
+        if subject_contains_query != "" and subject_contains_query is not None:
+            tutors = tutors.filter(subject__icontains = subject_contains_query).order_by("-id")
+            number = tutors.count()
+
+        if city_contains_query != "" and city_contains_query is not None:
+            tutors = tutors.filter(tutorUser__city__icontains = city_contains_query).order_by("-id")
+            number = tutors.count()
+
     context = {
-        "tutors":tuts,
-        "number": len(tuts)
+        "tutors":tutors,
+        "number": number,
+        "tutor":tuts,
     }
     return render(request, "home/all_tuts.html", context)
+
+def ads_detail(request, id):
+    tutor = PostAnAd_tutor.objects.get(id = id)
+    qual = AboutAndQualifications.objects.get(tutor__username = tutor.tutorUser.username)
+    tutor.views += 1
+    tutor.save()
+    tutors = PostAnAd_tutor.objects.filter(tutorUser__username = tutor.tutorUser.username).order_by("-id")
+    
+    try:
+        registered = request.user.groups.all()[0].name
+    except:
+        registered = None
+
+    form = StudentSignupForm()
+
+    if request.method == "POST":
+        form = StudentSignupForm(request.POST)
+
+        if form.is_valid():
+            student = form.save()
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            age = form.cleaned_data.get('age')
+            city = form.cleaned_data.get('city')
+            firstName = form.cleaned_data.get('first_name')
+            lastName = form.cleaned_data.get('last_name')
+            phone = form.cleaned_data.get("phone")
+
+            group = Group.objects.get(name="students")
+            student.groups.add(group)
+
+            Student.objects.create(
+                student=student,
+                username= username,
+                email = email,
+                age =age,
+                city = city,
+                first_name = firstName,
+                last_name = lastName,
+                phone = phone
+            )
+
+            student.is_active = False
+            student.save()
+
+            current_site = get_current_site(request)
+            template = render_to_string("home/activate_invite_register.html", {
+                "firstname": firstName,
+                "lastname": lastName,
+                "domain": current_site,
+                "uid": urlsafe_base64_encode(force_bytes(student.pk)),
+                "token": generate_token.make_token(student),
+                "id":id
+            })
+            registerEmail = EmailMessage(
+                'Account Activation',
+                template,
+                settings.EMAIL_HOST_USER,
+                [email]
+            )
+            registerEmail.fail_silently = False
+            registerEmail.send()
+
+            return render(request,"home/activation_sent.html",{})
+
+
+    context = {
+        "tutor": tutor,
+        "qual": qual,
+        "tutors": tutors.exclude(id = id),
+        "registered": registered,
+        "form": form
+    }
+    return render (request,"home/ads_detail.html", context)
+
+
+def activate_invite_view(request,uidb64, token, id):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        student = User.objects.get(pk = uid)
+    except:
+        student = None
+    
+    if student is not None and generate_token.check_token(student, token):
+        student.is_active = True
+        student.save()
+        student = student.student
+        template = render_to_string("home/registerEmail.html", {
+            "firstname": student.first_name,
+            "lastname": student.last_name,
+            "register_as" : "student"
+        })
+        registerEmail = EmailMessage(
+            'Registration Successful',
+            template,
+            settings.EMAIL_HOST_USER,
+            [student.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
+        ad = PostAnAd_tutor.objects.get(id=id)
+        tutor = Tutor.objects.get ( username = ad.tutorUser.username)
+        
+
+        
+        Invitaions.objects.create(
+                inivitaion_by_student = student,
+                tutor_ad = ad,
+                invitation_sent = True,
+                accepted = False,
+                rejected = False
+            )
+        student.invitations_sent += 1
+        student.save()
+        tutor.invitations_recieved += 1
+        tutor.save()
+        demotemplate = render_to_string("home/inviteEmail.html", {
+                "firstname": ad.tutorUser.first_name,
+                "lastname": ad.tutorUser.last_name,
+                "ad": ad,
+                "invited_to": "Tutor",
+                "area":ad.address,
+                "city":ad.tutorUser.city
+                })
+        demoEmail = EmailMessage(
+                'Invite For Demo',
+                demotemplate,
+                settings.EMAIL_HOST_USER,
+                [student.email]
+            )
+        demoEmail.fail_silently = False
+        demoEmail.send()
+
+        intemplate = render_to_string("home/invitationEmail.html", {
+        "firstname": student.first_name,
+        "lastname": student.last_name,
+        "ad": ad,
+        "invited_to": "Tutor",
+        "area":ad.address,
+        "city":ad.tutorUser.city
+            })
+
+        email = EmailMessage(
+            'Invitation',
+            intemplate,
+            settings.EMAIL_HOST_USER,
+            [ad.tutorUser.email]
+        )
+        email.fail_silently = False
+        email.send()
+
+
+        messages.success(request,'account was created for ' + student.username)
+        messages.success(request,'Invitation Sent To ' + tutor.tutor.first_name)
+        return redirect("sign_in")
+
+
+    return render(request, 'students/activate_failed.html', status=401)
 
 
 def tutorDetail (request, id):
@@ -79,6 +263,7 @@ def home(request):
 
     if request.user.groups.exists():
         group = request.user.groups.all()[0].name
+
     context = {
         'grp': group,
         "page":"home",

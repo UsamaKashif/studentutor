@@ -23,6 +23,8 @@ urlpatterns = [
     path('privacy-policy/', views.privcy_policy, name="privacy_policy"),
     path('terms-of-use/', views.terms_of_use, name="terms"),
     path('tutors/<int:id>/', views.tutorDetail, name="tutor_detail"),
+    path('ad-detail/<int:id>/', views.ads_detail, name="ads_detail_tutor"),
+    path("activate-student/<uidb64>/<token>/<id>/", views.activate_invite_view, name="activate_invite"),
 
     path('reset_password/', auth_views.PasswordResetView.as_view(template_name="home/password_reset.html"), name="reset_password"),
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(template_name="home/password_reset_sent.html"), name="password_reset_done"),

@@ -8,6 +8,24 @@
             
             font-family: 'Kaushan Script', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
         }
+
+        #floating_btn{
+            position: fixed;
+            bottom: 50px;
+            right: 40px;
+            z-index: 999;
+            padding: 15;
+            font-size: 1.2rem;
+            width: 80px;
+            height: 80px;
+            border: solid 2px;
+            border-color: black;
+            border-radius: 40%;
+            background-color:#fec810;
+            color:white;
+            font-weight:600;
+            font-size: 17px;
+        }
     </style>
 {% endblock %}
 
@@ -15,60 +33,270 @@
 <nav class="navbar navbar-light bg-dark">
     <span class="navbar-brand mb-0 h1">
             <a class="navbar-brand js-scroll-trigger" href="{% url 'home_page' %}" style="color: #fed136;">
-                    <img src="{% static 'home/img/logo.png' %}"> StudenTutor
+                <img src="{% static 'home/img/logo.png' %}"> StudenTutor
             </a>
     </span>
 </nav>
 {% endblock %}
 
-
 {% block content %}
 
-<div class="container mt-5">
-    <div class="row mt-3">
-        <div class="col-md-6">
-            <h5>Verified Tutors: {{number}}</h5>
-        </div>
-    </div>
-<div class="row row-cols-1 row-cols-md-2 mt-3">
-        {% if tutors %}
-        {% for tutor in tutors %}
-        <div class="col mb-4">
-            <div class="card shadow border border-primary" style="height: auto;">
-                <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col-md-12">
-                            <span class="d-flex justify-content-end"> 
-                                <a class="btn btn-info" href="{% url 'tutor_detail' tutor.id %}">View Tutor</a>
-                            </span>
+<div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Filter Tutors</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form method="GET" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="search" name="Subject" placeholder="Subject" class="form-control">
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <select class="form-control selectpicker" name="TuitionLevel">
+                                <option>All</option>
+                                <option>Primary (class 1-5)</option>
+                                <option>Matric</option>
+                                <option>University</option>
+                                <option>Professional</option>
+                                <option>Secondary (class 6-8)</option>
+                                <option>Intermediate</option>
+                                <option>O Level</option>
+                                <option>A Level</option>
+                                <option>SAT-I / SAT-II / E-CAT / M-CAT / GRE / GMAT / Entry test</option>
+                                <option>IELTS / TOEFL", "IELTS / TOEFL</option>
+                                <option>Quran / Religious Studies", "Quran / Religious Studies</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="search" name="City" placeholder="City" class="form-control ">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success">Filter</button>
+                        </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
 
-                    <div class="row">
-                        <div class="col-md-12 container ">
-                            <div class="d-flex justify-content-center">
-                                <img src="{{tutor.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+<!-- <div class="container mt-5">
+        <h3 class="bg-light p-3">FEATURED</h3>
+        <br>
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                  <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                  <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                  <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <div class="bg-primary" style="width: 100%; height:400px;">
+                        <div class="card card-body shadow bg-light">
+                            <div class="d-flex justify-content-between">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5>Tutor Name</h5>
+                                        <p>This is tagline of tutor</p>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <a class="btn btn-info text-light">View</a>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card h-100 bg-dark shadow border-top text-light card-body">
+                            <div class="container mt-5">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="text-center"><b>Subject</b></h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>Maths</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="text-center"><b>Tuition Level</b></h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>A-Level</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="text-center"><b>Estimated Fees</b></h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>PKR 5000</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                  </div>
+                  
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+              <br>
+    <hr>
+    <br>
+</div> -->
 
-                    <div class="mt-4 container">
-                        <div>
-                            <h5> {{tutor.first_name}} {{tutor.last_name}} </h5>
+<div class="container mt-5">
+    <h3 class="bg-light p-3">Latest Tutors</h3>
+    <div class="row row-cols-1 row-cols-md-2 mt-3">
+            {% if tutors %}
+            {% for tutor in tutor %}
+            <div class="col mb-4">
+                <div class="card shadow border border-primary" style="height: auto;">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <span class="d-flex justify-content-end"> 
+                                    <a class="btn btn-info" href="{% url 'tutor_detail' tutor.id %}">View Tutor</a>
+                                </span>
+                            </div>
                         </div>
-                        <div>
-                            <small style="text-align: justify;">{{tutor.tagline}}</small>
+    
+                        <div class="row">
+                            <div class="col-md-12 container ">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{tutor.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="mt-4 container">
+                            <div>
+                                <h5> {{tutor.first_name}} {{tutor.last_name}} </h5>
+                            </div>
+                            <div>
+                                <small style="text-align: justify;">{{tutor.tagline}}</small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
+            {% else %}
+            <div class="d-flex justify-content-center container">
+                    <h1 class="border p-3 mt-5 border-primary text-secondary"> NO TUTOR FOUND </h1>
+                </div>
+            {% endif %}
         </div>
-        {% endfor %}
-        {% else %}
-        <div class="d-flex justify-content-center container">
-                <h1 class="border p-3 mt-5 border-primary text-secondary"> NO TUTOR FOUND </h1>
+    </div>
+    
+</div>
+
+
+
+{% if tutors %}
+<div class="container">
+        <hr>
+        <button class="btn shadow text-center" id="floating_btn" data-toggle="modal" data-target="#myModal" >Filter Tutors</button>
+
+
+        {% if user.student.profile_complete == False %}
+            <div class="alert alert-danger mt-4" role="alert">
+                Complete <a href="{% url 'student_about' %}"><b>About Me</b></a> to be able to invite tutor for demo
             </div>
         {% endif %}
+        {% if messages %}
+        <ul class="messages d-flex justify-content-center mb-2 mt-2">
+            {% for message in messages %}
+            <div class="alert alert-warning" role="alert">
+            <h5  {% if message.tags %} class="{{ message.tags }} "{% endif %}>{{ message }}</h5>
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <h5>ADs Found: {{number}}</h5>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 mt-3">
+            {% for tutor in tutors %}
+            {% if tutor.tutorUser.verified == True %}
+            <div class="col mb-4">
+                <div class="card shadow border-primary" style="height: auto;">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <span class="d-flex justify-content-end"> 
+                                    <a class="btn btn-info" href="{% url 'ads_detail_tutor' tutor.id %}">View Tutor</a>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 container ">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{tutor.tutorUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 container">
+                            <div>
+                                <h5> {{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}} </h5>
+                            </div>
+                            <div>
+                                <small style="text-align: justify;">{{tutor.tutorUser.tagline}}</small>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{tutor.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{tutor.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{tutor.tutorUser.city}}</span></li>
+                                {% if tutor.can_travel == "Yes" %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Travel</b></span></li>
+                                {% else %}
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{tutor.address}}</span></li>
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Not Travel</b></span></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
     </div>
-</div>
+    {% else %}
+    <div class="d-flex justify-content-center container">
+        <h1 class="border p-3 mt-5 border-primary text-secondary"> NO TUTOR FOUND </h1>
+    </div>
+    {% endif %}
 {% endblock %}

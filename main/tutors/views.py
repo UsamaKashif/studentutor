@@ -195,6 +195,7 @@ def postAnAd(request, pk):
             can_travel = postForm.cleaned_data['can_travel']
             estimated_fees = postForm.cleaned_data['estimated_fees']
             address = postForm.cleaned_data['address']
+            tuition_type = postForm.cleaned_data["tuition_type"]
 
             adAvailabel = False
 
@@ -209,7 +210,8 @@ def postAnAd(request, pk):
                     tuition_level = tuition_level,
                     can_travel = can_travel,
                     estimated_fees = estimated_fees,
-                    address = address
+                    address = address,
+                    tuition_type = tuition_type
                 )
                 user.total_ads += 1
                 user.ad_post_count += 1

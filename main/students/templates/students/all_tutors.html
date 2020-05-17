@@ -150,6 +150,12 @@
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{tutor.address}}</span></li>
                                     <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Not Travel</b></span></li>
                                 {% endif %}
+                                
+                                {% if tutor.tuition_type == "Home Tuition" %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Home Tuition</b></span></li>
+                                {% else %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Online Tuition</b></span></li>
+                                {% endif %}
                             </ul>
                         </div>
 

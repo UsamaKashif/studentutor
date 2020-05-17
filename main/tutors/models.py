@@ -69,6 +69,7 @@ class PostAnAd(models.Model):
 
 
     can_travel = models.CharField(max_length=100, null=True)
+    tuition_type = models.CharField(max_length=100, null=True, default="Home Tuition")
 
     address = models.CharField(max_length=300)
 

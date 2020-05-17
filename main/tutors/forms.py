@@ -170,7 +170,17 @@ class PostAnAdForm(forms.Form):
     subject = forms.ChoiceField(choices=SUBJECT,widget=forms.Select(attrs={'class': 'form-control'}))
     tuition_level = forms.ChoiceField(choices=TUITIONLEVEL,widget=forms.Select(attrs={'class': 'form-control'}))
 
+    TYPE = (
+        ("Home Tuition", "Home Tuition"),
+        ("Online Tuition", "Online Tuition"),
+    )
 
+    tuition_type = forms.ChoiceField(
+        choices=TYPE, 
+        widget=forms.Select(attrs={'class': 'form-control'})
+        )
+
+        
     CANTRAVEL = (
         ("Yes", "Yes"),
         ("No", "No"),

@@ -431,7 +431,7 @@ def specificStudent(request, id):
 def inviteForDemo(request, id):
     ad = PostAnAd_std.objects.get(id = id)
 
-    std = Student.objects.get(username = ad.studentUser)
+    std = Student.objects.get(username = ad.studentUser.username)
 
     tutor = Tutor.objects.get(tutor__username = request.user.username)
 
@@ -554,7 +554,7 @@ def inviteForDemo(request, id):
 @allowed_users(allowed_roles=["tutors"])
 def tutorInvited(request):
     tutor = Tutor.objects.get(username = request.user.username)
-    invited = TutorInvitaions.objects.filter(inivitaion_by_tutor = tutor)
+    invited = TutorInvitaions.objects.filter(inivitaion_by_tutor = tutor).order_by("-id")
 
     context = {
         "invited": invited

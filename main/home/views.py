@@ -240,7 +240,8 @@ def tutorDetail (request, id):
 def home(request):
     group = None
     
-    
+    tutors = Tutor.objects.all().count()
+    students = Student.objects.all().count()
 
     if request.method == "POST":
         name = request.POST.get('name')
@@ -267,6 +268,8 @@ def home(request):
     context = {
         'grp': group,
         "page":"home",
+        "tutors": tutors,
+        "students": students
     }
     return render(request, 'home/index_page.html' , context)
 

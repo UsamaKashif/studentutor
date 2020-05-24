@@ -5,10 +5,13 @@ from .models import Tutor, Invitaions, PostAnAd, AboutAndQualifications, Verify
 
 class TutorAdmin(admin.ModelAdmin):
     list_display = ("username", "id","gender", "email" , "verified", "verification_sent", "about_complete", "qual_complete")
+    search_fields = ("username", "id", "email", "gender")
+    list_filter = ("verified","verification_sent","about_complete", "qual_complete")
 
 
 class InvitaionsAdmin(admin.ModelAdmin):
     list_display = ("inivitaion_by_student","tutor_ad", "accepted", "rejected")
+    list_filter = ("accepted","rejected")
 
 
 admin.site.register(Tutor, TutorAdmin)

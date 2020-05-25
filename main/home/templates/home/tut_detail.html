@@ -23,6 +23,15 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link " href="{% url 'home_page' %}">Home</a>
         {% if user.is_authenticated %}
+        {% if grp == "students" %}
+            <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{% url 'student_dashboard' %}">Dashboard</a>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{% url 'tutor_dashboard' %}">Dashboard</a>
+            </li>
+        {% endif %}
         <a class="nav-item nav-link" href="{% url 'sign_out' %}">Sign Out</a>
         {% else %}
         <a class="nav-item nav-link" href="{% url 'sign_in' %}">Sign In</a>
@@ -108,4 +117,6 @@
         </div>
     </div>
 </div>
+
+{% include "home/footer.html" %}
 {% endblock %}

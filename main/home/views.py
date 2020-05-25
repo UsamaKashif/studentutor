@@ -47,7 +47,7 @@ def tutors(request):
 
     number = tutors.count()
 
-    paginator = Paginator(tuts,5)
+    paginator = Paginator(tuts,6)
     page = request.GET.get('page')
     try:
         items = paginator.page(page)
@@ -74,13 +74,17 @@ def tutors(request):
         if city_contains_query != "" and city_contains_query is not None:
             tutors = tutors.filter(tutorUser__city__icontains = city_contains_query).order_by("-id")
             number = tutors.count()
+    group = None
+    if request.user.groups.exists():
+        group = request.user.groups.all()[0].name
 
     context = {
         "tutors":tutors,
         "number": number,
         "tutor":tuts,
         "items": items,
-        "page_range": page_range
+        "page_range": page_range,
+        "grp": group
     }
     return render(request, "home/all_tuts.html", context)
 
@@ -147,14 +151,17 @@ def ads_detail(request, id):
             registerEmail.send()
 
             return render(request,"home/activation_sent.html",{})
-
+    group = None
+    if request.user.groups.exists():
+        group = request.user.groups.all()[0].name
 
     context = {
         "tutor": tutor,
         "qual": qual,
         "tutors": tutors.exclude(id = id),
         "registered": registered,
-        "form": form
+        "form": form,
+        "grp": group
     }
     return render (request,"home/ads_detail.html", context)
 
@@ -248,10 +255,15 @@ def tutorDetail (request, id):
     tutor = Tutor.objects.get(id = id)
     ads = PostAnAd_tutor.objects.filter(tutorUser = tutor)
     qual = AboutAndQualifications.objects.get(tutor__username = tutor.username)
+
+    group = None
+    if request.user.groups.exists():
+        group = request.user.groups.all()[0].name
     context = {
         "tutor":tutor,
         "qual": qual,
-        "ads": ads
+        "ads": ads,
+        "grp": group
     }
     return render (request, "home/tut_detail.html", context)
 

@@ -1,0 +1,37 @@
+{% extends "home/b.html" %}
+
+{% block footer %}
+<footer class="footer mt-3 bg-light text-dark">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <span class="copyright">Copyright &copy; StudenTuor 2020</span>
+        </div>
+        <div class="col-md-4">
+          <ul class="list-inline social-buttons">
+            <li class="list-inline-item">
+              <a href="https://twitter.com/TutorStuden"  target="blank">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://www.facebook.com/StudenTutorOfficial" target="blank">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <ul class="list-inline quicklinks">
+            <li class="list-inline-item">
+              <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="{% url 'terms' %}">Terms of Use</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+{% endblock %}

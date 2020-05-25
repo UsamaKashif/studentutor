@@ -1,7 +1,7 @@
 {% if items.has_other_pages %}
     <div class="col-6 offset-3 text-center pagination-set">
-        <nav aria-label="">
-            <ul class="pagination">
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center">
                 {% if items.has_previous %}
                     <li class="page-item">
                         <a class="page-link" href="?page={{items.previous_page_number}}"><<</a>

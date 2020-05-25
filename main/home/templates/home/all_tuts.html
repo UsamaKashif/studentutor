@@ -1,4 +1,4 @@
-{% extends 'home/b.html' %}
+{% extends 'home/base.html' %}
 
 {% load static %}
 
@@ -30,13 +30,26 @@
 {% endblock %}
 
 {% block nav %}
-<nav class="navbar navbar-light bg-dark">
-    <span class="navbar-brand mb-0 h1">
-            <a class="navbar-brand js-scroll-trigger" href="{% url 'home_page' %}" style="color: #fed136;">
-                <img src="{% static 'home/img/logo.png' %}"> StudenTutor
-            </a>
-    </span>
-</nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'home_page' %}" style="color: #fed136;">
+        <img src="{% static 'home/img/logo.png' %}"> StudenTutor
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link " href="{% url 'home_page' %}">Home</a>
+        {% if user.is_authenticated %}
+        <a class="nav-item nav-link" href="{% url 'sign_out' %}">Sign Out</a>
+        {% else %}
+        <a class="nav-item nav-link" href="{% url 'sign_in' %}">Sign In</a>
+        <a class="nav-item nav-link" href="{% url 'register_as' %}">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
 {% endblock %}
 
 {% block content %}
@@ -170,37 +183,42 @@
 </div> -->
 
 <div class="container mt-5">
-    <h3 class="bg-light p-3">Latest Tutors</h3>
-    <div class="row row-cols-1 row-cols-md-2 mt-3">
-            {% if tutor %}
-            {% for tutor in tutor %}
+    <h3 class="bg-light p-3">Verified Tutors</h3>
+    <div class="row row-cols-1 row-cols-md-2 mt-3 mb-3">
+            {% if items %}
+            {% for tutor in items %}
             <div class="col-md-4 mb-4">
                 <div class="card shadow border border-primary" style="height: auto;">
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-md-12">
-                                <span class="d-flex justify-content-end"> 
+                                <span class="d-flex justify-content-end mb-2"> 
                                     <a class="btn btn-info" href="{% url 'tutor_detail' tutor.id %}">View Tutor</a>
                                 </span>
                             </div>
                         </div>
-    
+
                         <div class="row">
-                            <div class="col-md-12 container ">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{tutor.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                            <div class="d-flex">
+                                <div class="col-md-6 container ">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{{tutor.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="100" width="100">
+                                    </div>
+                                </div>
+                            
+        
+                                <div class="mt-2 container">
+                                    <div>
+                                        <h5> {{tutor.first_name}} {{tutor.last_name}} </h5>
+                                    </div>
+                                    <div>
+                                        <small style="text-align: justify;">{{tutor.tagline}}</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
     
-                        <div class="mt-4 container">
-                            <div>
-                                <h5> {{tutor.first_name}} {{tutor.last_name}} </h5>
-                            </div>
-                            <div>
-                                <small style="text-align: justify;">{{tutor.tagline}}</small>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -212,99 +230,11 @@
             {% endif %}
         </div>
     </div>
+    {% include "home/pagination.html" %}
     
 </div>
 
 
 
-{% if tutors %}
-<div class="container">
-        <hr>
-        <button class="btn shadow text-center" id="floating_btn" data-toggle="modal" data-target="#myModal" >Filter Tutors</button>
 
-
-        {% if user.student.profile_complete == False %}
-            <div class="alert alert-danger mt-4" role="alert">
-                Complete <a href="{% url 'student_about' %}"><b>About Me</b></a> to be able to invite tutor for demo
-            </div>
-        {% endif %}
-        {% if messages %}
-        <ul class="messages d-flex justify-content-center mb-2 mt-2">
-            {% for message in messages %}
-            <div class="alert alert-warning" role="alert">
-            <h5  {% if message.tags %} class="{{ message.tags }} "{% endif %}>{{ message }}</h5>
-            </div>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <h5>ADs Found: {{number}}</h5>
-            </div>
-        </div>
-        <div class="row row-cols-1 row-cols-md-2 mt-3">
-            {% for tutor in tutors %}
-            {% if tutor.tutorUser.verified == True %}
-            <div class="col-md-6 mb-4">
-                <div class="card shadow border-primary" style="height: auto;">
-                    <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-md-12">
-                                <span class="d-flex justify-content-end"> 
-                                    <a class="btn btn-info" href="{% url 'ads_detail_tutor' tutor.id %}">View Tutor</a>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12 container ">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{tutor.tutorUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-4 container">
-                            <div>
-                                <h5> {{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}} </h5>
-                            </div>
-                            <div>
-                                <small style="text-align: justify;">{{tutor.tutorUser.tagline}}</small>
-                            </div>
-                        </div>
-
-                        <div class="container">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{tutor.subject}}</span></li>
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{tutor.tuition_level}}</span></li>
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{tutor.tutorUser.city}}</span></li>
-                                {% if tutor.can_travel == "Yes" and tutor.tuition_type == "Home Tuition" %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Travel</b></span></li>
-                                {% elif tutor.can_travel == "No" and tutor.tuition_type == "Home Tuition" %}
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{tutor.address}}</span></li>
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Not Travel</b></span></li>
-                                {% else %}
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Online Tuition</b></span></li>
-                                {% endif %}
-                                
-                                <!-- {% if tutor.tuition_type == "Home Tuition" %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Home Tuition</b></span></li>
-                                {% else %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Online Tuition</b></span></li>
-                                {% endif %} -->
-                            </ul>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-    {% else %}
-    <div class="d-flex justify-content-center container">
-        <h1 class="border p-3 mt-5 border-primary text-secondary"> NO TUTOR FOUND </h1>
-    </div>
-    {% endif %}
 {% endblock %}

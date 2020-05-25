@@ -108,7 +108,11 @@
             {% if user.tutor.verified == True %}
             <a class="btn btn-primary float-right"  href="{% url 'post_ad_tutor' user.id %}" style="color: white;">Post An AD</a>
             {% else %}
-            <a class="btn btn-secondary disabled float-right"  href="{% url 'post_ad_tutor' user.id %}" style="color: white;">Post An AD</a>
+                {% if user.tutor.about_complete and user.tutor.qual_complete %}
+                <a class="btn btn-primary float-right"  href="{% url 'verify_tutor' %}" style="color: white;">Verify Documents</a>
+                {% else %}
+                <a class="btn btn-secondary disabled float-right"  href="{% url 'verify_tutor' %}" style="color: white;">Verify Documents</a>
+                {% endif %}
             {% endif %}
         </div>
     </div>

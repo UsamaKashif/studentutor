@@ -1,13 +1,26 @@
-{% extends 'home/b.html' %}
+{% extends 'home/base.html' %}
 {% load static %}
 {% block nav %}
-<nav class="navbar navbar-light bg-dark">
-        <span class="navbar-brand mb-0 h1">
-                <a class="navbar-brand js-scroll-trigger" href="{% url 'home_page' %}" style="color: #fed136;">
-                        <img src="{% static 'home/img/logo.png' %}"> StudenTutor
-                </a>
-        </span>
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'home_page' %}" style="color: #fed136;">
+        <img src="{% static 'home/img/logo.png' %}"> StudenTutor
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link " href="{% url 'home_page' %}">Home</a>
+        <a class="nav-item nav-link " href="{% url 'tutors' %}">Tutors</a>
+        {% if user.is_authenticated %}
+        <a class="nav-item nav-link" href="{% url 'sign_out' %}">Sign Out</a>
+        {% else %}
+        <a class="nav-item nav-link" href="{% url 'sign_in' %}">Sign In</a>
+        <a class="nav-item nav-link" href="{% url 'register_as' %}">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
 {% endblock %}
 
 {% block links %}

@@ -6,6 +6,7 @@ from django.urls import reverse
 from PIL import Image
 # Create your models here.
 
+
 class Student(models.Model):
 
     textArea = models.CharField(max_length=300, null=True, default="")

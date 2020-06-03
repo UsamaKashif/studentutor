@@ -24,7 +24,6 @@
       {% else %}
       <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'register_as' %}">Join Now</a>
       {% endif %}
-      
     </div>
   </div>
 </header>
@@ -119,11 +118,13 @@
             </div>
           </li>
           <li class="timeline-inverted">
+          <a href="{% url 'register_as' %}" target="blank">
             <div class="timeline-image">
               <h4>Be Part
                 <br>Of Our
                 <br>Story!</h4>
             </div>
+          </a>
           </li>
         </ul>
       </div>
@@ -225,6 +226,9 @@
         </div>
         <div class="col-md-4">
           <ul class="list-inline quicklinks">
+            <li class="list-inline-item">
+              <a href="{% url 'register_as' %}" target="blank">Join Now</a>
+            </li>
             <li class="list-inline-item">
               <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
             </li>

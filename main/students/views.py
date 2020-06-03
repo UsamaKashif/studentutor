@@ -17,7 +17,7 @@ from tutors.models import Invitaions
 from django.contrib import messages
 
 from django.core.mail import EmailMessage
-from django.conf import settings 
+from django.conf import settings
 from django.template.loader import render_to_string
 
 from django.contrib.sites.shortcuts import get_current_site

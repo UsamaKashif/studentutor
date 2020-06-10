@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 
 
 from django.contrib.auth.models import User
+from django.views.generic import RedirectView
 
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from django.contrib.auth.decorators import login_required
@@ -273,10 +274,10 @@ def allTutors(request):
             tutors = tutors.filter(tutorUser__city__icontains = city_contains_query).order_by("-id")
             number = tutors.count()
 
-
     context = {
         "tutors":tutors,
-        "number": number
+        "number": number,
+        "student": request.user.student
     }
     return render(request, 'students/all_tutors.html', context)
 
@@ -290,10 +291,12 @@ def SpecificTutor(request, id):
     tutor.views += 1
     tutor.save()
     tutors = PostAnAd_tutor.objects.filter(tutorUser__username = tutor.tutorUser.username).order_by("-id")
+    
     context = {
         "tutor": tutor,
         "qual": qual,
-        "tutors": tutors.exclude(id = id)
+        "tutors": tutors.exclude(id = id),
+        "student": request.user.student
     }
     return render (request, "students/specific_tutor.html", context)
 
@@ -603,3 +606,77 @@ def del_account_student(request):
         return redirect("student_dashboard")
     context = {}
     return render(request, "students/del_account.html", context)
+
+
+
+class PostLikeToggle(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        id = self.kwargs.get("id") 
+        print(id)
+        post = PostAnAd_tutor.objects.get(id=id)
+        url_ = post.get_absolute_url()
+        user = self.request.user
+        student = user.student
+        if student in post.likes.all():
+            post.likes.remove(student)
+        else:
+            post.likes.add(student)
+        return url_
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+
+import threading 
+
+def add_like(post,std):
+    post.likes.add(std)
+
+
+def send_email(post,student):
+    template = render_to_string("home/post_like_email.html", {
+                "user":student,
+                "post":post,
+                "owner":post.tutorUser
+            })
+    postLikeEmail = EmailMessage(
+        f'{student.first_name} {student.last_name} liked your AD',
+        template,
+        settings.EMAIL_HOST_USER,
+        [post.tutorUser.email]
+    )
+    postLikeEmail.fail_silently = False
+    postLikeEmail.send()
+
+class PostLikeAPIToggle(APIView):
+
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, id=None ,format=None):
+        
+        post = PostAnAd_tutor.objects.get(id=id)
+        user = self.request.user
+        student = user.student
+        updated = False
+        liked = False
+        
+        if student in post.likes.all():
+            liked = False 
+            updated = True
+            post.likes.remove(student)
+        else:
+            liked = True 
+            updated = True
+            t1 = threading.Thread(target=add_like, args=[post,student])
+            t2 = threading.Thread(target=send_email, args=[post,student])
+
+            t1.start()
+            t2.start()
+
+        data = {
+            "updated":updated,
+            "liked":liked
+        }
+        return Response(data)

@@ -76,7 +76,41 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
   {% block scripts %} {% endblock %}
-
+  <script
+  src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
+  
+ 
+    <script>
+      $(document).ready(function(){
+        $(".like-btn").click(function(e){
+          e.preventDefault()
+          var this_ = $(this)
+          var like_url = this_.attr("data-href")
+          var like_count = this_.attr("data-likes")
+          
+          $.ajax({
+              url: like_url,
+              method:"GET",
+              data:{},
+              success: function(data){
+                  var new_likes;
+                  if(data.liked){
+                      new_likes = like_count + 1
+                  }else{
+                      new_likes = like_count - 1
+                  }
+                  console.log(data)
+                  location.reload()
+              }, error: function(error){
+                  console.log(error)
+                  console.log("error")
+              }
+          })
+      })
+      })
+    </script>
 </body>
 
 </html>

@@ -34,8 +34,18 @@
                                     </div> 
             
                                     <div class="mt-4 container">
-                                        <div>
+                                        <div class="d-flex justify-content-between">
                                             <h5> {{student.studentUser.first_name}} {{student.studentUser.last_name}} </h5>
+                                            <span class="d-flex">
+                                                    {% if tutor in student.get_all_likes %}
+                                                    <a href="{{student.get_like_url}}" class="like like-btn" data-likes={{student.likes.count}} data-href='{{student.get_like_api_url}}' style="color: red;"><i class="fas fa-heart" style="font-size: 30px;"></i></a>
+                                                    {% else %}
+                                                    <a href="{{student.get_like_url}}" id="like" class="like-btn" data-likes={{student.likes.count}} data-href='{{student.get_like_api_url}}'><i class="far fa-heart" style="font-size: 30px;color:black;"></i></a>
+                                                    {% endif %}
+                                                    {% if student.likes.count > 0 %}
+                                                        <h5 class="text-muted ml-3">{{student.likes.count}}</h5>
+                                                    {% endif %}
+                                            </span>
                                         </div>
                                         <div>
                                             <p style="text-align: justify;" class="mt-2">{{student.studentUser.textArea}}</p>

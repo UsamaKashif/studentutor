@@ -53,7 +53,7 @@ class Student(models.Model):
             img.thumbnail(outputSize)
             img.save(self.user_image.path)
 
-
+from tutors.models import Tutor
 
 class PostAnAd(models.Model):
     studentUser = models.ForeignKey(Student, null=True, on_delete=models.CASCADE)
@@ -64,7 +64,7 @@ class PostAnAd(models.Model):
 
     subject = models.CharField(max_length=100, default="English")
     tuition_level = models.CharField(max_length=100, default="O Level")
-
+    likes = models.ManyToManyField(Tutor,blank=True, related_name='post_likes')
 
     tuition_type = models.CharField(max_length=100, null=True)
 
@@ -79,7 +79,16 @@ class PostAnAd(models.Model):
     def __str__(self):
         return f'{self.subject} : {self.tuition_level} : {self.studentUser.username} : {self.studentUser.id}'
 
-from tutors.models import Tutor
+    def get_absolute_url(self):
+        return reverse('all_students')
+
+    def get_all_likes(self):
+        return self.likes.all()
+
+    def get_like_api_url(self):
+        return reverse('post_like_api_tut', kwargs={'id': self.id})
+
+
 
 class TutorInvitaions(models.Model):
     inivitaion_by_tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True) 
@@ -90,3 +99,11 @@ class TutorInvitaions(models.Model):
 
     def __str__(self):
         return f'Invitaion By {self.inivitaion_by_tutor.username} : {self.inivitaion_by_tutor.id}'
+
+
+class WishList(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True) 
+    tutors = models.ManyToManyField(Tutor, blank=True ,related_name="wishlist")
+
+    def __str__(self):
+        return render (f'{student.username} - {student.id}')

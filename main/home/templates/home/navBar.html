@@ -14,9 +14,6 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav text-uppercase ml-auto">
           {% if page == "home" %}
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#about">How It Works</a>
-          </li>
           {% if user.is_authenticated and grp == "students" %}
           <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="{% url 'all_tutors' %}">Tutors</a>
@@ -26,10 +23,15 @@
               <a class="nav-link js-scroll-trigger" href="{% url 'tutors' %}">Tutors</a>
             </li>
           {% endif %}
-
-
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#about">How It Works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#whywe">Why We</a>
+          </li>
+          
           {% endif %}
-
+          
           {% if user.is_authenticated %}
             
             {% if grp == "students" %}
@@ -45,20 +47,20 @@
                     <a class="nav-link js-scroll-trigger" href="{% url 'sign_out' %}">Sign Out</a>
                   </li>
           {% else %}
-          
+          <li class="nav-item">
+              <a class="nav-link js-scroll-trigger"  href="#registernow">Register</a>
+            </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="{% url 'sign_in' %}">Sign In</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger"  href="{% url 'register_as' %}">Register</a>
-          </li>
+          
           {% endif %}
-
           {% if page == "home" %}
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
           </li>
           {% endif %}
+          
         </ul>
       </div>
     </div>

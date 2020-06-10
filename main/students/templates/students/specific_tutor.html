@@ -2,6 +2,12 @@
 
 {% block nav %}
     {% include 'students/navBar.html' %}
+
+    <style>
+        #like{
+            color: black;
+        }
+    </style>
 {% endblock %}
 
 
@@ -15,11 +21,7 @@
                                     <div class="row mb-2">
                                         <div class="col-md-12">
                                             <span class="d-flex justify-content-end"> 
-                                                {% if user.student.profile_complete == True%}
-                                                    <a class="btn btn-info" href="{% url 'tutor_invite' tutor.id %}">Invite For Demo</a>
-                                                {% else %}
-                                                    <a class="btn btn-info disabled">Invite For Demo</a>
-                                                {% endif %}
+                                                <a class="btn btn-info" href="{% url 'tutor_invite' tutor.id %}">Invite For Demo</a>
                                             </span>
                                         </div>
                                     </div>
@@ -33,8 +35,18 @@
                                     </div>
                     
                                     <div class="mt-4 container">
-                                        <div>
+                                        <div class="d-flex justify-content-between">
                                             <h5><b>Tutor: </b>{{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}} </h5>
+                                            <span class="d-flex">
+                                                    {% if student in tutor.get_all_likes %}
+                                                    <a href="{{tutor.get_like_url}}" class="like like-btn" data-likes={{tutor.likes.count}} data-href='{{tutor.get_like_api_url}}' style="color: red;"><i class="fas fa-heart" style="font-size: 30px;"></i></a>
+                                                    {% else %}
+                                                    <a href="{{tutor.get_like_url}}" id="like" class="like-btn" data-likes={{tutor.likes.count}} data-href='{{tutor.get_like_api_url}}'><i class="far fa-heart" style="font-size: 30px;"></i></a>
+                                                    {% endif %}
+                                                    {% if tutor.likes.count > 0 %}
+                                                        <h5 class="text-muted ml-3">{{tutor.likes.count}}</h5>
+                                                    {% endif %}
+                                            </span>
                                         </div>
                                         <div>
                                             <small style="text-align: justify;">{{tutor.tutorUser.tagline}}</small>

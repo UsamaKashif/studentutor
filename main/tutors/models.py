@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from PIL import Image
+
+from django.urls import reverse
 # Create your models here.
 
 
@@ -57,6 +59,7 @@ class Tutor(models.Model):
             img.thumbnail(outputSize)
             img.save(self.user_image.path)
 
+from students.models import Student
 
 class PostAnAd(models.Model):
     tutorUser = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True)
@@ -67,6 +70,7 @@ class PostAnAd(models.Model):
     subject = models.CharField(max_length=300)
     tuition_level = models.CharField(max_length=300)
 
+    likes = models.ManyToManyField(Student,blank=True, related_name='post_likes')
 
     can_travel = models.CharField(max_length=100, null=True)
     tuition_type = models.CharField(max_length=100, null=True, default="Home Tuition")
@@ -75,11 +79,22 @@ class PostAnAd(models.Model):
 
     estimated_fees = models.IntegerField()
 
+    def get_absolute_url(self):
+        return reverse('all_tutors')
+
+    def get_all_likes(self):
+        return self.likes.all()
+    
+    # def get_like_url(self):
+    #     return reverse('post_like_std', kwargs={'id': self.id})
+    
+    def get_like_api_url(self):
+        return reverse('post_like_api_std', kwargs={'id': self.id})
 
     def __str__(self):
         return f'{self.subject} : {self.tuition_level} : {self.tutorUser.username} : {self.tutorUser.id}'
 
-from students.models import Student
+
 
 class Invitaions(models.Model):
     inivitaion_by_student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True) # username of student

@@ -1,13 +1,23 @@
 {% extends 'home/base.html' %}
 
 {% block links %}
-    <style>
-        .filterForm{
-            width: 100%;
-            height: 25vh;
-            background-color: #bdc3c7;
-            border-top: solid 3px;
-            border-color: #fec810;
+<style>
+        #floating_btn{
+            position: fixed;
+            bottom: 50px;
+            right: 40px;
+            z-index: 999;
+            padding: 15;
+            font-size: 1.2rem;
+            width: 80px;
+            height: 80px;
+            border: solid 2px;
+            border-color: black;
+            border-radius: 40%;
+            background-color:#fec810;
+            color:white;
+            font-weight:600;
+            font-size: 17px;
         }
     </style>
 {% endblock %}
@@ -17,43 +27,67 @@
 {% endblock %}
 
 {% block content %}
-<div class="filterForm">
-    <form method="GET" >
-        <div class="p-2 d-flex justify-content-center flex-column align-center">
-            <div class="form-row">
-                <div class="form-group col-12 mt-4">
-                    <div class="input-group">
-                        <input type="search" name="Subject" placeholder="Subject" class="form-control mr-2">
-                        <select class="form-control selectpicker" name="TuitionLevel">
-                            <option>Primary (class 1-5)</option>
-                            <option>Matric</option>
-                            <option>University</option>
-                            <option>Professional</option>
-                            <option>Secondary (class 6-8)</option>
-                            <option>Intermediate</option>
-                            <option>O Level</option>
-                            <option>A Level</option>
-                            <option>SAT-I / SAT-II / E-CAT / M-CAT / GRE / GMAT / Entry test</option>
-                            <option>IELTS / TOEFL", "IELTS / TOEFL</option>
-                            <option>Quran / Religious Studies", "Quran / Religious Studies</option>
-                        </select>
-                        <input type="search" name="City" placeholder="City" class="form-control ml-2">
+
+<div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Filter Tutors</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form method="GET" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="search" name="Subject" placeholder="Subject" class="form-control">
+                        </div>
                     </div>
-                </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <select class="form-control selectpicker" name="TuitionLevel">
+                                <option>All</option>
+                                <option>Primary (class 1-5)</option>
+                                <option>Matric</option>
+                                <option>University</option>
+                                <option>Professional</option>
+                                <option>Secondary (class 6-8)</option>
+                                <option>Intermediate</option>
+                                <option>O Level</option>
+                                <option>A Level</option>
+                                <option>SAT-I / SAT-II / E-CAT / M-CAT / GRE / GMAT / Entry test</option>
+                                <option>IELTS / TOEFL", "IELTS / TOEFL</option>
+                                <option>Quran / Religious Studies", "Quran / Religious Studies</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="search" name="City" placeholder="City" class="form-control ">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success">Filter</button>
+                        </div>
+                </form>
+            </div>
             </div>
         </div>
-        <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-success">Filter</button>
-        </div>
-    </form>
-</div>
+    </div>
+
+
+
 {% if tutors %}
 <div class="container">
-        {% if user.student.profile_complete == False %}
-            <div class="alert alert-danger mt-4" role="alert">
-                Complete <b>About Me</b> to be able to invite tutor for demo
-            </div>
-        {% endif %}
+        <button class="btn shadow text-center" id="floating_btn" data-toggle="modal" data-target="#myModal" >Filter Tutors</button>
+        
         {% if messages %}
         <ul class="messages d-flex justify-content-center mb-2 mt-2">
             {% for message in messages %}
@@ -63,20 +97,21 @@
             {% endfor %}
         </ul>
         {% endif %}
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <h5>ADs Found: {{number}}</h5>
+            </div>
+        </div>
         <div class="row row-cols-1 row-cols-md-2 mt-3">
             {% for tutor in tutors %}
             {% if tutor.tutorUser.verified == True %}
             <div class="col mb-4">
-                <div class="card shadow " style="height: 46rem;">
+                <div class="card shadow border-primary" style="height: auto;">
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-md-12">
                                 <span class="d-flex justify-content-end"> 
-                                    {% if user.student.profile_complete == True%}
-                                        <a class="btn btn-info" href="{% url 'tutor_invite' tutor.id %}">Invite For Demo</a>
-                                    {% else %}
-                                        <a class="btn btn-info disabled">Invite For Demo</a>
-                                    {% endif %}
+                                    <a class="btn btn-info" href="{% url 'specific_tutor' tutor.id %}">View Tutor</a>
                                 </span>
                             </div>
                         </div>
@@ -84,7 +119,7 @@
                         <div class="row">
                             <div class="col-md-12 container ">
                                 <div class="d-flex justify-content-center">
-                                    <img src="{{tutor.tutorUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                    <img src="{{tutor.tutorUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="100" width="100">
                                 </div>
                             </div>
                         </div>
@@ -95,19 +130,21 @@
                             </div>
                             <div>
                                 <small style="text-align: justify;">{{tutor.tutorUser.tagline}}</small>
-                                <p style="text-align: justify;" class="mt-2">{{tutor.tutorUser.about}}</p>
                             </div>
                         </div>
 
                         <div class="container">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{tutor.subject}}</span></li>
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">{{tutor.tuition_level}}</span></li>
-                                <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{tutor.estimated_fees}} Estimated Fees</span></li>
-                                {% if tutor.can_travel == "Yes" %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Travel</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{tutor.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{tutor.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{tutor.tutorUser.city}}</span></li>
+                                {% if tutor.can_travel == "Yes" and tutor.tuition_type == "Home Tuition" %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Travel</b></span></li>
+                                {% elif tutor.can_travel == "No" and tutor.tuition_type == "Home Tuition" %}
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{tutor.address}}</span></li>
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Not Travel</b></span></li>
                                 {% else %}
-                                    <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Not Travel</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Online Tuition</b></span></li>
                                 {% endif %}
                             </ul>
                         </div>

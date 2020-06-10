@@ -9,7 +9,7 @@ from students.models import PostAnAd as PostAnAd_std
 from students.models import TutorInvitaions, Student
 
 from django.contrib.auth.models import Group
-
+from django.views.generic import RedirectView
 
 from students.decorators import unauthenticated_user, allowed_users, admin_only
 from django.contrib.auth.decorators import login_required
@@ -409,7 +409,8 @@ def allStudents(request):
 
     context = {
         "students":students,
-        "number": number
+        "number": number,
+        "tutor":request.user.tutor
     }
     return render(request, "tutors/all_students.html", context)
 
@@ -422,7 +423,8 @@ def specificStudent(request, id):
     students = PostAnAd_std.objects.filter(studentUser__username = student.studentUser.username).order_by("-id")
     context = {
         "student": student,
-        "students":students.exclude(id = id)
+        "students":students.exclude(id = id),
+        "tutor":request.user.tutor
     }
     return render(request, "tutors/specific_std.html", context)
 
@@ -710,3 +712,64 @@ def del_account_student(request):
         return redirect("tutor_dashboard")
     context = {}
     return render(request, "tutors/del_tutor.html", context)
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+
+import threading
+
+def add_like(post,tutor):
+    post.likes.add(tutor)
+
+def send_email(post,tutor):
+    template = render_to_string("home/post_like_email.html", {
+                "user":tutor,
+                "post":post,
+                "owner":post.studentUser
+            })
+    postLikeEmail = EmailMessage(
+        f'{tutor.first_name} {tutor.last_name} liked your AD',
+        template,
+        settings.EMAIL_HOST_USER,
+        [post.studentUser.email]
+    )
+    postLikeEmail.fail_silently = False
+    postLikeEmail.send()
+
+
+
+
+class PostLikeAPIToggle(APIView):
+
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, id=None ,format=None):
+        
+        post = PostAnAd_std.objects.get(id=id)
+        user = self.request.user
+        tutor = user.tutor
+        updated = False
+        liked = False
+        
+        if tutor in post.likes.all():
+            liked = False 
+            updated = True
+            post.likes.remove(tutor)
+        else:
+            liked =True 
+            updated = True
+            t1 = threading.Thread(target=add_like, args=[post,tutor])
+            t2 = threading.Thread(target=send_email, args=[post,tutor])
+            t1.start()
+            t2.start()
+
+            
+
+        data = {
+            "updated":updated,
+            "liked":liked
+        }
+        return Response(data)

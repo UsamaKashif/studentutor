@@ -117,22 +117,32 @@
                         <div class="row mb-2">
                             <div class="col-md-12">
                                 <span class="d-flex justify-content-end">  
+                                    <!-- <i class="fas fa-list" style="font-size: 30px;"></i> -->
                                     <a class="btn btn-info" href="{% url 'specific_students' student.id %}">View Student</a>
                                 </span>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12 container ">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{student.studentUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="container">
+                                    <div class="d-flex justify-content-between">
+                                        <span>
+                                            {{student.studentUser.first_name}} {{student.studentUser.last_name}}
+                                        </span>
+                                        <span class="d-flex">
+                                            {% if tutor in student.get_all_likes %}
+                                            <a href="{{student.get_like_url}}" class="like like-btn" data-likes={{student.likes.count}} data-href='{{student.get_like_api_url}}' style="color: red;"><i class="fas fa-heart" style="font-size: 30px;"></i></a>
+                                            {% else %}
+                                            <a href="{{student.get_like_url}}" class="like-btn" data-likes={{student.likes.count}} data-href='{{student.get_like_api_url}}'><i class="far fa-heart" style="font-size: 30px;color:black;"></i></a>
+                                            {% endif %}
+                                            {% if student.likes.count > 0 %}
+                                            <h5 class="text-muted ml-3">{{student.likes.count}}</h5>
+                                            {% endif %}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        </div> 
-
-                        <div class="mt-4 container">
-                            <div>
-                                <h5> {{student.studentUser.first_name}} {{student.studentUser.last_name}} </h5>
                             </div>
                         </div>
 

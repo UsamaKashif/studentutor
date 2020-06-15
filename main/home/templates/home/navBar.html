@@ -48,7 +48,10 @@
                   </li>
           {% else %}
           <li class="nav-item">
+            {% if page == "home" %}
               <a class="nav-link js-scroll-trigger"  href="#registernow">Register</a>
+              
+            {% endif %}
             </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="{% url 'sign_in' %}">Sign In</a>

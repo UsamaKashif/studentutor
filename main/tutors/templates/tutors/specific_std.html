@@ -14,8 +14,13 @@
                                 <div class="card-body">
                                     <div class="row mb-2">
                                         <div class="col-md-12">
-                                                <span class="d-flex justify-content-end">   
-                                                        <!-- <h5 class="card-title">{{user.first_name}}</h5>     -->
+                                                <span class="d-flex justify-content-between">   
+                                                        {% if added %}
+                                                            <a style="color:red; cursor:pointer" class="wishlist" data-href="{{student_id.get_api_url}}" ><i class="far fa-minus-square" style="font-size: 30px;"></i></a>
+                                                        {% else %}
+                                                            <a href="" style="cursor:pointer"  data-href="{{student_id.get_api_url}}" class="wishlist"><i class="far fa-plus-square"  data-action="add" data-tutor='{{tutor_id.id}}' style="font-size: 30px; color: black;"></i></a>
+                                                        {% endif %}
+
                                                         {% if user.tutor.verified == False %}
                                                             <a class="btn btn-info disabled" href="{% url 'student_invite' student.id %}">Ask For Demo</a>
                                                         {% else %}
@@ -28,7 +33,7 @@
                                     <div class="row">
                                         <div class="col-md-12 container ">
                                             <div class="d-flex justify-content-center">
-                                                <img src="{{student.studentUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                                <img src="{{student.studentUser.user_image.url}}" alt="student" style="border: solid 2px; border-radius: 125px;" height="150" width="150">
                                             </div>
                                         </div>
                                     </div> 

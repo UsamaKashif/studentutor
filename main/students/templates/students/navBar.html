@@ -10,6 +10,7 @@
                 <a class="nav-item nav-link" href="{% url 'invited' %}">Invited</a>
                 <a class="nav-item nav-link" href="{% url 'invitations_student' %}">Demo Requests</a>
                 <a class="nav-item nav-link" href="{% url 'ads' %}">ADS</a>
+                <a class="nav-item nav-link" href="{% url 'wishlist' %}">WishList</a>
                 {% if user.student.profile_complete == True %}
                     <a class="nav-item nav-link" href="{% url 'post_ad' user.id %}">Post An AD</a>
                 {% else %}

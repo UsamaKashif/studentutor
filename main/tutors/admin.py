@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Tutor, Invitaions, PostAnAd, AboutAndQualifications, Verify
+from .models import Tutor, Invitaions, PostAnAd, AboutAndQualifications, Verify,WishList
 # Register your models here.
 
 
@@ -18,4 +18,5 @@ admin.site.register(Tutor, TutorAdmin)
 admin.site.register(Invitaions, InvitaionsAdmin)
 admin.site.register(PostAnAd)
 admin.site.register(AboutAndQualifications)
+admin.site.register(WishList)
 admin.site.register(Verify)

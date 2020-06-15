@@ -4,13 +4,14 @@ from django.contrib.auth.models import User
 from PIL import Image
 
 from django.urls import reverse
+
+
 # Create your models here.
 
 
 
 class Tutor(models.Model):
     username = models.CharField(max_length=200, null=True, default="")
-    
 
     tutor = models.OneToOneField(User, null=True, on_delete=models.CASCADE) 
     first_name = models.CharField(max_length=100, null=True)
@@ -58,6 +59,10 @@ class Tutor(models.Model):
 
             img.thumbnail(outputSize)
             img.save(self.user_image.path)
+
+    def get_api_url(self):
+        return reverse("wish_list", kwargs={'id': self.id} )
+
 
 from students.models import Student
 
@@ -129,3 +134,18 @@ class Verify(models.Model):
 
     def __str__(self):
         return f'{self.tutor.username} : {self.tutor.id}'
+
+class WishList(models.Model):
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True) 
+    students = models.ManyToManyField(Student, blank=True ,related_name="wishlist_students")
+
+    def __str__(self):
+        return (f'{self.tutor.username} - {self.tutor.id}')
+
+
+class WishList_tut(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
+    tutors = models.ManyToManyField(Tutor, blank=True ,related_name="tutor_wish")
+
+    def __str__(self):
+        return self.tutor

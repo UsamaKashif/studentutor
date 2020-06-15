@@ -1,0 +1,38 @@
+{% extends 'home/base.html' %}
+
+{% block nav %}
+    {% include 'students/navBar.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <h2 class="mt-3 mb-3 bg-light text-center p-3">WishList</h2>
+        <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tutor Name</th>
+                        <th scope="col">ADs</th>
+                        <th scope="col">Remove</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for tutor in tutors %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{tutor.first_name}} {{tutor.last_name}}</td>
+                        <td>{{tutor.postanad_set.all.count}}</td>
+                        <td><a style="color:red; cursor:pointer" class="wishlist" data-href="{{tutor.get_api_url}}" ><i class="far fa-minus-square" style="font-size: 30px;"></i></a></td>
+                    </tr>
+                    {% empty %}
+                    <td colspan="4" class="text-center"><h2 class=" bg-light p-2">No Tutors</h2></td>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+</div>
+
+{% endblock %}

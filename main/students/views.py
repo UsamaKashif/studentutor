@@ -10,10 +10,10 @@ from django.views.generic import RedirectView
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from django.contrib.auth.decorators import login_required
 
-from .models import TutorInvitaions , Student, PostAnAd
+from .models import TutorInvitaions , Student, PostAnAd, WishList, WishList_std
 
 from tutors.models import PostAnAd as PostAnAd_tutor
-from tutors.models import Invitaions
+from tutors.models import Invitaions,WishList_tut
 
 from django.contrib import messages
 
@@ -25,6 +25,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
 from .utils import generate_token
+
+import threading 
 # Create your views here.
 
 
@@ -163,15 +165,52 @@ def studentDashboard(request):
     }
     return render(request, 'students/student_dashboard.html', context)
 
+
+def post_ad(subject,tuition_level,tuition_type,address,hours_per_day,days_per_week,estimated_fees,user):
+    myad = PostAnAd(
+        studentUser = user,
+        subject = subject,
+        tuition_level = tuition_level,
+        tuition_type = tuition_type,
+        address = address,
+        hours_per_day = hours_per_day,
+        days_per_week = days_per_week,
+        estimated_fees = estimated_fees
+    )
+    myad.save()
+    user.total_ads += 1
+    user.ad_post_count += 1
+    user.save()
+
+def email_send(user,my_ad,emails):
+    if emails:
+        template = render_to_string("home/stdAD.html", {
+            "firstname": user.first_name,
+            "lastname": user.last_name,
+            "ad":my_ad
+            })
+        ADEmail = EmailMessage(
+            subject = f'{user.first_name} {user.last_name} posted an AD',
+            body = template,
+            from_email = settings.EMAIL_HOST_USER,
+            bcc = emails
+        )
+        ADEmail.fail_silently = False
+        ADEmail.send()
+
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["students"])
 def postAd(request, pk):
     postform = PostAnAdForm()
     user = Student.objects.get(username = request.user.username)
 
-    postCount = user.ad_post_count
 
     studentAds = PostAnAd.objects.filter(studentUser__username = request.user.username)
+    wishlist,created = WishList_tut.objects.get_or_create(student=request.user.student)
+    emails = []
+    tutors = wishlist.tutors.all()
+    for t in tutors:
+        emails.append(t.email)
 
     if request.method == "POST":
         postform = PostAnAdForm(request.POST)
@@ -192,20 +231,22 @@ def postAd(request, pk):
                 if ad.subject == subject and ad.tuition_level == tuition_level:
                     adAvailabel = True
             if adAvailabel == False:
-                PostAnAd.objects.create(
-                    studentUser = user,
-                    subject = subject,
-                    tuition_level = tuition_level,
-                    tuition_type = tuition_type,
-                    address = address,
-                    hours_per_day = hours_per_day,
-                    days_per_week = days_per_week,
-                    estimated_fees = estimated_fees
-                )
+                currentad = {
+                    "subject" : subject,
+                    "tuition_level" : tuition_level,
+                    "tuition_type" : tuition_type,
+                    "address" : address,
+                    "hours_per_day" : hours_per_day,
+                    "days_per_week" : days_per_week,
+                    "estimated_fees" : estimated_fees
+                }
+                my_ad = threading.Thread(target=post_ad, args=[subject,tuition_level,tuition_type,address,hours_per_day,days_per_week,estimated_fees,user])
+                
+                t2 = threading.Thread(target=email_send, args=[user,currentad,emails])
 
-                user.total_ads += 1
-                user.ad_post_count += 1
-                user.save()
+                my_ad.start()
+                t2.start()
+
                 messages.info(request, "Your post is Successfully Created")
                 return redirect("student_dashboard")
             else:
@@ -291,12 +332,24 @@ def SpecificTutor(request, id):
     tutor.views += 1
     tutor.save()
     tutors = PostAnAd_tutor.objects.filter(tutorUser__username = tutor.tutorUser.username).order_by("-id")
+
+    try:
+        wishList = WishList.objects.get(student = request.user.student)
+    except:
+        wishList = None
+
+    added = False
+    if wishList is not None:
+        if tutor.tutorUser in wishList.tutors.all():
+            added = True
     
     context = {
+        "tutor_id": tutor.tutorUser,
         "tutor": tutor,
         "qual": qual,
         "tutors": tutors.exclude(id = id),
-        "student": request.user.student
+        "student": request.user.student,
+        "added":added,
     }
     return render (request, "students/specific_tutor.html", context)
 
@@ -628,7 +681,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 
-import threading 
 
 def add_like(post,std):
     post.likes.add(std)
@@ -680,3 +732,50 @@ class PostLikeAPIToggle(APIView):
             "liked":liked
         }
         return Response(data)
+
+class WishlistApi(APIView):
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, id=None ,format=None):
+        tutor = Tutor.objects.get(id=id)
+        student = request.user.student 
+        updated = False 
+        added = False 
+
+        wishlist,created = WishList.objects.get_or_create(student=student)
+        wishlist_std,created = WishList_std.objects.get_or_create(tutor=tutor)
+
+        if tutor in wishlist.tutors.all():
+            updated = True 
+            added = False 
+            wishlist.tutors.remove(tutor)
+            wishlist_std.students.remove(student)
+        else:
+            updated = True 
+            added = True 
+            wishlist.tutors.add(tutor)
+            wishlist_std.students.add(student)
+
+        data = {
+            "updated":updated,
+            "added":added
+        }
+        return Response(data)
+
+
+def wishList(request):
+    try:
+        wishlist = WishList.objects.get(student=request.user.student)
+    except:
+        wishlist = None 
+
+    if wishlist is not None:
+        tutors = wishlist.tutors.all()
+    else:
+        tutors = []
+
+    context = {
+        "tutors":tutors
+    }
+    return render(request,'students/wishlist.html',context)

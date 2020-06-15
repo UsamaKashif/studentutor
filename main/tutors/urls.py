@@ -8,6 +8,7 @@ from . import views
 urlpatterns = [
     path("", views.tutorDashboard , name="tutor_dashboard"),
     path("postad/<str:pk>/", views.postAnAd , name="post_ad_tutor"),
+    path("wish-list/", views.wishList , name="wishlist_tut"),
     path("ads/", views.ads , name="ads_tutor"),
     path("invitaions/", views.invitations , name="invitations"),
     path("confirminvite/<int:id>/", views.confirmInvite , name="confirm_invite"),
@@ -16,6 +17,7 @@ urlpatterns = [
     path("students/", views.allStudents , name="all_students"),
     path("students/<int:id>/", views.specificStudent , name="specific_students"),
     path("students/<int:id>/like/api/", views.PostLikeAPIToggle.as_view() , name="post_like_api_tut"),
+    path("students/<int:id>/wish-list/", views.WishlistApi.as_view() , name="wish_list_tut"),
     path("students/invite/<int:id>/", views.inviteForDemo , name="student_invite"),
     path("student/invited/", views.tutorInvited , name="invited_students"),
     path("about/", views.about_qual , name="about_tutor"),

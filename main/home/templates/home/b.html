@@ -28,8 +28,8 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
   <meta name="author" content="">
+  <meta name="description" content="A platfrom for students and tutors to connect together">
 
   <title>StudenTutor</title>
 
@@ -49,6 +49,26 @@
   {% block links %} {% endblock %}
 
   <link rel="shortcut icon" type="image/png" href="{% static 'home/img/logo.png' %}">
+
+  <script>
+      let user = '{{request.user}}'
+      function getToken(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+      var csrftoken = getToken('csrftoken');
+  </script>
 
 </head>
 
@@ -110,6 +130,24 @@
           })
       })
       })
+    </script>
+    <script>
+        $(".wishlist").click(function(e){
+          e.preventDefault()
+          var this_ = $(this)
+          var wishList_url = this_.attr("data-href")
+          $.ajax({
+            url:wishList_url,
+            method:"GET",
+            data:{},
+            success: function(data){
+              location.reload()
+            }, error: function(error){
+              console.log(error)
+              console.log("error")
+            }
+          })
+        })
     </script>
 </body>
 

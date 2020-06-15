@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 
 from django.urls import reverse
 
+
+
 from PIL import Image
 # Create your models here.
 
@@ -52,6 +54,12 @@ class Student(models.Model):
 
             img.thumbnail(outputSize)
             img.save(self.user_image.path)
+
+    def get_api_url(self):
+        return reverse("wish_list_tut", kwargs={'id': self.id} )
+
+
+
 
 from tutors.models import Tutor
 
@@ -103,7 +111,15 @@ class TutorInvitaions(models.Model):
 
 class WishList(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True) 
-    tutors = models.ManyToManyField(Tutor, blank=True ,related_name="wishlist")
+    tutors = models.ManyToManyField(Tutor, blank=True ,related_name="wishlist_tutors")
 
     def __str__(self):
-        return render (f'{student.username} - {student.id}')
+        return (f'{self.student.username} - {self.student.id}')
+
+
+class WishList_std(models.Model):
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True)
+    students = models.ManyToManyField(Student, blank=True ,related_name="students")
+
+    def __str__(self):
+        return self.tutor

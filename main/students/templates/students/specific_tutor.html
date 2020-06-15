@@ -20,7 +20,12 @@
                                 <div class="card-body">
                                     <div class="row mb-2">
                                         <div class="col-md-12">
-                                            <span class="d-flex justify-content-end"> 
+                                            <span class="d-flex justify-content-between"> 
+                                                {% if added %}
+                                                    <a style="color:red; cursor:pointer" class="wishlist" data-href="{{tutor_id.get_api_url}}" ><i class="far fa-minus-square" style="font-size: 30px;"></i></a>
+                                                {% else %}
+                                                <a href="" style="cursor:pointer"  data-href="{{tutor_id.get_api_url}}" class="wishlist"><i class="far fa-plus-square"  data-action="add" data-tutor='{{tutor_id.id}}' style="font-size: 30px; color: black;"></i></a>
+                                                {% endif %}
                                                 <a class="btn btn-info" href="{% url 'tutor_invite' tutor.id %}">Invite For Demo</a>
                                             </span>
                                         </div>
@@ -29,7 +34,7 @@
                                     <div class="row">
                                         <div class="col-md-12 container ">
                                             <div class="d-flex justify-content-center">
-                                                <img src="{{tutor.tutorUser.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                                <img src="{{tutor.tutorUser.user_image.url}}" alt="tutor"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
                                             </div>
                                         </div>
                                     </div>

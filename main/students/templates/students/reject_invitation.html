@@ -18,7 +18,7 @@
                     <form method="POST" >
                         {% csrf_token %}
 
-                        <a class="btn btn-warning" href="{% url 'invited' %}">cancel</a>
+                        <a class="btn btn-warning" href="{% url 'invitations_student' %}">cancel</a>
                         <input class="btn btn-danger" type="submit" name="confirm">
                     </form>
                 </div>

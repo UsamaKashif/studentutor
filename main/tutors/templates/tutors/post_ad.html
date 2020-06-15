@@ -21,7 +21,7 @@
 			  </div>
 		{% endif %}
 		<div class="d-flex  ">
-			<div class="card card-body shadow mt-4  my-card">
+			<div class="card card-body shadow mt-4 mb-3 my-card">
 				<h5 class="card-title text-center">Post An AD</h5>
 				<hr>
 				<div class="container">
@@ -77,9 +77,17 @@
 
 						<div class="d-flex justify-content-center mt-3 login_container">
 							{% if user.tutor.ad_post_count < 5 %}
-							<input class="btn mt-3 text-info w-50 " type="submit" value="Post An AD">
+							{% if user.tutor.about_complete and user.tutor.qual_complete %}
+								{% if user.tutor.verified %}
+								<input class="btn mt-3 text-info w-50 " type="submit" value="Post An AD">
+								{% else %}
+								<h5 class="btn mt-3 text-info w-50 " >Post An AD</h5>
+								{% endif %}
+							{% else %}
+							<h5 class="btn mt-3 text-info w-50 " >Post An AD</h5>
+							{% endif %}
 							{% elif user.tutor.ad_post_count >= 5 %}
-							<input class="btn mt-3 text-info w-50 "  value="Post An AD">
+							<h5 class="btn mt-3 text-info w-50 " >Post An AD</h5>
 							{% endif %}
 						</div>
 					</form>

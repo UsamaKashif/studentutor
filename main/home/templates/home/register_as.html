@@ -9,6 +9,9 @@
                 background-repeat: no-repeat;
                 background-size: cover;
             }
+            .my-card{
+                border: 2px solid red;
+            }
     </style>
 {% endblock %}
 
@@ -21,22 +24,24 @@
 <header class="masthead ">
     <div class="container">
         <div class="container">
-            <div class="intro-text">
-                <div class="intro-lead-in">Sign-Up As</div>
-                <div class="intro-heading text-uppercase">Education is a progressive discovery of our own ignorance - <small>Will Durant</small></div>
-                <!-- <span class="d-flex justify-content-around">
-                        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'student_register' %}">Student</a>
-                        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'tutor_register' %}">Tutor</a>
-                </span> -->
-                <div class="row d-flex justify-content-around">
-                    <div class="col-md-3 mb-3">
-                            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'student_register' %}">Student</a>
+                <div class="intro-text">
+                        <div class="intro-lead-in mb-3">REGISTER <span class="text-primary">NOW</span></div>
+                       
+                            
+                        <div class="row text-center d-flex justify-content-around mt-5">
+                                <div class="col-md-6">
+                                    <p class="mb-4"><b>Qualified and Experienced tutors available.<br> Register Now to find one.</b></p>
+                                    <a class="btn btn-danger text-light p-5 mb-5" href="{% url 'student_register' %}" target="blank">Register as Student</a>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <p class=" mb-4"><b>Start your teaching career for free.<br> Register Now and follow the steps to get your first tuition.</b></p>
+                                    <a class="btn btn-secondary text-light p-5" href="{% url 'tutor_register' %}" target="blank">Register as Tutor</a>
+                                </div>
+                            </div>
+                       
                     </div>
-                    <div class="col-md-3">
-                            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'tutor_register' %}">Tutor</a>
-                    </div>
-                </div>
-            </div>
+        </div>
         </div>
     </div>
   </header>

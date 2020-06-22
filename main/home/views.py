@@ -31,22 +31,27 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 def tutors(request):
 
     try:
-        allTutors = Tutor.objects.all().order_by("-id")
+        tutors = Tutor.objects.all().order_by("-id")
     except:
-        allTutors = None
+        tutors = None
+    
+
+    # tutors = PostAnAd_tutor.objects.all().order_by("-id")
+    print(tutors)
+    gender_query = request.GET.get('gender')
+    name_query = request.GET.get('name')
+    if tutors:
+        if gender_query != "" and gender_query is not None and gender_query != "Both":
+            tutors = tutors.filter(gender__startswith = gender_query)
+        if name_query != "" and name_query is not None:
+            tutors = tutors.filter(first_name__icontains= name_query)
+
     tuts = []
-    if allTutors != None:
-        for t in allTutors:
-            if t.verified and t.tutor.is_active:
+    if tutors != None:
+        for t in tutors:
+            if  t.tutor.is_active and t.verified:
                 tuts.append(t)
-
-    tutors = PostAnAd_tutor.objects.all().order_by("-id")
-    tuition_level_contains_query = request.GET.get('TuitionLevel')
-    subject_contains_query = request.GET.get('Subject')
-    city_contains_query = request.GET.get('City')
-
-    number = tutors.count()
-
+                
     paginator = Paginator(tuts,6)
     page = request.GET.get('page')
     try:
@@ -62,25 +67,11 @@ def tutors(request):
     end_index = index + 5 if index <= max_index - 5 else max_index
     page_range = paginator.page_range[start_index:end_index]
 
-    if tutors:
-        if tuition_level_contains_query != "" and tuition_level_contains_query is not None and tuition_level_contains_query != "All":
-            tutors = tutors.filter(tuition_level = tuition_level_contains_query).order_by("-id")
-            number = tutors.count()
-
-        if subject_contains_query != "" and subject_contains_query is not None:
-            tutors = tutors.filter(subject__icontains = subject_contains_query).order_by("-id")
-            number = tutors.count()
-
-        if city_contains_query != "" and city_contains_query is not None:
-            tutors = tutors.filter(tutorUser__city__icontains = city_contains_query).order_by("-id")
-            number = tutors.count()
     group = None
     if request.user.groups.exists():
         group = request.user.groups.all()[0].name
 
     context = {
-        "tutors":tutors,
-        "number": number,
         "tutor":tuts,
         "items": items,
         "page_range": page_range,

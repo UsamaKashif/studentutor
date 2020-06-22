@@ -44,6 +44,7 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{ad.subject}}</span></li>
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{ad.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Gender: </b>{{ad.tutor_gender}}</span></li>
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>hrs/day: </b>{{ad.hours_per_day}}</span></li>
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>days/week: </b>{{ad.days_per_week}}</span></li>
                                 <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{ad.estimated_fees}}</span></li>
@@ -59,9 +60,19 @@
             </div>
             {% endfor %}
             {% else %}
-            <div class="d-flex justify-content-center container">
-                    <h1 class="border p-3 mt-5 border-primary text-secondary"> YOU DON'T HAVE ANY ADs </h1>
-                </div>
+            <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-end">
+                                <a class="btn btn-primary text-light" href="{% url 'post_ad' user.id %}">Post An AD</a>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="d-flex justify-content-center">
+                        <h1 class="border p-3 mt-3 border-primary text-secondary"> YOU DON'T HAVE ANY ADs </h1>
+                    </div>
+            </div>
             {% endif %}
         </div>
     </div>

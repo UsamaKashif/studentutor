@@ -67,8 +67,10 @@
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{tutor.subject}}</span></li>
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{tutor.tuition_level}}</span></li>
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{tutor.estimated_fees}}</span></li>
-                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{tutor.tutorUser.city}}</span></li>
+                                            
                                             {% if tutor.can_travel == "Yes" and tutor.tuition_type == "Home Tuition" %}
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{tutor.tutorUser.city}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{tutor.address}}</span></li>
                                                 <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Travel</b></span></li>
                                             {% elif tutor.can_travel == "No" and tutor.tuition_type == "Home Tuition" %}
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{tutor.address}}</span></li>

@@ -26,6 +26,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
 from .utils import generate_token
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 import threading 
 # Create your views here.
 
@@ -166,7 +168,7 @@ def studentDashboard(request):
     return render(request, 'students/student_dashboard.html', context)
 
 
-def post_ad(subject,tuition_level,tuition_type,address,hours_per_day,days_per_week,estimated_fees,user):
+def post_ad(subject,tuition_level,tuition_type,address,hours_per_day,days_per_week,estimated_fees,user,tutor_gender):
     myad = PostAnAd(
         studentUser = user,
         subject = subject,
@@ -175,7 +177,8 @@ def post_ad(subject,tuition_level,tuition_type,address,hours_per_day,days_per_we
         address = address,
         hours_per_day = hours_per_day,
         days_per_week = days_per_week,
-        estimated_fees = estimated_fees
+        estimated_fees = estimated_fees,
+        tutor_gender = tutor_gender
     )
     myad.save()
     user.total_ads += 1
@@ -220,6 +223,7 @@ def postAd(request, pk):
             subject = postform.cleaned_data["subject"]
             tuition_level = postform.cleaned_data["tuition_level"]
             tuition_type = postform.cleaned_data["tuition_type"]
+            tutor_gender = postform.cleaned_data["tutor_gender"]
             address = postform.cleaned_data["address"]
             hours_per_day = postform.cleaned_data["hours_per_day"]
             days_per_week = postform.cleaned_data["days_per_week"]
@@ -238,9 +242,10 @@ def postAd(request, pk):
                     "address" : address,
                     "hours_per_day" : hours_per_day,
                     "days_per_week" : days_per_week,
-                    "estimated_fees" : estimated_fees
+                    "estimated_fees" : estimated_fees,
+                    "tutor_gender":tutor_gender
                 }
-                my_ad = threading.Thread(target=post_ad, args=[subject,tuition_level,tuition_type,address,hours_per_day,days_per_week,estimated_fees,user])
+                my_ad = threading.Thread(target=post_ad, args=[subject,tuition_level,tuition_type,address,hours_per_day,days_per_week,estimated_fees,user,tutor_gender])
                 
                 t2 = threading.Thread(target=email_send, args=[user,currentad,emails])
 
@@ -299,7 +304,7 @@ def allTutors(request):
     tuition_level_contains_query = request.GET.get('TuitionLevel')
     subject_contains_query = request.GET.get('Subject')
     city_contains_query = request.GET.get('City')
-
+    tuition_gender_query = request.GET.get('tuition_gender')
     number = tutors.count()
 
     if tutors:
@@ -314,11 +319,38 @@ def allTutors(request):
         if city_contains_query != "" and city_contains_query is not None:
             tutors = tutors.filter(tutorUser__city__icontains = city_contains_query).order_by("-id")
             number = tutors.count()
-
+        
+        if tuition_gender_query != "" and tuition_gender_query is not None and tuition_gender_query != "Both":
+            tutors = tutors.filter(tutorUser__gender__startswith = tuition_gender_query.lower())
+            number = tutors.count()
+    
+    tuts = []
+    if tutors:
+        for t in tutors:
+            if t.tutorUser.verified:
+                tuts.append(t)
+            
+    paginator = Paginator(tuts,8)
+    page = request.GET.get('page')
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
+    
+    index = items.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 5 if index >= 5 else 0
+    end_index = index + 5 if index <= max_index - 5 else max_index
+    page_range = paginator.page_range[start_index:end_index]
+    
     context = {
-        "tutors":tutors,
+        # "tutors":items,
+        "items":items,
         "number": number,
-        "student": request.user.student
+        "student": request.user.student,
+        "page_range": page_range,
     }
     return render(request, 'students/all_tutors.html', context)
 

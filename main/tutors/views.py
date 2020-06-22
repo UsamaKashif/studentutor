@@ -25,6 +25,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
 from students.utils import generate_token
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 import threading 
 # Create your views here.
 
@@ -431,6 +433,7 @@ def allStudents(request):
     tuition_level_contains_query = request.GET.get('TuitionLevel')
     subject_contains_query = request.GET.get('Subject')
     city_contains_query = request.GET.get('City')
+    tuition_gender_query = request.GET.get('tuition_gender')
 
     number = students.count()
 
@@ -447,7 +450,33 @@ def allStudents(request):
             students = students.filter(studentUser__city__icontains = city_contains_query).order_by("-id")
             number = students.count()
 
+        if tuition_gender_query != "" and tuition_gender_query is not None and tuition_gender_query != "Both":
+            students = students.filter(tutor_gender = tuition_gender_query)
+            number = students.count()
+
+    stds = []
+    for s in students:
+        if s.studentUser.profile_complete:
+            stds.append(s)
+
+    paginator = Paginator(stds,8)
+    page = request.GET.get('page')
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
+    
+    index = items.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 5 if index >= 5 else 0
+    end_index = index + 5 if index <= max_index - 5 else max_index
+    page_range = paginator.page_range[start_index:end_index]
+
     context = {
+        "page_range": page_range,
+        "items":items,
         "students":students,
         "number": number,
         "tutor":request.user.tutor

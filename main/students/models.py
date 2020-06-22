@@ -83,6 +83,8 @@ class PostAnAd(models.Model):
 
     estimated_fees = models.IntegerField()
 
+    tutor_gender = models.CharField(max_length=200, default="Male/Fe-Male")
+
 
     def __str__(self):
         return f'{self.subject} : {self.tuition_level} : {self.studentUser.username} : {self.studentUser.id}'

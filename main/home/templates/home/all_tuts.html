@@ -63,60 +63,6 @@
 
 {% block content %}
 
-<div class="modal" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Filter Tutors</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            
-            <!-- Modal body -->
-            <div class="modal-body">
-                <form method="GET" enctype="multipart/form-data">
-                    {% csrf_token %}
-
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="search" name="Subject" placeholder="Subject" class="form-control">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <select class="form-control selectpicker" name="TuitionLevel">
-                                <option>All</option>
-                                <option>Primary (class 1-5)</option>
-                                <option>Matric</option>
-                                <option>University</option>
-                                <option>Professional</option>
-                                <option>Secondary (class 6-8)</option>
-                                <option>Intermediate</option>
-                                <option>O Level</option>
-                                <option>A Level</option>
-                                <option>SAT-I / SAT-II / E-CAT / M-CAT / GRE / GMAT / Entry test</option>
-                                <option>IELTS / TOEFL", "IELTS / TOEFL</option>
-                                <option>Quran / Religious Studies", "Quran / Religious Studies</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="search" name="City" placeholder="City" class="form-control ">
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn btn-success">Filter</button>
-                        </div>
-                </form>
-            </div>
-            </div>
-        </div>
-    </div>
-
 <!-- <div class="container mt-5">
         <h3 class="bg-light p-3">FEATURED</h3>
         <br>
@@ -193,6 +139,30 @@
 
 <div class="container mt-5">
     <h3 class="bg-light p-3">Verified Tutors</h3>
+    <form method="GET">
+        {% csrf_token %}
+            <div class="row">
+              <div class="col-lg-4 col-md-4 col-sm-6">
+                <input type="search" class="form-control" name="name" placeholder="Tutor Name">
+              </div>
+
+              <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="input-group">
+                        <select class="form-control selectpicker" name="gender">
+                            <option>Both</option>
+                            <option>Male</option>
+                            <option>FeMale</option>
+                        </select>
+                    </div>
+              </div>
+              
+              <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="d-flex ">
+                        <button type="submit" class="btn btn-primary">Filter Tutors</button>
+                    </div>
+              </div>
+            </div>
+          </form>
     <div class="row row-cols-1 row-cols-md-2 mt-3 mb-3">
             {% if items %}
             {% for tutor in items %}

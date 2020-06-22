@@ -82,6 +82,16 @@
                     
                     <div class="form-group">
                         <div class="input-group">
+                            <select class="form-control selectpicker" name="tuition_gender">
+                                <option>Both</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
                             <input type="search" name="City" placeholder="City" class="form-control ">
                         </div>
                     </div>
@@ -96,7 +106,7 @@
 
 
 
-{% if tutors %}
+{% if items %}
 <div class="container">
         <button class="btn shadow text-center" id="floating_btn" data-toggle="modal" data-target="#myModal" >Filter Tutors</button>
         
@@ -115,8 +125,8 @@
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-2 mt-3">
-            {% for tutor in tutors %}
-            {% if tutor.tutorUser.verified == True %}
+            {% for tutor in items %}
+            
             <div class="col mb-4">
                 <div class="card shadow border-primary" style="height: auto;">
                     <div class="card-body">
@@ -157,9 +167,12 @@
                                 <div class="container">
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{tutor.subject}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Gender: </b>{{tutor.tutorUser.gender}}</span></li>
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{tutor.tuition_level}}</span></li>
-                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{tutor.tutorUser.city}}</span></li>
+                                            
                                             {% if tutor.can_travel == "Yes" and tutor.tuition_type == "Home Tuition" %}
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{tutor.tutorUser.city}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{tutor.address}}</span></li>
                                                 <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can Travel</b></span></li>
                                             {% elif tutor.can_travel == "No" and tutor.tuition_type == "Home Tuition" %}
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{tutor.address}}</span></li>
@@ -174,8 +187,8 @@
                     </div>
                 </div>
             </div>
-            {% endif %}
             {% endfor %}
+            {% include "home/pagination.html" %}
         </div>
     </div>
     {% else %}
@@ -183,4 +196,5 @@
         <h1 class="border p-3 mt-5 border-primary text-secondary"> NO TUTOR FOUND </h1>
     </div>
     {% endif %}
+   
 {% endblock %}

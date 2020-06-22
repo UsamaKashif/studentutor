@@ -8,6 +8,7 @@
 {% block content %}
     <div class="container">
         <div class="row row-cols-1 row-cols-md-2 mt-3">
+            {% if ads %}
             {% for ad in ads %}
             <div class="col mb-4">
                 <div class="card shadow border-primary" style="height: auto;">
@@ -59,6 +60,21 @@
                 </div>
             </div>
             {% endfor %}
+            {% else %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-primary text-light" href="{% url 'post_ad_tutor' user.id %}" >Post An AD</a>
+                        </div>
+                    </div>
+                </div>
+            
+            <div class="d-flex justify-content-center">
+                    <h1 class="border p-3 mt-3 border-primary text-secondary"> YOU DON'T HAVE ANY ADs </h1>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
     

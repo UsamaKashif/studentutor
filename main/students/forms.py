@@ -163,6 +163,17 @@ class PostAnAdForm (forms.Form):
         ("Online Tuition", "Online Tuition"),
     )
 
+    GENDER = {
+        ("Male/FeMale","Male/FeMale"),
+        ("Male","Male"),
+        ("FeMale","FeMale"),
+    }
+
+    tutor_gender = forms.ChoiceField(
+        choices = GENDER,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     tuition_type = forms.ChoiceField(
         choices=TYPE, 
         widget=forms.Select(attrs={'class': 'form-control'})

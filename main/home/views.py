@@ -42,7 +42,7 @@ def tutors(request):
     name_query = request.GET.get('name')
     if tutors:
         if gender_query != "" and gender_query is not None and gender_query != "Both":
-            tutors = tutors.filter(gender__startswith = gender_query)
+            tutors = tutors.filter(gender__startswith = gender_query.lower())
         if name_query != "" and name_query is not None:
             tutors = tutors.filter(first_name__icontains= name_query)
 

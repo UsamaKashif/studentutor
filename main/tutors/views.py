@@ -456,9 +456,9 @@ def allStudents(request):
 
     stds = []
     for s in students:
-        if s.studentUser.profile_complete:
+        if s.studentUser.profile_complete and s.studentUser.student.is_active:
             stds.append(s)
-
+    number = len(stds)
     paginator = Paginator(stds,8)
     page = request.GET.get('page')
     try:

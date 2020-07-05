@@ -31,14 +31,18 @@
                     
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <span class="d-flex justify-content-end">   
-                                {% if invite.accepted %}
-                                <h5 class="text-success">Invitation Accepted</h5>
-                                {% elif  invite.rejected %}
-                                <h5 class="text-danger">Invitation Rejected</h5>
+                            <span class="d-flex justify-content-end"> 
+                                {% if user.tutor.verified %}  
+                                    {% if invite.accepted %}
+                                    <h5 class="text-success">Invitation Accepted</h5>
+                                    {% elif  invite.rejected %}
+                                    <h5 class="text-danger">Invitation Rejected</h5>
+                                    {% else %}
+                                    <a class="btn btn-info mr-3" href="{% url 'confirm_invite' invite.id %}">Accept</a>
+                                    <a class="btn btn-danger" href="{% url 'reject_invite' invite.id %}">Reject</a>
+                                    {% endif %}
                                 {% else %}
-                                <a class="btn btn-info mr-3" href="{% url 'confirm_invite' invite.id %}">Accept</a>
-                                <a class="btn btn-danger" href="{% url 'reject_invite' invite.id %}">Reject</a>
+                                    <h5 class="text-danger mb-4">Verify Yourself To Accept/Reject</h5>
                                 {% endif %}
                             </span>
                         </div>

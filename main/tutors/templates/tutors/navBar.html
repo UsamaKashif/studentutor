@@ -11,18 +11,20 @@
             <a class="nav-item nav-link" href="{% url 'invited_students' %}">Invited</a>
             <a class="nav-item nav-link" href="{% url 'ads_tutor' %}">ADS</a>
             <a class="nav-item nav-link" href="{% url 'wishlist_tut' %}">WishList</a>
-            {% if user.tutor.verified == True %}
-                <a class="nav-item nav-link" href="{% url 'post_ad_tutor' user.id %}" >Post An AD</a>
-                
+            
+            {% if user.tutor.verified == True %}   
             {% elif user.tutor.verified == False %}
-                <a class="nav-item nav-link disabled" aria-disabled="true">Post An AD</a>
+                
                 {% if user.tutor.about_complete == True and user.tutor.qual_complete == True %}
                     {% if user.tutor.verification_sent == True %}
+                    <a class="nav-item nav-link" href="{% url 'post_ad_tutor' user.id %}" >Post An AD</a>
                         <a class="nav-item nav-link disabled" href="{% url 'verify_tutor' %}">Verify Documents</a>
                     {% else %}
+                    <a class="nav-item nav-link" href="{% url 'post_ad_tutor' user.id %}" >Post An AD</a>
                         <a class="nav-item nav-link" href="{% url 'verify_tutor' %}">Verify Documents</a>
                     {% endif %}
                 {% else %}
+                <a class="nav-item nav-link disabled" href="{% url 'post_ad_tutor' user.id %}" >Post An AD</a>
                     <a class="nav-item nav-link disabled" >Verify Documents</a>
                 {% endif %}
             {% endif %}

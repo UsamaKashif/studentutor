@@ -4,6 +4,17 @@
 
 {% block nav %}
   {% include 'home/navBar.html' %}
+
+  <style>
+    @media (max-width:500px){
+      .tutors-section{
+        flex-direction: column;
+      }
+      .tutors-section h4{
+        padding: 30px;;
+      }
+}
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -32,21 +43,17 @@
 <section class="page-section" id="services">
   <div class="container">
     <div class="row text-center d-flex justify-content-around">
-      <div class="col-md-4 mb-4">
-        <h4 class="service-heading">Registered Tutors</h4>
+      <div class="col-md-12 justify-content-center mb-4 d-flex tutors-section" >
+        
         <!-- <p class="text-muted">{{tutors}}</p> -->
         <a href="{% url 'tutors' %}" target="blank"><span class="fa-stack fa-4x">
           <i class="fas fa-circle fa-stack-2x text-primary"></i>
           <i class="fas fa-stack-1x fa-inverse">{{tutors}}</i>
         </span></a>
-      </div>
-      <div class="col-md-4">
-        <h4 class="service-heading">Registered Students</h4>
-        <!-- <p class="text-muted">{{students}}</p> -->
-        <span class="fa-stack fa-4x">
-          <i class="fas fa-circle fa-stack-2x text-primary"></i>
-          <i class="fas fa-stack-1x fa-inverse">{{students}}</i>
-        </span>
+        <h4 class="service-heading align-self-center">
+          Registered Tutors
+          <a href="{% url 'tutors' %}" target="_blank" style="display: block; margin-top: 10px; color: #fed136; font-weight: bold;">View Tutors</a>
+        </h4>
       </div>
     </div>
   </div>

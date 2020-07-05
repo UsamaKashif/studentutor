@@ -77,14 +77,10 @@
 
 						<div class="d-flex justify-content-center mt-3 login_container">
 							{% if user.tutor.ad_post_count < 5 %}
-							{% if user.tutor.about_complete and user.tutor.qual_complete %}
-								{% if user.tutor.verified %}
+							{% if user.tutor.qual_complete == True and user.tutor.about_complete == True %}
 								<input class="btn mt-3 text-info w-50 " type="submit" value="Post An AD">
-								{% else %}
-								<h5 class="btn mt-3 text-info w-50 " >Post An AD</h5>
-								{% endif %}
 							{% else %}
-							<h5 class="btn mt-3 text-info w-50 " >Post An AD</h5>
+								<h5 class="btn mt-3 text-info w-50 " >Post An AD</h5>
 							{% endif %}
 							{% elif user.tutor.ad_post_count >= 5 %}
 							<h5 class="btn mt-3 text-info w-50 " >Post An AD</h5>

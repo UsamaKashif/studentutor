@@ -18,8 +18,12 @@
                     <form method="POST" >
                         {% csrf_token %}
 
-                        <a class="btn btn-warning" href="{% url 'invitations' %}">cancel</a>
-                        <input class="btn btn-danger" type="submit" name="confirm">
+                        {% if user.tutor.verified %}
+                            <a class="btn btn-warning" href="{% url 'invitations' %}">cancel</a>
+                            <input class="btn btn-danger" type="submit" name="confirm">
+                        {% else %}
+                            <h4 class="text-danger">Verify YourSelf To Reject The Invitation</h4>
+                        {% endif %}
                     </form>
                 </div>
             </div>

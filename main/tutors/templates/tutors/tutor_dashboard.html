@@ -84,13 +84,13 @@
 <div class="container mt-5">
     {% if user.tutor.verified == False and user.tutor.verification_sent == False %}
     <div class="alert alert-danger mb-4" role="alert">
-        Verify your documents to be able to <b>Post An AD</b> and <b>Ask Students For Demo</b>
+        Verify your documents to be able to <b>Ask Students For Demo</b> and <b>Accept the INVITATION from Student</b>
     </div>
     {% endif %}
 
     {% if user.tutor.qual_complete == False or user.tutor.about_complete == False  %}
     <div class="alert alert-info mb-4" role="alert">
-        Complete <b>About Me & Qualifications</b> to be able to <b>Verify your documents</b>
+        Complete <b>About Me & Qualifications</b> to be able to <b>Verify your documents</b> and <b>Post Your AD</b>
     </div>
     {% endif %}
 
@@ -105,11 +105,13 @@
     {% endif %}
     <div class="row mb-3">
         <div class="col-md-12">
+            
             {% if user.tutor.verified == True %}
             <a class="btn btn-primary float-right"  href="{% url 'post_ad_tutor' user.id %}" style="color: white;">Post An AD</a>
             <a class="btn btn-success float-right mr-3"  href="{% url 'wishlist_tut' %}" style="color: white;">WishList</a>
             {% else %}
                 {% if user.tutor.about_complete and user.tutor.qual_complete %}
+                <a class="btn btn-success float-right ml-3"  href="{% url 'post_ad_tutor' user.id %}" style="color: white;">Post An AD</a>
                 <a class="btn btn-primary float-right"  href="{% url 'verify_tutor' %}" style="color: white;">Verify Documents</a>
                 {% else %}
                 <a class="btn btn-secondary  float-right"  href="{% url 'about_tutor' %}" style="color: white;">About</a>

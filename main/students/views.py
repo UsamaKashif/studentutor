@@ -326,9 +326,8 @@ def allTutors(request):
     
     tuts = []
     if tutors:
-        for t in tutors:
-            if t.tutorUser.verified:
-                tuts.append(t)
+        for t in tutors:  
+            tuts.append(t)
             
     paginator = Paginator(tuts,8)
     page = request.GET.get('page')

@@ -51,7 +51,11 @@
                         </div>
                         <small class="text-danger">{{form.highest_qual.errors}}</small>
                         <div class="d-flex justify-content-center">
-                            <input type="submit" value="Verify" class="btn btn-success mt-2">
+                            {% if user.tutor.qual_complete and user.tutor.about_complete %}
+                                <input type="submit" value="Verify" class="btn btn-success mt-2">
+                            {% else %}
+                                <h4  class="btn btn-secondary disabled mt-2">Verify</h4>
+                            {% endif %}
                         </div>
                     </form>
                 </div>

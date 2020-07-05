@@ -37,7 +37,7 @@ def tutors(request):
     
 
     # tutors = PostAnAd_tutor.objects.all().order_by("-id")
-    print(tutors)
+    
     gender_query = request.GET.get('gender')
     name_query = request.GET.get('name')
     if tutors:
@@ -51,7 +51,7 @@ def tutors(request):
         for t in tutors:
             if  t.tutor.is_active and t.verified:
                 tuts.append(t)
-                
+    number = Tutor.objects.all().count()
     paginator = Paginator(tuts,6)
     page = request.GET.get('page')
     try:
@@ -75,7 +75,8 @@ def tutors(request):
         "tutor":tuts,
         "items": items,
         "page_range": page_range,
-        "grp": group
+        "grp": group,
+        "number":number
     }
     return render(request, "home/all_tuts.html", context)
 

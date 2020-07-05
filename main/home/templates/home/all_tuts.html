@@ -138,7 +138,7 @@
 </div> -->
 
 <div class="container mt-5">
-    <h3 class="bg-light p-3">Verified Tutors</h3>
+    <h3 class="bg-light p-3"><span style="color: #fec810;">{{number}}</span> Tutors</h3>
     <form method="GET">
         {% csrf_token %}
             <div class="row">
@@ -146,7 +146,7 @@
                 <input type="search" class="form-control" name="name" placeholder="Tutor Name">
               </div>
 
-              <div class="col-lg-4 col-md-4 col-sm-6">
+              <!-- <div class="col-lg-4 col-md-4 col-sm-6">
                     <div class="input-group">
                         <select class="form-control selectpicker" name="gender">
                             <option>Both</option>
@@ -154,7 +154,7 @@
                             <option>FeMale</option>
                         </select>
                     </div>
-              </div>
+              </div> -->
               
               <div class="col-lg-4 col-md-4 col-sm-12">
                     <div class="d-flex ">

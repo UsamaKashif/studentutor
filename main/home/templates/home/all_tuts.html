@@ -284,19 +284,19 @@
                                 <span class="d-flex justify-content-between">
                                     {% if user.is_authenticated and registered == "students" %}
                                     {% if user.student.profile_complete == False %}
-                                    <a class="btn btn-danger text-light" href="{% url 'tutor_detail' tutor.id %}">View
+                                    <a class="btn btn-danger text-light" href="{% url 'tutor_detail' tutor.tutorUser.id %}">View
                                         Tutor</a>
                                     <a class="btn btn-info text-light disabled"
                                         href="{% url 'tutor_invite' tutor.id %}">Invite For Demo</a>
                                     {% else %}
-                                    <a class="btn btn-danger text-light" href="{% url 'tutor_detail' tutor.id %}">View
+                                    <a class="btn btn-danger text-light" href="{% url 'tutor_detail' tutor.tutorUser.id %}">View
                                         Tutor</a>
                                     <a class="btn btn-info text-light" href="{% url 'tutor_invite' tutor.id %}">Invite
                                         For
                                         Demo</a>
                                     {% endif %}
                                     {% else %}
-                                    <a class="btn btn-danger text-light" href="{% url 'tutor_detail' tutor.id %}">View
+                                    <a class="btn btn-danger text-light" href="{% url 'tutor_detail' tutor.tutorUser.id %}">View
                                         Tutor</a>
                                     <a class="btn btn-info text-light" data-toggle="modal"
                                         data-target="#myModal">Register</a>

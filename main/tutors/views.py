@@ -49,7 +49,7 @@ def tutorRegister(request):
             city = form.cleaned_data.get('city')
             firstName = form.cleaned_data.get('first_name')
             lastName = form.cleaned_data.get('last_name')
-            gender = form.cleaned_data.get('gender')
+            gender = form.cleaned_data.get('gender').upper()
             cnic = form.cleaned_data.get('cnic')
             phone = form.cleaned_data.get('phone')
 

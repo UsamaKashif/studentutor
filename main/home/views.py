@@ -44,7 +44,11 @@ def tutors(request):
 
     if tutors:
         if gender_query != "" and gender_query is not None and gender_query != "Male/FeMale":
-            tutors = tutors.filter(tutorUser__gender__startswith = gender_query.lower())
+            for t in tutors:
+                t.tutorUser.gender = t.tutorUser.gender.upper()
+                t.tutorUser.save()
+            tutors = tutors.filter(tutorUser__gender__startswith = gender_query.upper())
+            
         if subject_query != "" and subject_query is not None:
             tutors = tutors.filter(subject__icontains= subject_query)
         if tuitionlevel_query != "" and tuitionlevel_query is not None and tuitionlevel_query != "All Tuition Level":

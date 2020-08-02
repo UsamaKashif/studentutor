@@ -3,30 +3,30 @@
 {% load static %}
 
 {% block links %}
-    <style>
-        a {
-            
-            font-family: 'Kaushan Script', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-        }
+<style>
+    a {
 
-        #floating_btn{
-            position: fixed;
-            bottom: 50px;
-            right: 40px;
-            z-index: 999;
-            padding: 15;
-            font-size: 1.2rem;
-            width: 80px;
-            height: 80px;
-            border: solid 2px;
-            border-color: black;
-            border-radius: 40%;
-            background-color:#fec810;
-            color:white;
-            font-weight:600;
-            font-size: 17px;
-        }
-    </style>
+        font-family: 'Kaushan Script', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    }
+
+    #floating_btn {
+        position: fixed;
+        bottom: 50px;
+        right: 40px;
+        z-index: 999;
+        padding: 15;
+        font-size: 1.2rem;
+        width: 80px;
+        height: 80px;
+        border: solid 2px;
+        border-color: black;
+        border-radius: 40%;
+        background-color: #fec810;
+        color: white;
+        font-weight: 600;
+        font-size: 17px;
+    }
+</style>
 {% endblock %}
 
 {% block nav %}
@@ -34,30 +34,31 @@
     <a class="navbar-brand" href="{% url 'home_page' %}" style="color: #fed136;">
         <img src="{% static 'home/img/logo.png' %}"> StudenTutor
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link " href="{% url 'home_page' %}">Home</a>
-        {% if user.is_authenticated %}
-        {% if grp == "students" %}
+        <div class="navbar-nav">
+            <a class="nav-item nav-link " href="{% url 'home_page' %}">Home</a>
+            {% if user.is_authenticated %}
+            {% if grp == "students" %}
             <li class="nav-item">
                 <a class="nav-link js-scroll-trigger" href="{% url 'student_dashboard' %}">Dashboard</a>
             </li>
-        {% else %}
+            {% else %}
             <li class="nav-item">
                 <a class="nav-link js-scroll-trigger" href="{% url 'tutor_dashboard' %}">Dashboard</a>
             </li>
-        {% endif %}
-        <a class="nav-item nav-link" href="{% url 'sign_out' %}">Sign Out</a>
-        {% else %}
-        <a class="nav-item nav-link" href="{% url 'sign_in' %}">Sign In</a>
-        <a class="nav-item nav-link" href="{% url 'register_as' %}">Register</a>
-        {% endif %}
-      </div>
+            {% endif %}
+            <a class="nav-item nav-link" href="{% url 'sign_out' %}">Sign Out</a>
+            {% else %}
+            <a class="nav-item nav-link" href="{% url 'sign_in' %}">Sign In</a>
+            <a class="nav-item nav-link" href="{% url 'register_as' %}">Register</a>
+            {% endif %}
+        </div>
     </div>
-  </nav>
+</nav>
 
 {% endblock %}
 
@@ -136,85 +137,256 @@
     <hr>
     <br>
 </div> -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog border-dark">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Register Now To Send The Invitation</h4>
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-10 col-xl-9 mx-auto">
+                            <div class="card  shadow-lg card-signin flex-row my-5 border-dark">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Student Register</h5>
+                                    <form class="form-signin" method="POST" action="">
+                                        {% csrf_token %}
+                                        <div class="form-label-group">
+                                            {{form.username}}
+                                        </div>
+                                        <small class="text-danger">{{form.username.errors}}</small>
+
+                                        <div class="form-label-group">
+                                            {{form.first_name}}
+                                        </div>
+                                        <small class="text-danger">{{form.first_name.errors}}</small>
+                                        <div class="form-label-group">
+                                            {{form.last_name}}
+                                        </div>
+                                        <small class="text-danger">{{form.last_name.errors}}</small>
+                                        <div class="form-label-group">
+                                            {{form.email}}
+                                        </div>
+                                        <small class="text-danger">{{form.email.errors}}</small>
+                                        <div class="form-label-group">
+                                            {{form.phone}}
+                                        </div>
+                                        <small class="text-danger">{{form.email.phone}}</small>
+                                        <div class="form-label-group">
+                                            {{form.age}}
+                                        </div>
+                                        <small class="text-danger">{{form.age.errors}}</small>
+                                        <div class="form-label-group">
+                                            {{form.city}}
+                                        </div>
+                                        <small class="text-danger">{{form.city.errors}}</small>
+
+                                        <hr>
+
+                                        <div class="form-label-group">
+                                            {{form.password1}}
+                                        </div>
+                                        <small class="text-danger">{{form.password1.errors}}</small>
+
+                                        <div class="form-label-group">
+                                            {{form.password2}}
+                                        </div>
+                                        <small class="text-danger">{{form.password2.errors}}</small>
+
+                                        <div class="d-flex justify-content-center text-center mb-3 mt-3">
+                                            <small>By clicking register you <b>accept</b> our <br> <a
+                                                    href="{% url 'privacy_policy' %}" target="blank"><b>Privacy
+                                                        Policy</b></a> and <a href="{% url 'terms' %}"
+                                                    target="blank"><b>Terms Of Use</b></a></small>
+                                        </div>
+
+                                        <button class="btn btn-lg btn-primary btn-block text-uppercase"
+                                            type="submit">Register</button>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="container mt-5">
-    <h3 class="bg-light p-3"><span style="color: #fec810;">{{number}}</span> Tutors</h3>
-    <form method="GET">
-        {% csrf_token %}
-            <div class="row">
-              <div class="col-lg-4 col-md-4 col-sm-6">
-                <input type="search" class="form-control" name="name" placeholder="Tutor Name">
-              </div>
 
-              <!-- <div class="col-lg-4 col-md-4 col-sm-6">
+    <h3 class="bg-light p-3"><span style="color: #fec810;">{{count}}</span> AD(s) Found</h3>
+    <div class="col-12 d-flex justify-content-center">
+        <form method="GET">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+                    <input type="search" class="form-control" name="subject" placeholder="Subject">
+                </div>
+
+
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
                     <div class="input-group">
                         <select class="form-control selectpicker" name="gender">
-                            <option>Both</option>
+                            <option>Male/FeMale</option>
                             <option>Male</option>
                             <option>FeMale</option>
                         </select>
                     </div>
-              </div> -->
-              
-              <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="d-flex ">
-                        <button type="submit" class="btn btn-primary">Filter Tutors</button>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-3">
+                    <div class="input-group">
+                        <select class="form-control selectpicker" name="tuition-level">
+                            <option>All Tuition Level
+                            <option>
+                            <option>Primary (class 1-5)</option>
+                            <option>Matric</option>
+                            <option>University</option>
+                            <option>Professional</option>
+                            <option>Secondary (class 6-8)</option>
+                            <option>Intermediate</option>
+                            <option>O Level</option>
+                            <option>A Level</option>
+                            <option>SAT-I / SAT-II / E-CAT / M-CAT / GRE / GMAT / Entry test</option>
+                            <option>IELTS / TOEFL", "IELTS / TOEFL</option>
+                            <option>Quran / Religious Studies</option>
+                        </select>
                     </div>
-              </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="d-flex ">
+                        <button type="submit" class="btn btn-primary">Filter ADs</button>
+                    </div>
+                </div>
             </div>
-          </form>
+        </form>
+    </div>
     <div class="row row-cols-1 row-cols-md-2 mt-3 mb-3">
-            {% if items %}
-            {% for tutor in items %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow border border-primary" style="height: auto;">
+        {% if items %}
+        {% for tutor in items %}
+        <div class="col-md-6 col-lg-6 col-xl-6 mb-4">
+            <div class="d-flex justify-content-center">
+                <div class="card shadow  mb-5 border-dark" style="height: auto; width:90%;">
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-md-12">
-                                <span class="d-flex justify-content-end mb-2"> 
-                                    <a class="btn btn-info" href="{% url 'tutor_detail' tutor.id %}">View Tutor</a>
+                                <span class="d-flex justify-content-between">
+                                    {% if user.is_authenticated and registered == "students" %}
+                                    {% if user.student.profile_complete == False %}
+                                    <a class="btn btn-danger text-light" href="{% url 'tutor_detail' tutor.id %}">View
+                                        Tutor</a>
+                                    <a class="btn btn-info text-light disabled"
+                                        href="{% url 'tutor_invite' tutor.id %}">Invite For Demo</a>
+                                    {% else %}
+                                    <a class="btn btn-danger text-light" href="{% url 'tutor_detail' tutor.id %}">View
+                                        Tutor</a>
+                                    <a class="btn btn-info text-light" href="{% url 'tutor_invite' tutor.id %}">Invite
+                                        For
+                                        Demo</a>
+                                    {% endif %}
+                                    {% else %}
+                                    <a class="btn btn-danger text-light" href="{% url 'tutor_detail' tutor.id %}">View
+                                        Tutor</a>
+                                    <a class="btn btn-info text-light" data-toggle="modal"
+                                        data-target="#myModal">Register</a>
+                                    {% endif %}
                                 </span>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="d-flex">
-                                <div class="col-md-6 container ">
-                                    <div class="d-flex justify-content-center">
-                                        <img src="{{tutor.user_image.url}}" alt="tutor" style="border: solid 2px; border-radius: 125px;" height="100" width="100">
-                                    </div>
-                                </div>
-                            
-        
-                                <div class="mt-2 container">
-                                    <div>
-                                        <h5> {{tutor.first_name}} {{tutor.last_name}} </h5>
-                                    </div>
-                                    <div>
-                                        <small style="text-align: justify;">{{tutor.tagline}}</small>
-                                    </div>
-                                </div>
+
+
+                        <div class="mt-4 container">
+                            <div>
+                                {% if tutor.tutorUser.verified %}
+                                <span class="badge badge-success p-2 mb-2">Verified By StudenTutor</span>
+                                {% else %}
+                                <span class="badge badge-warning p-2 mb-2">Not Verified By StudenTutor</span>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h5><b>Tutor: </b>{{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}} </h5>
+                            </div>
+                            <div>
+                                <small style="text-align: justify;">{{tutor.tutorUser.tagline}}</small>
                             </div>
                         </div>
-    
-                        
+
+                        <div class="container">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject:
+                                        </b>{{tutor.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level:
+                                        </b>{{tutor.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees:
+                                        </b>PKR
+                                        {{tutor.estimated_fees}}</span></li>
+
+                                {% if tutor.can_travel == "Yes" and tutor.tuition_type == "Home Tuition" %}
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City:
+                                        </b>{{tutor.tutorUser.city}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area:
+                                        </b>{{tutor.address}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can
+                                            Travel</b></span></li>
+                                {% elif tutor.can_travel == "No" and tutor.tuition_type == "Home Tuition" %}
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City:
+                                        </b>{{tutor.tutorUser.city}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area:
+                                        </b>{{tutor.address}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Can
+                                            Not
+                                            Travel</b></span></li>
+                                {% else %}
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Online
+                                            Tuition</b></span></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+
                     </div>
                 </div>
             </div>
-            {% endfor %}
-            {% else %}
-            <div class="d-flex justify-content-center container">
-                    <h1 class="border p-3 mt-5 border-primary text-secondary"> NO TUTOR FOUND </h1>
-                </div>
-            {% endif %}
         </div>
+        {% endfor %}
+        {% else %}
+        <div class="d-flex justify-content-center container">
+            <h1 class="border p-3 mt-5 border-primary text-secondary"> NO TUTOR FOUND </h1>
+        </div>
+        {% endif %}
     </div>
-    {% include "home/pagination.html" %}
-    
+</div>
+{% include "home/pagination.html" %}
+<script>
+    var form_fields = document.getElementsByTagName('input')
+    form_fields[1].placeholder = 'Username';
+    form_fields[2].placeholder = 'First Name';
+    form_fields[3].placeholder = 'Last Name';
+    form_fields[4].placeholder = 'Email';
+    form_fields[5].placeholder = 'Phone';
+    form_fields[6].placeholder = 'Age';
+    form_fields[7].placeholder = 'City';
+    form_fields[8].placeholder = 'Password';
+    form_fields[9].placeholder = 'Password Again';
+    for (var field in form_fields) {
+        form_fields[field].className += ' form-control'
+    }
+</script>
 </div>
 
 {% endblock %}
 
 {% block footer %}
-    {% include "home/footer.html" %}
+{% include "home/footer.html" %}
 {% endblock %}

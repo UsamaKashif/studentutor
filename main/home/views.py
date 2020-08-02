@@ -31,7 +31,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 def tutors(request):
 
     try:
-        tutors = Tutor.objects.all().order_by("-id")
+        tutors = PostAnAd_tutor.objects.all().order_by("-id")
     except:
         tutors = None
     
@@ -39,20 +39,24 @@ def tutors(request):
     # tutors = PostAnAd_tutor.objects.all().order_by("-id")
     
     gender_query = request.GET.get('gender')
-    name_query = request.GET.get('name')
+    subject_query = request.GET.get("subject")
+    tuitionlevel_query = request.GET.get("tuition-level")
+
     if tutors:
-        if gender_query != "" and gender_query is not None and gender_query != "Both":
-            tutors = tutors.filter(gender__startswith = gender_query.lower())
-        if name_query != "" and name_query is not None:
-            tutors = tutors.filter(first_name__icontains= name_query)
+        if gender_query != "" and gender_query is not None and gender_query != "Male/FeMale":
+            tutors = tutors.filter(tutorUser__gender__startswith = gender_query.lower())
+        if subject_query != "" and subject_query is not None:
+            tutors = tutors.filter(subject__icontains= subject_query)
+        if tuitionlevel_query != "" and tuitionlevel_query is not None and tuitionlevel_query != "All Tuition Level":
+            tutors = tutors.filter(tuition_level = tuitionlevel_query)
 
     tuts = []
     if tutors != None:
         for t in tutors:
-            if  t.tutor.is_active and t.verified:
+            if  t.tutorUser.tutor.is_active:
                 tuts.append(t)
     number = Tutor.objects.all().count()
-    paginator = Paginator(tuts,6)
+    paginator = Paginator(tuts,16)
     page = request.GET.get('page')
     try:
         items = paginator.page(page)
@@ -71,12 +75,68 @@ def tutors(request):
     if request.user.groups.exists():
         group = request.user.groups.all()[0].name
 
+    form = StudentSignupForm()
+
+    if request.method == "POST":
+        form = StudentSignupForm(request.POST)
+
+        if form.is_valid():
+            student = form.save()
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            age = form.cleaned_data.get('age')
+            city = form.cleaned_data.get('city')
+            firstName = form.cleaned_data.get('first_name')
+            lastName = form.cleaned_data.get('last_name')
+            phone = form.cleaned_data.get("phone")
+
+            group = Group.objects.get(name="students")
+            student.groups.add(group)
+
+            Student.objects.create(
+                student=student,
+                username= username,
+                email = email,
+                age =age,
+                city = city,
+                first_name = firstName,
+                last_name = lastName,
+                phone = phone
+            )
+
+            student.is_active = False
+            student.save()
+
+            current_site = get_current_site(request)
+            template = render_to_string("home/activate_invite_register.html", {
+                "firstname": firstName,
+                "lastname": lastName,
+                "domain": current_site,
+                "uid": urlsafe_base64_encode(force_bytes(student.pk)),
+                "token": generate_token.make_token(student),
+                "id":id
+            })
+            registerEmail = EmailMessage(
+                'Account Activation',
+                template,
+                settings.EMAIL_HOST_USER,
+                [email]
+            )
+            registerEmail.fail_silently = False
+            registerEmail.send()
+
+            return render(request,"home/activation_sent.html",{})
+
+
+
     context = {
         "tutor":tuts,
         "items": items,
         "page_range": page_range,
         "grp": group,
-        "number":number
+        "number":number,
+        "form": form,
+        "count": len(tuts),
     }
     return render(request, "home/all_tuts.html", context)
 

@@ -315,8 +315,9 @@
                                 <span class="badge badge-warning p-2 mb-2">Not Verified By StudenTutor</span>
                                 {% endif %}
                             </div>
-                            <div>
+                            <div class="d-flex justify-content-between">
                                 <h5><b>Tutor: </b>{{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}} </h5>
+                                <h5><b>{{tutor.tutorUser.gender}}</b></h5>
                             </div>
                             <div>
                                 <small style="text-align: justify;">{{tutor.tutorUser.tagline}}</small>

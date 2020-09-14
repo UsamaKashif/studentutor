@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'students.apps.StudentsConfig',
     'tutors.apps.TutorsConfig',
+    'academy.apps.AcademyConfig',
      'rest_framework',
 ]
 

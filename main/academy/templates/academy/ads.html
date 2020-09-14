@@ -1,0 +1,80 @@
+{% extends 'home/base.html' %}
+
+
+
+{% block nav %}
+    {% include 'academy/nav.html' %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 mt-3">
+            {% if ads %}
+            {% for ad in ads %}
+            <div class="col mb-4">
+                <div class="card shadow border-primary" style="height: auto;">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <span class="d-flex justify-content-end">
+                                    <!-- <h5 class="card-title">{{user.first_name}}</h5>     -->
+                                    <!-- <h5> {{user.first_name}} {{user.last_name}} </h5> -->
+                                    <a class="btn btn-danger h-25" href="{% url 'ads_delete_academy' ad.pk %}"><i class="fas fa-trash-alt"></i></a>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- <div class="row">
+                            <div class="col-md-12 container">
+                                <div class="d-flex justify-content-center" >
+                                    <img src="{{user.student.user_image.url}}" style="border: solid 2px; border-radius: 125px; border-color:white;" height="150" width="150">
+                                </div>
+                            </div>
+                        </div>  -->
+
+                        <div class="mt-4 container">
+                            <div class="d-flex justify-content-between">
+                                <h5> {{ad.academyUser.name}} </h5>
+                                <span class=""><b class="text-primary">Views:</b> {{ad.views}}</span>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{ad.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{ad.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Gender: </b>{{ad.tutor_gender}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>hrs/day: </b>{{ad.hours_per_day}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>days/week: </b>{{ad.days_per_week}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{ad.estimated_fees}}</span></li>
+                                {% if ad.tuition_type == "Online Tuition" %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Online Tuition</b></span></li>
+                                {% else %}
+                                    <li class="list-group-item"><span class="p-2 border-primary mr-2 text-success"><b>Home Tuition</b></span></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-end">
+                                <a class="btn btn-primary text-light" href="{% url 'post_ad_academy' user.id %}">Post An AD</a>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="d-flex justify-content-center">
+                        <h1 class="border p-3 mt-3 border-primary text-secondary"> YOU DON'T HAVE ANY ADs </h1>
+                    </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

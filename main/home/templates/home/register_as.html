@@ -12,6 +12,16 @@
             .my-card{
                 border: 2px solid red;
             }
+
+
+            @media (max-width: 522px) {
+                .register_btn{
+                    flex-direction: column;
+                }
+                .student{
+                    margin-bottom: 3%;
+                }
+            }
     </style>
 {% endblock %}
 
@@ -26,26 +36,32 @@
         <div class="container">
                 <div class="intro-text">
                         <div class="intro-lead-in mb-3">REGISTER <span class="text-primary">NOW</span></div>
-                       
-                            
+
+
                         <div class="row text-center d-flex justify-content-around mt-5">
                                 <div class="col-md-6">
                                     <p class="mb-4"><b>Qualified and Experienced tutors available.<br> Register Now to find one.</b></p>
-                                    <a class="btn btn-danger text-light p-5 mb-5" href="{% url 'student_register' %}" target="blank">Register as Student</a>
+
+                                    <div class="d-flex justify-content-between register_btn mb-3">
+                                        <a class=" student btn btn-danger text-light w-5 p-4" href="{% url 'student_register' %}" target="blank">Register as Student</a>
+                                        <a class="btn btn-success text-light w-5 p-4" href="{% url 'academy_register' %}" target="blank">Register as Academy</a>
+                                    </div>
                                 </div>
-                                
+
                                 <div class="col-md-6">
                                     <p class=" mb-4"><b>Start your teaching career for free.<br> Register Now and follow the steps to get your first tuition.</b></p>
-                                    <a class="btn btn-secondary text-light p-5" href="{% url 'tutor_register' %}" target="blank">Register as Tutor</a>
+                                    <a class="btn btn-secondary text-light p-4" href="{% url 'tutor_register' %}" target="blank">Register as Tutor</a>
                                 </div>
                             </div>
-                       
+
+
+
                     </div>
         </div>
         </div>
     </div>
   </header>
 
-  
+
 {% endblock %}
 

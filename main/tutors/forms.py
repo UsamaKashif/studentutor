@@ -14,7 +14,7 @@ class TutorSignUpform(UserCreationForm):
         ("Male", "Male"),
         ("Female", "Female")
     )
-    
+
     age = forms.IntegerField()
     city = forms.CharField(max_length=150)
     first_name = forms.CharField(max_length=100)
@@ -32,7 +32,7 @@ class TutorSignUpform(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise ValidationError("Account with that email already exists")
         return email
-    
+
     def clean_cnic(self):
         cnic = self.cleaned_data['cnic']
         if len(cnic) < 13 or cnic.isdigit() != True:
@@ -176,11 +176,11 @@ class PostAnAdForm(forms.Form):
     )
 
     tuition_type = forms.ChoiceField(
-        choices=TYPE, 
+        choices=TYPE,
         widget=forms.Select(attrs={'class': 'form-control'})
         )
 
-        
+
     CANTRAVEL = (
         ("Yes", "Yes"),
         ("No", "No"),

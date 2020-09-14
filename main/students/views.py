@@ -28,7 +28,7 @@ from .utils import generate_token
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-import threading 
+import threading
 # Create your views here.
 
 
@@ -97,7 +97,7 @@ def activate_view(request, uidb64, token):
         student = User.objects.get(pk = uid)
     except:
         student = None
-    
+
     if student is not None and generate_token.check_token(student, token):
         student.is_active = True
         student.save()
@@ -217,7 +217,7 @@ def postAd(request, pk):
 
     if request.method == "POST":
         postform = PostAnAdForm(request.POST)
-        
+
 
         if postform.is_valid():
             subject = postform.cleaned_data["subject"]
@@ -246,7 +246,7 @@ def postAd(request, pk):
                     "tutor_gender":tutor_gender
                 }
                 my_ad = threading.Thread(target=post_ad, args=[subject,tuition_level,tuition_type,address,hours_per_day,days_per_week,estimated_fees,user,tutor_gender])
-                
+
                 t2 = threading.Thread(target=email_send, args=[user,currentad,emails])
 
                 my_ad.start()
@@ -319,16 +319,16 @@ def allTutors(request):
         if city_contains_query != "" and city_contains_query is not None:
             tutors = tutors.filter(tutorUser__city__icontains = city_contains_query).order_by("-id")
             number = tutors.count()
-        
+
         if tuition_gender_query != "" and tuition_gender_query is not None and tuition_gender_query != "Both":
             tutors = tutors.filter(tutorUser__gender__startswith = tuition_gender_query.lower())
             number = tutors.count()
-    
+
     tuts = []
     if tutors:
-        for t in tutors:  
+        for t in tutors:
             tuts.append(t)
-            
+
     paginator = Paginator(tuts,8)
     page = request.GET.get('page')
     try:
@@ -337,13 +337,13 @@ def allTutors(request):
         items = paginator.page(1)
     except EmptyPage:
         items = paginator.page(paginator.num_pages)
-    
+
     index = items.number - 1
     max_index = len(paginator.page_range)
     start_index = index - 5 if index >= 5 else 0
     end_index = index + 5 if index <= max_index - 5 else max_index
     page_range = paginator.page_range[start_index:end_index]
-    
+
     context = {
         # "tutors":items,
         "items":items,
@@ -373,7 +373,7 @@ def SpecificTutor(request, id):
     if wishList is not None:
         if tutor.tutorUser in wishList.tutors.all():
             added = True
-    
+
     context = {
         "tutor_id": tutor.tutorUser,
         "tutor": tutor,
@@ -403,7 +403,7 @@ def inviteFordemo(request, id):
 
     if request.method == "POST":
         if invites_sent_by_std != None:
-            if invites_sent_by_std.invitation_sent == True and invites_sent_by_std.inivitaion_by_student.username == request.user.username: 
+            if invites_sent_by_std.invitation_sent == True and invites_sent_by_std.inivitaion_by_student.username == request.user.username:
                 messages.info(request, f'Invitation request already sent to {ad.tutorUser.first_name} {ad.tutorUser.last_name}')
                 return redirect("all_tutors")
             else:
@@ -487,8 +487,8 @@ def inviteFordemo(request, id):
             registerEmail.fail_silently = False
             registerEmail.send()
 
-            
-            
+
+
             intemplate = render_to_string("home/invitationEmail.html", {
                     "firstname": request.user.student.first_name,
                     "lastname": request.user.student.last_name,
@@ -565,7 +565,7 @@ def acceptInvitation(request, id):
         tutor.invitations_sent_accepted += 1
         tutor.save()
 
-        
+
         template = render_to_string("home/acceptEmail.html", {
                     "firstname": request.user.student.first_name,
                     "lastname": request.user.student.last_name,
@@ -634,7 +634,9 @@ def rejectInvite(request, id):
 
         messages.warning(request, f'Rejected Invite From {tutor.first_name} {tutor.last_name}')
         return redirect("invitations_student")
-    context = {}
+    context = {
+    "invite": invite
+    }
     return render(request,'students/reject_invitation.html', context)
 
 
@@ -672,7 +674,7 @@ def del_account_student(request):
     if request.method == "POST":
         student.is_active = False
         student.save()
-        
+
         template = render_to_string("home/delEmail.html", {
                 "register_as": "student",
                 "email": request.user.email,
@@ -695,7 +697,7 @@ def del_account_student(request):
 
 class PostLikeToggle(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        id = self.kwargs.get("id") 
+        id = self.kwargs.get("id")
         print(id)
         post = PostAnAd_tutor.objects.get(id=id)
         url_ = post.get_absolute_url()
@@ -738,19 +740,19 @@ class PostLikeAPIToggle(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, id=None ,format=None):
-        
+
         post = PostAnAd_tutor.objects.get(id=id)
         user = self.request.user
         student = user.student
         updated = False
         liked = False
-        
+
         if student in post.likes.all():
-            liked = False 
+            liked = False
             updated = True
             post.likes.remove(student)
         else:
-            liked = True 
+            liked = True
             updated = True
             t1 = threading.Thread(target=add_like, args=[post,student])
             t2 = threading.Thread(target=send_email, args=[post,student])
@@ -770,21 +772,21 @@ class WishlistApi(APIView):
 
     def get(self, request, id=None ,format=None):
         tutor = Tutor.objects.get(id=id)
-        student = request.user.student 
-        updated = False 
-        added = False 
+        student = request.user.student
+        updated = False
+        added = False
 
         wishlist,created = WishList.objects.get_or_create(student=student)
         wishlist_std,created = WishList_std.objects.get_or_create(tutor=tutor)
 
         if tutor in wishlist.tutors.all():
-            updated = True 
-            added = False 
+            updated = True
+            added = False
             wishlist.tutors.remove(tutor)
             wishlist_std.students.remove(student)
         else:
-            updated = True 
-            added = True 
+            updated = True
+            added = True
             wishlist.tutors.add(tutor)
             wishlist_std.students.add(student)
 
@@ -799,7 +801,7 @@ def wishList(request):
     try:
         wishlist = WishList.objects.get(student=request.user.student)
     except:
-        wishlist = None 
+        wishlist = None
 
     if wishlist is not None:
         tutors = wishlist.tutors.all()

@@ -1,0 +1,322 @@
+{% extends "home/b.html" %}
+{% load static %}
+
+
+
+{% block links %}
+    <style>
+        .image_container {
+            position: relative;
+            }
+
+        .profile_image {
+            opacity: 1;
+            display: block;
+            width: 250px;
+            height: 250px;
+            transition: .5s ease;
+            backface-visibility: hidden;
+            }
+
+        .middle {
+            transition: .5s ease;
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            text-align: center;
+            }
+
+        .image_container:hover .profile_image {
+            opacity: 0.3;
+            }
+
+        .image_container:hover .middle {
+            opacity: 1;
+            }
+
+            .text {
+                font-size: 16px;
+                padding: 16px 32px;
+                color: white !important;
+              }
+
+
+    </style>
+{% endblock %}
+
+
+
+{% block nav %}
+    {% include 'academy/nav.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h4 class="modal-title">Change Your Profile Picture</h4>
+
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            <small>250x250 Image Resolution</small>
+            <br>
+            <small class="mb-3"><b>Max Image Size Is 1MB</b></small>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{p_form.image}}
+                <div class="modal-footer">
+                        <input type="submit" class="btn btn-danger" value="Change">
+                    </div>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+        {% if messages %}
+        <ul class="messages d-flex justify-content-center mb-2">
+            {% for message in messages %}
+            <div class="alert alert-{{message.tags}}" role="alert">
+            <h5  {% if message.tags %} class="{{ message.tags }} "{% endif %}>{{ message }}</h5>
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if user.academy.profile_complete == False %}
+            <div class="alert alert-danger mb-4" role="alert">
+                Complete <b>About Me</b> to be able to <b>Post An AD</b>
+            </div>
+        {% endif %}
+        {% if not user.academy.verified %}
+        <div class="alert alert-danger mb-4" role="alert">
+                Your profile will be viewed for verification. <br>
+                Only verified academies will be able to send demo invitations or accept/reject incoming demo requests.
+            </div>
+
+        {% endif %}
+    <div class="row mb-3">
+        <div class="col-md-12">
+            {% if user.academy.profile_complete == True %}
+                <a class="btn btn-info float-right"  href="{% url 'post_ad_academy' user.id %}" style="color: white;">Post An AD</a>
+            {% else %}
+                <a class="btn btn-secondary float-right disabled"  href="{% url 'post_ad' user.id %}" style="color: white;">Post An AD</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <span class="d-flex justify-content-center mb-3 align-middle image_container">
+                <img src="{{user.academy.user_image.url}}" class="profile_image" height="250" width="250" alt="...">
+                <div class="middle">
+                    <button type="button" class="btn btn-primary text" data-toggle="modal" data-target="#myModal">
+                            Edit
+                    </button>
+                </div>
+            </span>
+            {% if user.academy.verified %}
+            <h4>Verification: <span class="text-success">Verified</span></h4>
+            {% else %}
+            <h4>Verification: <Span class="text-danger">Not Verified</Span></h4>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-body text-center shadow mb-3 border border-info">
+                        <h5 class="card-title text-info">Total ADs</h5>
+                        <hr>
+                        <h4 class="card-text text-muted">{{totalAds}}</h4>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-body text-center shadow mb-3 border border-success">
+                        <h5 class="card-title text-success">Active</h5>
+                        <hr>
+                        <h4 class="card-text text-muted">{{activeAds}}</h4>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-body text-center shadow mb-3 border border-danger">
+                        <h5 class="card-title text-danger">Deleted</h5>
+                        <hr>
+                        <h4 class="card-text text-muted">{{adsDel}}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-6 mb-3">
+                    <div class="card card-body shadow border-dark">
+                        <h5 class="card-title">Invitations Recieved</h5>
+                        <hr>
+                            {% if invitations_recieved < 1 and invitations_recieved_accepted < 1 and invitations_recieved_rejected < 1 %}
+                                <p class="text-center">Not Enough Data</p>
+                            {% else %}
+                                <canvas id="myChart" class="mt-3"></canvas>
+                            {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card card-body shadow border-dark">
+                        <h5 class="card-title">Invitations Sent</h5>
+                        <hr>
+                            {% if invitations_sent < 1 or invitations_sent_accepted < 1 or invitations_sent_rejected < 1 %}
+                                <p class="text-center">Not Enough Data</p>
+                            {% else %}
+                            <canvas id="isent" class="mt-3"></canvas>
+                            {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-5 mb-2">
+            <div class="card shadow p-4 border-primary" style="width: auto;">
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-muted">Academy Name</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <p>{{user.academy.name}}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-muted">City</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <p>{{user.academy.city}}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-muted">Phone</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <p>{{user.academy.phone}}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-muted">Email</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <p>{{user.academy.email}}</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-7 ">
+            <div class="card card-body shadow w-100 border-primary">
+                <h5 class="text-center">About Me</h5>
+                {% if user.academy.textArea == "" %}
+                    <p class="text-center mt-3 text-muted">Nothing to show</p>
+                {% else %}
+                    <p style="text-align: justify;"  class="text-center mt-3">{{user.academy.textArea}}</p>
+                {% endif %}
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'academy_about' %}" class="btn btn-info">Update</a>
+                </div>
+            </div>
+            <a class="btn btn-danger mt-3" href="{% url 'del_account_acad' %}">Delete Account</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var invitations_recieved = "{{invitations_recieved}}"
+    var invitations_recieved_accepted = "{{invitations_recieved_accepted}}"
+    var invitations_recieved_rejected = "{{invitations_recieved_rejected}}"
+    var Inv_rec_data = {
+        datasets: [{
+            data: [invitations_recieved, invitations_recieved_accepted, invitations_recieved_rejected],
+            backgroundColor:[
+                "#2980b9",
+                "#27ae60",
+                "#c0392b"
+            ]
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: [
+            'Recieved',
+            'Accepted',
+            'Rejected'
+        ]
+    };
+    var InvitationRecieved = new Chart(ctx, {
+        type: 'doughnut',
+        data: Inv_rec_data,
+        options: {
+            legend: {
+                display: false
+            }
+        }
+    });
+
+
+    var sentctx = document.getElementById('isent').getContext('2d');
+    var invitations_sent = "{{invitations_sent}}"
+    var invitations_sent_accepted = "{{invitations_sent_accepted}}"
+    var invitations_sent_rejected = "{{invitations_sent_rejected}}"
+    var Inv_rec_data = {
+        datasets: [{
+            data: [invitations_sent, invitations_sent_accepted, invitations_sent_rejected],
+            backgroundColor:[
+                "#2980b9",
+                "#27ae60",
+                "#c0392b"
+            ]
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: [
+            'Sent',
+            'Accepted',
+            'Rejected'
+        ]
+    };
+    var InvitationRecieved = new Chart(sentctx, {
+        type: 'doughnut',
+        data: Inv_rec_data,
+        options: {
+            legend: {
+                display: false
+            }
+        }
+    });
+</script>
+
+
+{% endblock %}

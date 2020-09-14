@@ -1,0 +1,47 @@
+{% extends "home/b.html" %}
+
+{% block links %}
+    <style>
+        .my-card{
+            border: solid 2px;
+            border-radius: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block nav %}
+    {% include 'academy/nav.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container">
+        <div class="card card-body shadow mt-5 my-card">
+            <h5 class="card-title text-muted text-center">About Me</h5>
+            <hr>
+            <div class="container">
+                <h6 class="text-info text-center">Write Something about your academy. This will be displayed on your AD.</h6>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="input-group d-flex flex-column p-3 mt-3 w-100 justify-content-center">
+                        {{form.textArea}}
+                        <small class="text-info mt-2 text-center ">Max characters: 300</small>
+                    </div>
+                    <input type="submit" class="btn" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+            var form_fields = document.getElementsByTagName('input')
+            for (var field in form_fields){
+                form_fields[field].className += ' form-control'
+            }
+    </script>
+{% endblock %}

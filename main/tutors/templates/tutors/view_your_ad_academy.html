@@ -1,0 +1,53 @@
+{% extends 'home/base.html' %}
+
+{% block nav %}
+    {% include 'tutors/navBar.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card p-3 shadow border-primary mb-3">
+                    <h5 class="card-title text-center">Your AD</h5>
+                    <hr>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{invite.tutor_ad.subject}}</span></li>
+                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{invite.tutor_ad.tuition_level}}</span></li>
+                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{invite.tutor_ad.estimated_fees}}</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <div class="card p-3 mb-3 shadow border-danger">
+                    <h5 class="card-title text-center">Other Academies Looking For Same Subject</h5>
+                    <hr>
+                    {% if students %}
+                        {% for student in students %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-body mb-3 border-primary shadow">
+                                        <div class="d-flex justify-content-between">
+                                            <h5>{{student.academyUser.name}}</h5>
+                                            <a href='{% url "specific_tutor" student.id %}' class="text-success">View AD</a>
+                                        </div>
+                                        <div class="conatiner mt-3 text-justify">
+                                            <small class="text-justify"><b>{{student.academyUser.textArea}}</b></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="d-flex justify-content-center container">
+                            <h1 class="border p-3 mt-5 border-primary text-secondary"> NO ACADEMIES FOUND </h1>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "home/b.html" %}
+
+{% block nav %}
+    {% include "tutors/navBar.html" %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="d-flex justify-content-center">
+                        <div class="card shadow  mt-5 mb-3 border-dark" style="height: auto; width:auto">
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-md-12">
+                                                <span class="d-flex justify-content-between">
+
+
+                                                        {% if user.tutor.verified == False %}
+                                                            <a class="btn btn-info disabled" href="{% url 'academy_invite' student.id %}">Ask For Demo</a>
+                                                        {% else %}
+                                                            <a class="btn btn-info" href="{% url 'academy_invite' student.id %}">Ask For Demo</a>
+                                                        {% endif %}
+                                                    </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 container ">
+                                            <div class="d-flex justify-content-center mt-3">
+                                                <img src="{{student.academyUser.user_image.url}}" alt="student" style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4 container">
+                                        <div class="d-flex justify-content-between">
+                                            <h5> {{student.academyUser.name}} </h5>
+                                        </div>
+                                        <div>
+                                            <p style="text-align: justify;" class="mt-2">{{student.academyUser.textArea}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="container">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{student.subject}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tutor Gender: </b>{{student.tutor_gender}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{student.tuition_level}}</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Hrs/day: </b>{{student.hours_per_day}} hrs/day</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Days/week: </b>{{student.days_per_week}} days/week</span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Estimated Fees: </b>PKR {{student.estimated_salary}} </span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{student.academyUser.city}} </span></li>
+                                            <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{student.academyUser.address}}</span></li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                    <div class="card shadow border-primary p-3 mb-3 mt-5">
+                        <h5 class="card-title text-center">Other ADs By This Academy</h5>
+                        <hr>
+                        {% if students %}
+                            {% for student in students %}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card card-body mb-3 border-success shadow">
+                                            <div class="d-flex justify-content-between">
+                                                <h5>{{student.academyUser.name}}</h5>
+                                                <a href='{% url "specific_acad" student.id %}' class="text-success">View AD</a>
+                                            </div>
+                                            <small>{{tutor.tutorUser.tagline}}</small>
+                                            <div class="conatiner mt-3 text-justify">
+                                                <small class="text-justify"><b>Subject: </b>{{student.subject}}</small>
+                                                <br>
+                                                <small class="text-justify"><b>Tuition Level: </b>{{student.tuition_level}}</small>
+                                                <br>
+                                                <small class="text-justify"><b>Estimated fees: </b>PKR {{student.estimated_salary}}</small>
+                                                <br>
+                                                <small class="text-justify"><b>Hrs/day: </b>PKR {{student.hours_per_day}}</small>
+                                                <br>
+                                                <small class="text-justify"><b>Days/week: </b>PKR {{student.days_per_week}}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                        <div class="d-flex justify-content-center container">
+                                <h1 class="border p-3 mt-5 border-primary text-secondary"> NO OTHER AD BY THIS Student </h1>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+        </div>
+    </div>
+{% endblock %}

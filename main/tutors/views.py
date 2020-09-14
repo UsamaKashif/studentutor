@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
 from .forms import TutorSignUpform, TutorProfile, PostAnAdForm, QualificationForm, ProfilePicture, AboutForm, VerifyForm
-from .models import Tutor, Invitaions, AboutAndQualifications, Verify,WishList,WishList_tut
+from .models import Tutor, Invitaions, AboutAndQualifications, Verify,WishList,WishList_tut, Invitaions_by_academy
 
 from .models import PostAnAd as PostAnAd_tut
 
@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from django.core.mail import EmailMessage
-from django.conf import settings 
+from django.conf import settings
 from django.template.loader import render_to_string
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -27,7 +27,13 @@ from students.utils import generate_token
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-import threading 
+import threading
+
+
+
+from academy.models import Invitations as Invitations_academy
+from academy.models import PostAnAd as PostAnAd_acad
+
 # Create your views here.
 
 
@@ -36,11 +42,11 @@ def tutorRegister(request):
 
     form = TutorSignUpform()
 
-    
+
 
     if request.method == "POST":
         form = TutorSignUpform(request.POST)
-        
+
         if form.is_valid():
             tutor = form.save()
             email = form.cleaned_data.get('email')
@@ -91,7 +97,7 @@ def tutorRegister(request):
             registerEmail.send()
             return render(request,"students/activation_sent.html",{})
 
-            
+
 
     context = {
         "form": form,
@@ -105,7 +111,7 @@ def activate_view(request, uidb64, token):
         tutor = User.objects.get(pk = uid)
     except:
         tutor = None
-    
+
     if tutor is not None and generate_token.check_token(tutor, token):
         tutor.is_active = True
         tutor.save()
@@ -156,7 +162,7 @@ def tutorDashboard(request):
             profile_image = Tutor.objects.get(username = request.user.username)
             profile_image.user_image = image
             profile_image.save()
-            
+
             return redirect("tutor_dashboard")
         else:
             messages.warning(request, 'Supported File Extensions are .jpg And .png, Max Image Size Is 1MB')
@@ -242,7 +248,7 @@ def postAnAd(request, pk):
             for ad in tutorAds:
                 if ad.subject == subject and ad.tuition_level == tuition_level:
                     adAvailabel = True
-            
+
             if adAvailabel  == False:
                 t1 = threading.Thread(target=post_ad, args=[user,subject,tuition_level,can_travel,estimated_fees,address,tuition_type])
                 current_ad = {
@@ -251,10 +257,10 @@ def postAnAd(request, pk):
                     "can_travel" : can_travel,
                     "estimated_fees" : estimated_fees,
                     "address" : address,
-                    "tuition_type" : tuition_type  
+                    "tuition_type" : tuition_type
                 }
                 t2 = threading.Thread(target=email_send, args=[user,emails,current_ad])
-                
+
                 t1.start()
                 t2.start()
 
@@ -277,7 +283,7 @@ def ads(request):
         tutorAbout = AboutAndQualifications.objects.get(tutor__username = request.user.username)
     except:
         tutorAbout = None
-    
+
     context = {
         "ads":ads,
         "about": tutorAbout
@@ -306,14 +312,23 @@ def adsDelete(request, pk):
 
 from students.models import Student
 
+from .models import Invitaions_by_academy
+
+from itertools import chain
+
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["tutors"])
 def invitations(request):
-    invites = Invitaions.objects.filter(tutor_ad__tutorUser = request.user.tutor).order_by("-id")
-    
+    invites_by_stds = Invitaions.objects.filter(tutor_ad__tutorUser = request.user.tutor).order_by("-id")
+    invites_by_academy = Invitaions_by_academy.objects.filter(tutor_ad__tutorUser = request.user.tutor).order_by("-id")
+
+
+    # invites = chain(invites_by_academy, invites_by_stds)
+    # print(invites)
 
     context = {
-        "invites":invites
+        "invites_by_stds":invites_by_stds,
+        "invites_by_academy": invites_by_academy
     }
 
     return render(request, 'tutors/invitations.html', context)
@@ -332,6 +347,87 @@ def view_your_ad(request, id):
         "students": students.exclude(studentUser__username = tutor_ad.inivitaion_by_student.username)
     }
     return render(request,'tutors/view_your_ad.html', context)
+
+
+from academy.models import PostAnAd as postAnAdAcademy
+
+
+@login_required(login_url="sign_in")
+@allowed_users(allowed_roles=["tutors"])
+def view_your_ad_academy(request, id):
+    tutor_ad = Invitaions_by_academy.objects.get(id = id)
+    try:
+        students = postAnAdAcademy.objects.filter(subject = tutor_ad.tutor_ad.subject)[4]
+    except:
+        students = postAnAdAcademy.objects.filter(subject = tutor_ad.tutor_ad.subject)
+
+    context = {
+        "invite":tutor_ad,
+        "students": students.exclude(academyUser__username = tutor_ad.inivitaion_by_academy.username)
+    }
+    return render(request,'tutors/view_your_ad_academy.html', context)
+
+
+from academy.models import Academy
+# from .models import Invitaions_by_academy
+
+@login_required(login_url="sign_in")
+@allowed_users(allowed_roles=["tutors"])
+def confirmInviteAcademy(request, id):
+    invite = Invitaions_by_academy.objects.get(id=id)
+
+    tutor = Tutor.objects.get(username = request.user.username)
+
+    std = Academy.objects.get(username = invite.inivitaion_by_academy.username)
+
+    if request.method == "POST":
+        invite.accepted = True
+        invite.rejected = False
+        invite.save()
+        tutor.invitations_recieved_accepted += 1
+        tutor.save()
+
+        std.invitations_sent_accepted += 1
+        std.save()
+
+        template = render_to_string("home/acceptEmail.html", {
+                    "firstname": request.user.tutor.first_name,
+                    "lastname": request.user.tutor.last_name,
+                    "email": request.user.email,
+                    "register_as": "Tutor",
+                    "phone": request.user.tutor.phone
+                    })
+        registerEmail = EmailMessage(
+            'Invitation Accepted',
+            template,
+            settings.EMAIL_HOST_USER,
+            [invite.inivitaion_by_academy.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
+
+        recieve_temp = render_to_string("home/accept_recieve_Email_academy.html", {
+                    "request_from" : std,
+                    "request": "Academy"
+                    })
+        Email = EmailMessage(
+            'Invitation Accepted',
+            recieve_temp,
+            settings.EMAIL_HOST_USER,
+            [request.user.email]
+        )
+        Email.fail_silently = False
+        Email.send()
+
+        messages.info(request, f'Accepted Invitation Request from {std.name}')
+        return redirect("invitations")
+    context = {
+        "invite": invite
+    }
+    return render(request, 'tutors/accept_invitation_academy.html', context)
+
+
 
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["tutors"])
@@ -368,8 +464,8 @@ def confirmInvite(request, id):
         )
         registerEmail.fail_silently = False
         registerEmail.send()
-        
-        
+
+
         recieve_temp = render_to_string("home/accept_recieve_Email.html", {
                     "request_from" : std,
                     "request": "Student"
@@ -389,6 +485,47 @@ def confirmInvite(request, id):
         "invite": invite
     }
     return render(request, 'tutors/accept_invitation.html', context)
+
+
+
+@login_required(login_url="sign_in")
+@allowed_users(allowed_roles=["tutors"])
+def rejectInviteAcademy(request, id):
+    invite = Invitaions_by_academy.objects.get(id = id)
+
+    tutor = Tutor.objects.get(username = request.user.username)
+    student = Academy.objects.get(username = invite.inivitaion_by_academy.username)
+    if request.method == "POST":
+        invite.delete()
+
+        tutor.invitations_recieved_rejected += 1
+        tutor.save()
+        student.invitations_sent_rejected += 1
+        student.save()
+
+        template = render_to_string("home/rejectEmail.html", {
+                    "firstname": request.user.tutor.first_name,
+                    "lastname": request.user.tutor.last_name,
+                    "student_email": request.user.email
+                    })
+        registerEmail = EmailMessage(
+            'Invitation Rejected',
+            template,
+            settings.EMAIL_HOST_USER,
+            [invite.inivitaion_by_academy.email]
+        )
+        registerEmail.fail_silently = False
+        registerEmail.send()
+
+        messages.warning(request, f'Rejected Invite From {student.name}')
+        return redirect("invitations")
+    context = {
+        "invite": invite
+    }
+    return render(request, 'tutors/reject_invite_academy.html', context)
+
+
+
 
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["tutors"])
@@ -467,7 +604,7 @@ def allStudents(request):
         items = paginator.page(1)
     except EmptyPage:
         items = paginator.page(paginator.num_pages)
-    
+
     index = items.number - 1
     max_index = len(paginator.page_range)
     start_index = index - 5 if index >= 5 else 0
@@ -482,6 +619,216 @@ def allStudents(request):
         "tutor":request.user.tutor
     }
     return render(request, "tutors/all_students.html", context)
+
+
+
+
+@login_required(login_url="sign_in")
+@allowed_users(allowed_roles=["tutors"])
+def allAcademy(request):
+    students = PostAnAd_acad.objects.all().order_by("-id")
+    tuition_level_contains_query = request.GET.get('TuitionLevel')
+    subject_contains_query = request.GET.get('Subject')
+    city_contains_query = request.GET.get('City')
+
+    number = students.count()
+
+    if students:
+        if tuition_level_contains_query != "" and tuition_level_contains_query is not None and tuition_level_contains_query != "All":
+            students = students.filter(tuition_level = tuition_level_contains_query).order_by("-id")
+            number = students.count()
+
+        if subject_contains_query != "" and subject_contains_query is not None:
+            students = students.filter(subject__icontains = subject_contains_query).order_by("-id")
+            number = students.count()
+
+        if city_contains_query != "" and city_contains_query is not None:
+            students = students.filter(studentUser__city__icontains = city_contains_query).order_by("-id")
+            number = students.count()
+
+    stds = []
+    for s in students:
+        if s.academyUser.profile_complete and s.academyUser.academy.is_active:
+            stds.append(s)
+    number = len(stds)
+    paginator = Paginator(stds,8)
+    page = request.GET.get('page')
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
+
+    index = items.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 5 if index >= 5 else 0
+    end_index = index + 5 if index <= max_index - 5 else max_index
+    page_range = paginator.page_range[start_index:end_index]
+
+    context = {
+        "page_range": page_range,
+        "items":items,
+        "students":students,
+        "number": number,
+        "tutor":request.user.tutor
+    }
+    return render(request, "tutors/all_acad.html", context)
+
+
+
+
+
+@login_required(login_url="sign_in")
+@allowed_users(allowed_roles=["tutors"])
+def specificAcademy(request, id):
+    student = PostAnAd_acad.objects.get(id = id)
+    student.views += 1
+    student.save()
+    students = PostAnAd_acad.objects.filter(academyUser__username = student.academyUser.username).order_by("-id")
+
+    # try:
+    #     wishlist = WishList.objects.get(tutor=request.user.tutor)
+    # except:
+    #     wishlist = None
+
+    # add = False
+    # if wishlist is not None:
+    #     if student.studentUser in wishlist.students.all():
+    #         add = True
+
+    context = {
+        "student": student,
+        "students":students.exclude(id = id),
+        "tutor":request.user.tutor,
+        "student_id":student.academyUser,
+        # "added":add
+    }
+    return render(request, "tutors/specific_acad.html", context)
+
+
+@login_required(login_url="sign_in")
+@allowed_users(allowed_roles=["tutors"])
+def inviteForDemoAcademy(request, id):
+    ad = PostAnAd_acad.objects.get(id = id)
+
+    std = Academy.objects.get(username = ad.academyUser.username)
+
+    tutor = Tutor.objects.get(tutor__username = request.user.username)
+
+    try:
+        invite_by_tutor = Invitations_academy.objects.get(academy_ad = ad)
+    except:
+        invite_by_tutor = None
+
+    # print(invite_by_tutor)
+
+    if request.method == "POST":
+        if invite_by_tutor != None:
+            if invite_by_tutor.invitation_sent == True and invite_by_tutor.inivitaion_by_tutor.username == request.user.username:
+                messages.info(request, f'Already Asked {ad.academyUser.name} for demo')
+                return redirect("all_students_acad")
+            else:
+                Invitations_academy.objects.create(
+                    inivitaion_by_tutor = tutor,
+                    academy_ad = ad,
+                    invitation_sent = True,
+                    accepted = False,
+                    rejected = False
+                )
+                tutor.invitations_sent += 1
+                tutor.save()
+                std.invitations_recieved += 1
+                std.save()
+
+                template = render_to_string("tutors/InviteEmailAcademy.html", {
+                    "name": ad.academyUser.name,
+                    "ad": ad,
+                    "area": ad.address,
+                    "city":ad.academyUser.city
+                    })
+                registerEmail = EmailMessage(
+                    'Request A Demo',
+                    template,
+                    settings.EMAIL_HOST_USER,
+                    [request.user.email]
+                )
+                registerEmail.fail_silently = False
+                registerEmail.send()
+
+                intemplate = render_to_string("tutors/InviteEmailRecieved.html", {
+                    "firstname": request.user.tutor.first_name,
+                    "lastname": request.user.tutor.last_name,
+                    "ad": ad,
+                    "area": ad.academyUser.address,
+                    "city":ad.academyUser.city
+                    })
+                email = EmailMessage(
+                    'Invitation',
+                    intemplate,
+                    settings.EMAIL_HOST_USER,
+                    [ad.academyUser.email]
+                )
+                email.fail_silently = False
+                email.send()
+
+                messages.info(request, f'Asked {std.name} For A Demo')
+                return redirect("invited_students")
+        else:
+            Invitations_academy.objects.create(
+                    inivitaion_by_tutor = tutor,
+                    academy_ad = ad,
+                    invitation_sent = True,
+                    accepted = False,
+                    rejected = False
+                )
+            tutor.invitations_sent += 1
+            tutor.save()
+            std.invitations_recieved += 1
+            std.save()
+
+            template = render_to_string("tutors/InviteEmailAcademy.html", {
+                "name": ad.academyUser.name,
+                "ad": ad,
+                "area": ad.academyUser.address,
+                "city":ad.academyUser.city
+                })
+            registerEmail = EmailMessage(
+                'Request A Demo',
+                template,
+                settings.EMAIL_HOST_USER,
+                [request.user.email]
+            )
+            registerEmail.fail_silently = False
+            registerEmail.send()
+
+            intemplate = render_to_string("tutors/InviteEmailRecieved.html", {
+                "firstname": request.user.tutor.first_name,
+                "lastname": request.user.tutor.last_name,
+                "ad": ad,
+                "area": ad.academyUser.address,
+                "city":ad.academyUser.city
+                })
+            email = EmailMessage(
+                'Invitation',
+                intemplate,
+                settings.EMAIL_HOST_USER,
+                [ad.academyUser.email]
+            )
+            email.fail_silently = False
+            email.send()
+
+
+            messages.info(request, f'Asked {std.name} For A Demo')
+            return redirect("invited_students")
+    context = {
+        "ad":ad
+    }
+    return render(request, 'tutors/invite_for_demo_academy.html', context)
+
+
+
+
 
 @login_required(login_url="sign_in")
 @allowed_users(allowed_roles=["tutors"])
@@ -499,7 +846,7 @@ def specificStudent(request, id):
     add = False
     if wishlist is not None:
         if student.studentUser in wishlist.students.all():
-            add = True 
+            add = True
 
     context = {
         "student": student,
@@ -640,8 +987,11 @@ def tutorInvited(request):
     tutor = Tutor.objects.get(username = request.user.username)
     invited = TutorInvitaions.objects.filter(inivitaion_by_tutor = tutor).order_by("-id")
 
+    academy_invited = Invitations_academy.objects.filter(inivitaion_by_tutor = tutor).order_by("-id")
+
     context = {
-        "invited": invited
+        "invited": invited,
+        "academy_invited": academy_invited
     }
 
     return render (request, 'tutors/invited.html', context)
@@ -689,7 +1039,7 @@ def qual (request):
             except:
                 pass
 
-            
+
             highest_qual = form.cleaned_data["highest_qual"]
             highest_qual_inst = form.cleaned_data["highest_qual_inst"]
             secondary_qaul = form.cleaned_data["secondary_qaul"]
@@ -827,26 +1177,26 @@ class PostLikeAPIToggle(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, id=None ,format=None):
-        
+
         post = PostAnAd_std.objects.get(id=id)
         user = self.request.user
         tutor = user.tutor
         updated = False
         liked = False
-        
+
         if tutor in post.likes.all():
-            liked = False 
+            liked = False
             updated = True
             post.likes.remove(tutor)
         else:
-            liked =True 
+            liked =True
             updated = True
             t1 = threading.Thread(target=add_like, args=[post,tutor])
             t2 = threading.Thread(target=send_email, args=[post,tutor])
             t1.start()
             t2.start()
 
-            
+
 
         data = {
             "updated":updated,
@@ -862,20 +1212,20 @@ class WishlistApi(APIView):
     def get(self, request, id=None ,format=None):
         student = Student.objects.get(id=id)
         tutor = request.user.tutor
-        updated = False 
-        added = False 
+        updated = False
+        added = False
 
         wishlist,created = WishList.objects.get_or_create(tutor=tutor)
         wishlist_tut,created = WishList_tut.objects.get_or_create(student=student)
 
         if student in wishlist.students.all():
-            updated = True 
-            added = False 
+            updated = True
+            added = False
             wishlist.students.remove(student)
             wishlist_tut.tutors.remove(tutor)
         else:
-            updated = True 
-            added = True 
+            updated = True
+            added = True
             wishlist.students.add(student)
             wishlist_tut.tutors.add(tutor)
 
@@ -890,7 +1240,7 @@ def wishList(request):
     try:
         wishlist = WishList.objects.get(tutor=request.user.tutor)
     except:
-        wishlist = None 
+        wishlist = None
 
     if wishlist is not None:
         students = wishlist.students.all()

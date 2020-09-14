@@ -34,10 +34,10 @@ def tutors(request):
         tutors = PostAnAd_tutor.objects.all().order_by("-id")
     except:
         tutors = None
-    
+
 
     # tutors = PostAnAd_tutor.objects.all().order_by("-id")
-    
+
     gender_query = request.GET.get('gender')
     subject_query = request.GET.get("subject")
     tuitionlevel_query = request.GET.get("tuition-level")
@@ -48,7 +48,7 @@ def tutors(request):
                 t.tutorUser.gender = t.tutorUser.gender.upper()
                 t.tutorUser.save()
             tutors = tutors.filter(tutorUser__gender__startswith = gender_query.upper())
-            
+
         if subject_query != "" and subject_query is not None:
             tutors = tutors.filter(subject__icontains= subject_query)
         if tuitionlevel_query != "" and tuitionlevel_query is not None and tuitionlevel_query != "All Tuition Level":
@@ -68,7 +68,7 @@ def tutors(request):
         items = paginator.page(1)
     except EmptyPage:
         items = paginator.page(paginator.num_pages)
-    
+
     index = items.number - 1
     max_index = len(paginator.page_range)
     start_index = index - 5 if index >= 5 else 0
@@ -150,7 +150,7 @@ def ads_detail(request, id):
     tutor.views += 1
     tutor.save()
     tutors = PostAnAd_tutor.objects.filter(tutorUser__username = tutor.tutorUser.username).order_by("-id")
-    
+
     try:
         registered = request.user.groups.all()[0].name
     except:
@@ -228,7 +228,7 @@ def activate_invite_view(request,uidb64, token, id):
         student = User.objects.get(pk = uid)
     except:
         student = None
-    
+
     if student is not None and generate_token.check_token(student, token):
         student.is_active = True
         student.save()
@@ -249,9 +249,9 @@ def activate_invite_view(request,uidb64, token, id):
 
         ad = PostAnAd_tutor.objects.get(id=id)
         tutor = Tutor.objects.get ( username = ad.tutorUser.username)
-        
 
-        
+
+
         Invitaions.objects.create(
                 inivitaion_by_student = student,
                 tutor_ad = ad,
@@ -325,7 +325,7 @@ def tutorDetail (request, id):
 
 def home(request):
     group = None
-    
+
     tutors = Tutor.objects.all().count()
     students = Student.objects.all().count()
 
@@ -372,19 +372,21 @@ def signIn(request):
 
         student= authenticate(request, username=username, password=password)
         group = None
-        
+
 
 
         if student is not None:
             login(request, student)
             if request.user.groups.exists():
                 group = request.user.groups.all()[0].name
-                
-            
-            if group == "students": 
+
+
+            if group == "students":
                 return redirect('student_dashboard')
-            else:
+            elif group == "tutors":
                 return redirect("tutor_dashboard")
+            else:
+                return redirect("academy_dashboard")
         else:
             messages.info(request, "username or password is incorrect")
             return redirect("sign_in")

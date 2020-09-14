@@ -29,19 +29,23 @@
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="#whywe">Why We</a>
           </li>
-          
+
           {% endif %}
-          
+
           {% if user.is_authenticated %}
-            
+
             {% if grp == "students" %}
             <li class="nav-item">
                 <a class="nav-link js-scroll-trigger" href="{% url 'student_dashboard' %}">Dashboard</a>
             </li>
-            {% else %}
+            {% elif grp == "tutors" %}
             <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="{% url 'tutor_dashboard' %}">Dashboard</a>
                 </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="{% url 'academy_dashboard' %}">Dashboard</a>
+            </li>
             {% endif %}
             <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="{% url 'sign_out' %}">Sign Out</a>
@@ -50,20 +54,20 @@
           <li class="nav-item">
             {% if page == "home" %}
               <a class="nav-link js-scroll-trigger"  href="#registernow">Register</a>
-              
+
             {% endif %}
             </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="{% url 'sign_in' %}">Sign In</a>
           </li>
-          
+
           {% endif %}
           {% if page == "home" %}
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
           </li>
           {% endif %}
-          
+
         </ul>
       </div>
     </div>

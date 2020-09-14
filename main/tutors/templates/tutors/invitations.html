@@ -1,5 +1,41 @@
 {% extends 'home/base.html' %}
 
+
+{% block links %}
+
+<style>
+    .Invitations {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .c1, .c2 {
+        width: 100%;
+        border: 1px solid black;
+        padding: 20px;
+        background-color: lightgrey;
+        color: white;
+
+    }
+
+    .selected {
+        background-color: grey;
+    }
+
+    .c1 h2, .c2 h2 {
+        text-align: center;
+        font-size: 38px;
+    }
+
+
+</style>
+{% endblock %}
+
 {% block nav %}
     {% include 'tutors/navBar.html' %}
 {% endblock %}
@@ -15,31 +51,36 @@
                 {% endfor %}
             </ul>
             {% endif %}
+            <div class="Invitations">
+                    <div class="c1" id="std">
+                        <h2>INVITATIONS</h2>
+                    </div>
+            </div>
         <div class="row row-cols-1 row-cols-md-2 mt-3">
 
-        {% if invites %}    
-        {% for invite in invites %}
-        <div class="col mb-4">
-            <div 
+        {% for invite in invites_by_stds %}
+        <div class="col mb-4" id="all-cards">
+            <div
             {% if invite.accepted %}
                 class="card shadow border-success"
             {% else %}
                 class="card shadow border-dark"
             {% endif %}
             style="height: auto;">
+
                 <div class="card-body">
-                    
+
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <span class="d-flex justify-content-end"> 
-                                {% if user.tutor.verified %}  
+                            <span class="d-flex justify-content-end">
+                                {% if user.tutor.verified %}
                                     {% if invite.accepted %}
                                     <h5 class="text-success">Invitation Accepted</h5>
                                     {% elif  invite.rejected %}
                                     <h5 class="text-danger">Invitation Rejected</h5>
                                     {% else %}
-                                    <a class="btn btn-info mr-3" href="{% url 'confirm_invite' invite.id %}">Accept</a>
-                                    <a class="btn btn-danger" href="{% url 'reject_invite' invite.id %}">Reject</a>
+                                            <a class="btn btn-info mr-3" href="{% url 'confirm_invite' invite.id %}">Accept</a>
+                                            <a class="btn btn-danger" href="{% url 'reject_invite' invite.id %}">Reject</a>
                                     {% endif %}
                                 {% else %}
                                     <h5 class="text-danger mb-4">Verify Yourself To Accept/Reject</h5>
@@ -54,9 +95,12 @@
                                 <img src="{{invite.inivitaion_by_student.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
                             </div>
                         </div>
-                    </div> 
+                    </div>
 
                     <div class="mt-4 container">
+                        <div>
+                            <h4><span class="badge-pill  badge badge-danger">STUDENT</span></h4>
+                        </div>
                         <div>
                             <h5><b>Invitation By:</b> {{invite.inivitaion_by_student.first_name}} {{invite.inivitaion_by_student.last_name}} </h5>
                         </div>
@@ -91,11 +135,126 @@
             </div>
         </div>
     {% endfor %}
-    {% else %}
-    <div class="d-flex justify-content-center container">
-            <h1 class="border p-3 mt-5 border-primary text-secondary"> NO INVITATIONS </h1>
+
+
+
+
+    {% for invite in invites_by_academy %}
+        <div class="col mb-4" id="all-cards-academy">
+            <div
+            {% if invite.accepted %}
+                class="card shadow border-success"
+            {% else %}
+                class="card shadow border-dark"
+            {% endif %}
+            style="height: auto;">
+
+                <div class="card-body">
+
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <span class="d-flex justify-content-end">
+                                {% if user.tutor.verified %}
+                                    {% if invite.accepted %}
+                                    <h5 class="text-success">Invitation Accepted</h5>
+                                    {% elif  invite.rejected %}
+                                    <h5 class="text-danger">Invitation Rejected</h5>
+                                    {% else %}
+                                            <a class="btn btn-info mr-3" href="{% url 'confirm_invite_academy' invite.id %}">Accept</a>
+                                            <a class="btn btn-danger" href="{% url 'reject_invite_academy' invite.id %}">Reject</a>
+                                    {% endif %}
+                                {% else %}
+                                    <h5 class="text-danger mb-4">Verify Yourself To Accept/Reject</h5>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 container ">
+                            <div class="d-flex justify-content-center">
+                                <img src="{{invite.inivitaion_by_academy.user_image.url}}"  style="border: solid 2px; border-radius: 125px;" height="150" width="150">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 container">
+                        <div>
+                            <h4><span class="badge-pill badge badge-danger">ACADEMY</span></h4>
+                        </div>
+                        <div>
+                            <h5><b>Invitation By:</b> {{invite.inivitaion_by_academy.name}}</h5>
+                        </div>
+                        <div>
+                            <p style="text-align: justify;" class="mt-2">{{invite.inivitaion_by_academy.textArea}}</p>
+                        </div>
+                        <div>
+                            <p style="text-align: justify;" class="mt-2"><b>LOCATION:</b> {{invite.inivitaion_by_academy.address}}</p>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                            <ul class="list-group list-group-flush">
+                                {# <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Your AD</b></span></li> #}
+                                {# <li class="list-group-item">LOCATION: <span class="p-2 border-primary mr-2">{{invite.inivitaion_by_academy.address}}</span></li> #}
+                                {# <li class="list-group-item"><span class="p-2 border-primary mr-2">{{invite.tutor_ad.tuition_level}}</span></li> #}
+                                {# <li class="list-group-item"><span class="p-2 border-primary mr-2">PKR {{invite.tutor_ad.estimated_fees}} Estimated Fees</span></li> #}
+                                {# {% if invite.tutor_ad.can_travel == "Yes" %} #}
+                                    {# <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Travel</span></li> #}
+                                {# {% else %} #}
+                                    {# <li class="list-group-item"><span class="p-2 border-primary mr-2">Can Not Travel</span></li> #}
+                                {# {% endif %}  #}
+                                {% if invite.accepted %}
+                                    <li class="list-group-item text-light bg-info">View Your Email For <b>{{invite.inivitaion_by_academy.name}}'s</b> Contact Details</li>
+                                {% elif invite.rejected %}
+                                <li class="list-group-item text-light bg-danger">You rejected the invite for demo request from <b>{{invite.inivitaion_by_academy.name}}</b></li>
+                                {% endif %}
+                            </ul>
+                            {% if not invite.accepted %}
+                            <a class="btn btn-info float-left mt-3 " href="{% url 'view_your_ad_tut_academy' invite.id %}" style="color: white;">View Your AD</a>
+                            {% endif %}
+                        </div>
+
+                </div>
+            </div>
         </div>
-    {% endif %}
+    {% endfor %}
+
+
+
+
+
         </div>
     </div>
+
+
+
+
+
+    <script type="text/javascript">
+
+    // const invitations_by_student = document.getElementById("std");
+    // const invitations_by_academy = document.getElementById("academy");
+
+    // invitations_by_student.addEventListener("click", function(){
+    //     invitations_by_academy.classList.remove("selected")
+    //     invitations_by_student.classList.add("selected")
+    //     document.getElementById("all-cards").classList.remove("hide")
+    //     document.getElementById("all-cards-academy").classList.add("hide")
+    // })
+
+    // invitations_by_academy.addEventListener("click", function(){
+    //     invitations_by_student.classList.remove("selected")
+    //     invitations_by_academy.classList.add("selected")
+    //     document.getElementById("all-cards").classList.add("hide")
+    //     document.getElementById("all-cards-academy").classList.remove("hide")
+    // })
+
+     </script>
+
+
+
+
+
+
 {% endblock %}

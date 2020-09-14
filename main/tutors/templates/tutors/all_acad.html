@@ -1,0 +1,165 @@
+{% extends 'home/base.html' %}
+
+
+{% block links %}
+
+    <style>
+        #floating_btn{
+            position: fixed;
+            bottom: 50px;
+            right: 40px;
+            z-index: 999;
+            padding: 15;
+            font-size: 1.2rem;
+            width: 120px;
+            height: 120px;
+            border: solid 2px;
+            border-color: black;
+            border-radius: 40%;
+            background-color:#fec810;
+            color:white;
+            font-weight:600;
+            font-size: 17px;
+        }
+    </style>
+{% endblock %}
+
+{% block nav %}
+    {% include 'tutors/navBar.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+
+     <!-- The Modal -->
+<div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Filter Academies</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form method="GET" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="search" name="Subject" placeholder="Subject" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <select class="form-control selectpicker" name="TuitionLevel">
+                                <option>All</option>
+                                <option>Primary (class 1-5)</option>
+                                <option>Matric</option>
+                                <option>University</option>
+                                <option>Professional</option>
+                                <option>Secondary (class 6-8)</option>
+                                <option>Intermediate</option>
+                                <option>O Level</option>
+                                <option>A Level</option>
+                                <option>SAT-I / SAT-II / E-CAT / M-CAT / GRE / GMAT / Entry test</option>
+                                <option>IELTS / TOEFL", "IELTS / TOEFL</option>
+                                <option>Quran / Religious Studies", "Quran / Religious Studies</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="search" name="City" placeholder="City" class="form-control ">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success">Filter</button>
+                        </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    {% if items %}
+    <div class="container">
+        <button class="btn shadow " id="floating_btn" data-toggle="modal" data-target="#myModal" >Filter Academies</button>
+
+        {% if user.tutor.verified == False %}
+        <div class="alert alert-danger mb-4 mt-3" role="alert">
+            Verify your documents
+        </div>
+        {% endif %}
+        {% if messages %}
+        <ul class="messages d-flex justify-content-center mb-2 mt-2">
+            {% for message in messages %}
+            <div class="alert alert-warning" role="alert">
+            <h5  {% if message.tags %} class="{{ message.tags }} "{% endif %}>{{ message }}</h5>
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="row mt-3">
+                <div class="col-md-6">
+                    <h5>ADs Found: {{number}}</h5>
+                </div>
+            </div>
+        <div class="row row-cols-1 row-cols-md-2 mt-3">
+            {% for student in items %}
+            <div class="col mb-4">
+                <div class="card shadow border-primary" style="height: auto;">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <span class="d-flex justify-content-end">
+                                    <!-- <i class="fas fa-list" style="font-size: 30px;"></i> -->
+                                    <a class="btn btn-info" href="{% url 'specific_acad' student.id %}">View Academy</a>
+                                </span>
+                            </div>
+                        </div>
+
+
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="container">
+                                    <div class="d-flex justify-content-between">
+                                        <span>
+                                            <b>{{student.academyUser.name}}</b>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{student.subject}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tutor Gender: </b>{{student.tutor_gender}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{student.tuition_level}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{student.academyUser.city}}</span></li>
+                                <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Location: </b>{{student.academyUser.address}}</span></li>                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% include "home/pagination.html" %}
+        </div>
+    </div>
+    {% else %}
+
+    <div class="d-flex justify-content-center container">
+            <h1 class="border p-3 mt-5 border-primary text-secondary"> NO ACADEMY FOUND </h1>
+        </div>
+
+    {% endif %}
+
+{% endblock %}

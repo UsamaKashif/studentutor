@@ -1,0 +1,35 @@
+{% if invited_to == "Student" %}
+{{firstname}} {{lastname}} requested a demo
+{% else %}
+{{firstname}} invited you for a demo.
+{% endif %}
+
+Your AD
+Subject: {{ad.subject}}
+Tuition Level: {{ad.tuition_level}}
+Estimated Fees: {{ad.estimated_fees}}
+City: {{city}}
+{% if invited_to == "Student" %}
+Hrs/day:  {{ad.hours_per_day}}
+Days/week: {{ad.days_per_week}}
+{% if ad.tuition_type == "Home Tuition" %}
+Home Tuition
+Area: {{area}}
+{% else %}
+Online Tuition
+{% endif %}
+{% else %}
+{% if ad.can_travel == "No" %}
+Area: {{area}}
+{% endif %}
+{% endif %}
+
+
+Visit the site to ACCEPT or REJECT
+https://www.studentutor.online/
+
+Follow us on:
+FACEBOOK: https://www.facebook.com/StudenTutorOfficial
+TWITTER: https://twitter.com/TutorStuden
+
+StudenTutor

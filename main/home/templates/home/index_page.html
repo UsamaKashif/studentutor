@@ -30,6 +30,8 @@
           <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'student_dashboard' %}">Start Now</a>
         {% elif grp == "tutors" %}
         <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'tutor_dashboard' %}">Start Now</a>
+        {% elif grp == "academy" %}
+          <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{% url 'academy_dashboard' %}">Start Now</a>
         {% endif %}
 
       {% else %}
@@ -44,7 +46,7 @@
   <div class="container">
     <div class="row text-center d-flex justify-content-around">
       <div class="col-md-12 justify-content-center mb-4 d-flex tutors-section" >
-        
+
         <!-- <p class="text-muted">{{tutors}}</p> -->
         <a href="{% url 'tutors' %}" target="blank"><span class="fa-stack fa-4x">
           <i class="fas fa-circle fa-stack-2x text-primary"></i>
@@ -152,10 +154,16 @@
             <p class="text-muted mb-4">Qualified and Experienced tutors available.<br> Register Now to find one.</p>
             <a class="btn btn-danger text-light p-5 mb-5" href="{% url 'student_register' %}" target="blank">Register as Student</a>
         </div>
-        
+
         <div class="col-md-6">
           <p class="text-muted mb-4">Start your teaching career for free.<br> Register Now and follow the steps to get your first tuition.</p>
           <a class="btn btn-secondary text-light p-5" href="{% url 'tutor_register' %}" target="blank">Register as Tutor</a>
+        </div>
+      </div>
+      <div class="row text-center d-flex justify-content-center mt-5">
+        <div class="col-md-12">
+            <p class="text-muted mb-4">Qualified and Experienced tutors available.<br> Register Now to find one.</p>
+            <a class="btn btn-success text-light p-5 mb-5" href="{% url 'academy_register' %}" target="blank">Register as Academy</a>
         </div>
       </div>
     </div>
@@ -178,7 +186,7 @@
           <h4 class="service-heading">Satisfaction Guaranteed</h4>
           <p class="text-muted">All tutors are verified by StudenTutor. We are confident that you will be satisfied with our service and our tutors.</p>
         </div>
-        
+
         <div class="col-md-4">
           <span class="fa-stack fa-4x">
             <i class="fas fa-circle fa-stack-2x text-primary"></i>

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth import views as auth_views 
+from django.contrib.auth import views as auth_views
 
 from . import views
 
@@ -8,6 +8,8 @@ from students.views import studentRegister
 
 
 from tutors.views import tutorRegister
+
+from academy.views import academyRegister
 
 
 
@@ -17,6 +19,7 @@ urlpatterns = [
     path('registeras/', views.registerAs, name="register_as"),
     path('registeras/student/', studentRegister, name="student_register"),
     path('registeras/tutor/', tutorRegister, name="tutor_register"),
+    path("registeras/academy/", academyRegister, name="academy_register" ),
     path('signin/', views.signIn, name="sign_in"),
     path('signout/', views.signOut, name="sign_out"),
     path('tutors/', views.tutors, name="tutors"),

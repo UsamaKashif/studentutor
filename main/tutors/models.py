@@ -13,7 +13,7 @@ from django.urls import reverse
 class Tutor(models.Model):
     username = models.CharField(max_length=200, null=True, default="")
 
-    tutor = models.OneToOneField(User, null=True, on_delete=models.CASCADE) 
+    tutor = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
     age = models.IntegerField()
@@ -32,7 +32,7 @@ class Tutor(models.Model):
     invitations_sent_accepted = models.IntegerField(default=0)  #done
     invitations_sent_rejected = models.IntegerField(default=0)  #done
 
-    invitations_recieved = models.IntegerField(default=0)   #done 
+    invitations_recieved = models.IntegerField(default=0)   #done
     invitations_recieved_accepted = models.IntegerField(default=0) #done
     invitations_recieved_rejected = models.IntegerField(default=0) #done
 
@@ -89,16 +89,15 @@ class PostAnAd(models.Model):
 
     def get_all_likes(self):
         return self.likes.all()
-    
+
     # def get_like_url(self):
     #     return reverse('post_like_std', kwargs={'id': self.id})
-    
+
     def get_like_api_url(self):
         return reverse('post_like_api_std', kwargs={'id': self.id})
 
     def __str__(self):
         return f'{self.subject} : {self.tuition_level} : {self.tutorUser.username} : {self.tutorUser.id}'
-
 
 
 class Invitaions(models.Model):
@@ -110,6 +109,24 @@ class Invitaions(models.Model):
 
     def __str__(self):
         return f'Invitaion By {self.inivitaion_by_student.username} : {self.inivitaion_by_student.id}'
+
+
+from academy.models import Academy
+
+
+class Invitaions_by_academy(models.Model):
+    inivitaion_by_academy = models.ForeignKey(Academy, on_delete=models.CASCADE, null=True) # username of student
+    tutor_ad = models.ForeignKey(PostAnAd, on_delete=models.CASCADE, null=True)
+    accepted = models.BooleanField(default=False)
+    rejected = models.BooleanField(default=False)
+    invitation_sent = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Invitaion By {self.inivitaion_by_academy.username} : {self.inivitaion_by_academy.id}'
+
+
+
+
 
 class AboutAndQualifications (models.Model):
     tutor = models.OneToOneField(Tutor, on_delete=models.CASCADE)
@@ -136,7 +153,7 @@ class Verify(models.Model):
         return f'{self.tutor.username} : {self.tutor.id}'
 
 class WishList(models.Model):
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True) 
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True)
     students = models.ManyToManyField(Student, blank=True ,related_name="wishlist_students")
 
     def __str__(self):

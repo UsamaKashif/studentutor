@@ -18,17 +18,17 @@
         <div class="row row-cols-1 row-cols-md-2 mt-3">
         {% if invites %}
             {% for invite in invites %}
-            
+
             <div class="col mb-4">
                 <div class="card shadow border-dark" style="height: auto;">
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-md-12">
-                                <span class="d-flex justify-content-end">   
+                                <span class="d-flex justify-content-end">
                                         {% if invite.accepted %}
                                         <h5 class="text-success" href="#">Request Accepted</h5>
                                         {% elif invite.rejected %}
-                                        <h5 class="text-success" href="#">Invitation Rejected</h5>
+                                        <h5 class="text-danger" href="#">Invitation Rejected</h5>
                                         {% else %}
                                         <a class="btn btn-info mr-3" href="{% url 'accept_invite' invite.id %}">Accept</a>
                                         <a class="btn btn-danger" href="{% url 'reject_invite_std' invite.id %}">Reject</a>
@@ -72,12 +72,15 @@
                                 {% if invite.accepted %}
                                     <li class="list-group-item text-light bg-info">View Your Email For <b>{{invite.inivitaion_by_tutor.first_name}} {{invite.inivitaion_by_tutor.last_name}}'s</b> Contact Details</li>
                                 {% endif %}
+                                {% if invite.rejected %}
+                                    <li class="list-group-item text-light bg-danger">You Rejected The Demo Request From <b>{{invite.inivitaion_by_tutor.first_name}} {{invite.inivitaion_by_tutor.last_name}}</b></li>
+                                {% endif %}
                             </ul>
-                            {% if not invite.accepted %}
+                            {% if not invite.accepted and not invite.rejected %}
                             <a class="btn btn-info float-left mt-3 " href="{% url 'view_your_ad_std' invite.id %}" style="color: white;">View Your AD</a>
                             {% endif %}
                         </div>
-                        
+
 
                     </div>
                 </div>

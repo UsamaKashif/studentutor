@@ -1,0 +1,27 @@
+{% extends 'home/b.html' %}
+
+{% block nav %}
+    {% include "academy/nav.html" %}
+{% endblock %}
+
+{% block content %}
+
+<br>
+<div class="container">
+    <div class="row text-center d-flex justify-content-around mt-4">
+        <div class="col-md-6">
+            <div class="card card-body shadow">
+                <p>Are you sure you want to delete your account</p>
+
+                <form method="POST" >
+                    {% csrf_token %}
+
+                    <a class="btn btn-warning" href="{% url 'academy_dashboard' %}">cancel</a>
+                    <input class="btn btn-danger" type="submit" name="confirm">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

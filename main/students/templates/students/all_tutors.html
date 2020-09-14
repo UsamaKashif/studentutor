@@ -43,13 +43,13 @@
 <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">
-            
+
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Filter Tutors</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            
+
             <!-- Modal body -->
             <div class="modal-body">
                 <form method="GET" enctype="multipart/form-data">
@@ -60,7 +60,7 @@
                             <input type="search" name="Subject" placeholder="Subject" class="form-control">
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <div class="input-group">
                             <select class="form-control selectpicker" name="TuitionLevel">
@@ -79,7 +79,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <div class="input-group">
                             <select class="form-control selectpicker" name="tuition_gender">
@@ -89,7 +89,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <div class="input-group">
                             <input type="search" name="City" placeholder="City" class="form-control ">
@@ -109,7 +109,7 @@
 {% if items %}
 <div class="container">
         <button class="btn shadow text-center" id="floating_btn" data-toggle="modal" data-target="#myModal" >Filter Tutors</button>
-        
+
         {% if messages %}
         <ul class="messages d-flex justify-content-center mb-2 mt-2">
             {% for message in messages %}
@@ -126,15 +126,15 @@
         </div>
         <div class="row row-cols-1 row-cols-md-2 mt-3">
             {% for tutor in items %}
-            
+
             <div class="col mb-4">
                 <div class="card shadow border-primary" style="height: auto;">
                     <div class="card-body">
                             <div class="row mb-2">
                                     <div class="col-md-12">
-                                        <span class="d-flex justify-content-end"> 
+                                        <span class="d-flex justify-content-end">
                                             <a class="btn btn-info" href="{% url 'specific_tutor' tutor.id %}">View Tutor</a>
-                                           
+
                                         </span>
                                     </div>
                                 </div>
@@ -146,6 +146,11 @@
                                         <span>
                                                 <h5> {{tutor.tutorUser.first_name}} {{tutor.tutorUser.last_name}} </h5>
                                                 <small style="text-align: justify;">{{tutor.tutorUser.tagline}}</small>
+                                                {% if tutor.tutorUser.verified %}
+                                                    <div><span class="badge p-2 mt-2 badge-pill badge-success">Verified by StudenTutor</span></div>
+                                                {% else %}
+<div><span class="badge p-2 mt-2 badge-pill badge-danger">Verified by StudenTutor</span></div>
+                                                {% endif %}
                                         </span>
                                         <span class="d-flex">
                                                 {% if student in tutor.get_all_likes %}
@@ -157,7 +162,7 @@
                                                     <h5 class="text-muted ml-3">{{tutor.likes.count}}</h5>
                                                 {% endif %}
                                         </span>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +174,7 @@
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Subject: </b>{{tutor.subject}}</span></li>
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Gender: </b>{{tutor.tutorUser.gender}}</span></li>
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Tuition Level: </b>{{tutor.tuition_level}}</span></li>
-                                            
+
                                             {% if tutor.can_travel == "Yes" and tutor.tuition_type == "Home Tuition" %}
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>City: </b>{{tutor.tutorUser.city}}</span></li>
                                             <li class="list-group-item"><span class="p-2 border-primary mr-2"><b>Area: </b>{{tutor.address}}</span></li>
@@ -196,5 +201,5 @@
         <h1 class="border p-3 mt-5 border-primary text-secondary"> NO TUTOR FOUND </h1>
     </div>
     {% endif %}
-   
+
 {% endblock %}

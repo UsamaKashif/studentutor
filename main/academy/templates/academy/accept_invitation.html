@@ -1,0 +1,34 @@
+{% extends 'home/base.html' %}
+
+{% block nav %}
+    {% include 'academy/nav.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+
+    <br>
+    <div class="container">
+        {% if not user.academy.verified %}
+            <h4 class="bg-danger p-3 text-center text-light">Waiting for Verification</h4>
+            {% endif %}
+        <div class="row text-center d-flex justify-content-around mt-4">
+            <div class="col-md-6">
+                <div class="card card-body shadow">
+                    <p>Are you sure you want to accept demo request from <b>{{invite.inivitaion_by_tutor.username}}</b></p>
+
+                    <form method="POST" >
+                        {% csrf_token %}
+
+                        <a class="btn btn-warning" href="{% url 'invitations_academy' %}">cancel</a>
+                        {% if user.academy.verified %}
+                        <input class="btn btn-success" type="submit" name="confirm">
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

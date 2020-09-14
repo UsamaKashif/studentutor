@@ -1,0 +1,102 @@
+{% extends "home/b.html" %}
+
+{% block links %}
+    <style>
+        .my-card{
+            border: solid 2px;
+            border-radius: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block nav %}
+    {% include 'academy/nav.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="container ">
+        {% if user.academy.ad_post_count >= 5 %}
+            <div class="alert alert-danger mt-3" role="alert">
+                Active ADs Limit Reached
+            </div>
+        {% endif %}
+        <div class="d-flex  ">
+            <div class="card card-body shadow mt-4 mb-5 my-card">
+                <h5 class="card-title text-center">Post An AD</h5>
+                <hr>
+                <div class="container">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">Subject</i></span>
+                            </div>
+                            {{form.subject}}
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">Tutor Gender</i></span>
+                            </div>
+                            {{form.tutor_gender}}
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">Tuition Level</i></span>
+                            </div>
+                            {{form.tuition_level}}
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">Hours per Day</i></span>
+                            </div>
+                            {{form.hours_per_day}}
+                        </div>
+                        <small class="text-danger">{{form.hours_per_day.errors}}</small>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">Days Per Week</i></span>
+                            </div>
+                            {{form.days_per_week}}
+                        </div>
+                        <small class="text-danger">{{form.days_per_week.errors}}</small>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">Estimated Salary</i></span>
+                            </div>
+                            {{form.estimated_salary}}
+                        </div>
+                        <small class="text-danger">{{form.estimated_salary.errors}}</small>
+
+                        <div class="d-flex justify-content-center mt-3 login_container">
+                            {% if user.academy.ad_post_count < 5 %}
+                                {% if user.academy.profile_complete %}
+                                    <input class="btn mt-3 text-info w-50 " type="submit" value="Post An AD">
+                                {% else %}
+                                <h5 class="btn mt-3 disabled text-info w-50 ">Post An AD</h5>
+                                {% endif %}
+                            {% elif user.academy.ad_post_count >= 5 %}
+                                <h5 class="btn mt-3 disabled text-info w-50 ">Post An AD</h5>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        var form_fields = document.getElementsByTagName('input')
+        for (var field in form_fields){
+            form_fields[field].className += ' form-control'
+        }
+    </script>
+{% endblock %}

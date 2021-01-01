@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+import locale
+from decouple import config
+
+
+config.encoding = locale.getpreferredencoding(False)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,14 +25,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3xv!p668g*2@ov=%77pj3sn)te7^mdbi4-fiz@s=ilc6h+p#1q'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
-    "159.89.205.37",
+    config("IP_ADRESS"),
     "www.studentutor.online",
     "studentutor.online",
     "127.0.0.1"
@@ -153,6 +158,6 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.zoho.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = "contact@studentutor.online"
-EMAIL_HOST_USER = "contact@studentutor.online"
-EMAIL_HOST_PASSWORD = "Xqf-4Fd9[=~Nn^A'"
+DEFAULT_FROM_EMAIL = config("EMAIL_ADDRESS")
+EMAIL_HOST_USER = config("EMAIL_ADDRESS")
+EMAIL_HOST_PASSWORD = config("EMAIL_PASS")

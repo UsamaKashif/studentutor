@@ -13,7 +13,36 @@ A platform for students and tutors to connect together.
 - **Accept / Reject** <br>
     On recieving an Invitation it is your choice to accept it or reject.
 
-<HR>
 
-**This Website is made using Django (Front-end / Back-end)**
-# DOCUMENTATION
+## Features
+- Sending and Recieving Invitations
+- Adding tutors | students to wisslist
+- Liking ADs
+- Create | Delete AD
+
+## Installation
+- **Clone this repository** <br>
+    <code>git clone https://github.com/UsamaKashif/studentutor.git</code>
+- **Change Directories ** <br>
+    <code>cd studentutor</code> <br>
+    <code>cd main</code>
+- **Create a Virtual environment** <br>
+    <code>python -m venv nameOfEnvironment</code>
+- **Activate your virtual environment (Windows)** <br>
+    <code>nameOfEnvironment\Source\activate.bin</code>
+- **Install Packages from the requirements.txt file** <br>
+    <code>pip install -r requirements.txt</code>
+
+
+## FEEL FREE TO CONTRIBUTE TO THIS PROJECT
+- create a new issue.
+- If the issue is valid you will be assigned to it.
+- Or checkout existing issues.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+- **Live Website:** <br>
+    https://studentutor.online/
+- **Facebook Page:** <br> 
+    https://www.facebook.com/StudenTutorOfficial

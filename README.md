@@ -15,7 +15,7 @@ A platform for students and tutors to connect together.
 
 
 ## Features
-- Sending and Recieving Invitations
+- Sending and Receiving Invitations
 - Adding tutors | students to wisslist
 - Liking ADs
 - Create | Delete AD
@@ -46,3 +46,7 @@ A platform for students and tutors to connect together.
     https://studentutor.online/
 - **Facebook Page:** <br> 
     https://www.facebook.com/StudenTutorOfficial
+- **StudenTutor Discord** <br>
+    https://discord.gg/kp6BEETp
+- **Medium Story** <br>
+    https://usamakashif1.medium.com/studentutor-online-b7730ab4c660

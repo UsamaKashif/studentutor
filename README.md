@@ -23,7 +23,7 @@ A platform for students and tutors to connect together.
 ## Installation
 - **Clone this repository** <br>
     <code>git clone https://github.com/UsamaKashif/studentutor.git</code>
-- **Change Directories ** <br>
+- **Change Directories** <br>
     <code>cd studentutor</code> <br>
     <code>cd main</code>
 - **Create a Virtual environment** <br>

@@ -1,6 +1,5 @@
 ![fb](https://user-images.githubusercontent.com/49620321/104490248-6d5a1980-55f2-11eb-8dd2-354fea7b5912.png)
-# [StudenTutor.online][1]
-[1]: https://studentutor.online/ "Title"
+# StudenTutor
 A platform for students and tutors to connect together.
 
 ## How It Works
@@ -42,11 +41,5 @@ A platform for students and tutors to connect together.
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
-- **Live Website:** <br>
-    https://studentutor.online/
-- **Facebook Page:** <br> 
-    https://www.facebook.com/StudenTutorOfficial
-- **StudenTutor Discord** <br>
-    https://discord.gg/kp6BEETp
 - **Medium Story** <br>
     https://usamakashif1.medium.com/studentutor-online-b7730ab4c660
